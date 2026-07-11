@@ -1,10 +1,12 @@
-# TODO: Validate
 [project]
 name = "meshfilm"
 version = "0.1.0"
-description = "Unofficial Netflix public-title metadata API."
+description = "Netflix API Wrapper."
 readme = "README.md"
 requires-python = ">=3.14"
+authors = [
+  { name = "ryn-cx", email = "262888154+ryn-cx@users.noreply.github.com" }
+]
 dependencies = [
   "get-around",
   "good-ass-pydantic-integrator",
@@ -12,7 +14,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "get-around[testing]",
+  "prek>=0.4.8",
   "pytest>=8.4.2",
   "ruff>=0.13.3",
 ]
@@ -23,16 +25,6 @@ build-backend = "uv_build"
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = [
-  "D100",
-  "D101",
-  "D102",
-  "D103",
-  "D104",
-  "D105",
-  "D106",
-  "D107",
-]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
