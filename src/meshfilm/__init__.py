@@ -31,7 +31,7 @@ class Meshfilm:
     """Netflix API wrapper."""
 
     def __init__(self, get_around_client: GetAround | None = None) -> None:
-        """Initialize the meshfilm client.
+        """Initialize the Meshfilm client.
 
         Args:
             get_around_client: The HTTP client used for every request.

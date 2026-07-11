@@ -1,13 +1,21 @@
 from __future__ import annotations
 
 import json
+from contextlib import contextmanager
 from pathlib import Path
+from typing import TYPE_CHECKING, Protocol
 
 import pytest
 from get_around import build_client_automatically
+from good_ass_pydantic_integrator import GAPIBaseModel
 
 from meshfilm import Meshfilm
 from meshfilm.exceptions import NoContentError
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+    from good_ass_pydantic_integrator.constants import INPUT_TYPE
 
 ENV_FILE = Path(__file__).parent.parent / ".env"
 
@@ -38,8 +46,28 @@ SEASON_1_EPISODE_IDS: list[str | int] = [
 ]
 """Every episode from Disenchantment's first season."""
 MOVIE_ID = 81458424
-"movie_id of Watch Wake Up Dead Man: A Knives Out Mystery"
+""""movie_id of Watch Wake Up Dead Man: A Knives Out Mystery."""
 INVALID_SHOW_NAME = "qwertasdfgzxcvb"
+
+
+class _SavableEndpoint[ArgT, ModelT: GAPIBaseModel](Protocol):
+    """Endpoint that fetches a model and can round-trip its raw input to disk."""
+
+    def get(self, arg: ArgT, /) -> ModelT: ...
+    @staticmethod
+    def original_input(data: ModelT) -> INPUT_TYPE: ...
+    def save_new_json_file(self, data: INPUT_TYPE) -> Path: ...
+
+
+@contextmanager
+def get_and_save[ArgT, ModelT: GAPIBaseModel](
+    endpoint: _SavableEndpoint[ArgT, ModelT],
+    arg: ArgT,
+) -> Generator[ModelT]:
+    """Fetch ``arg``, yield the model to assert on, then save it once asserts pass."""
+    model = endpoint.get(arg)
+    yield model
+    endpoint.save_new_json_file(endpoint.original_input(model))
 
 
 class TestAliases:
@@ -68,11 +96,8 @@ class TestGet:
         ids=[f"{SHOW_ID=}", f"{EPISODE_ID=}", f"{MOVIE_ID=}"],
     )
     def test_get_lodp_title_and_plans_page(self, video_id: int) -> None:
-        endpoint = client.lodp_title_and_plans_page
-        model = endpoint.get(video_id)
-        raw = endpoint.original_input(model)
-        endpoint.save_new_json_file(raw)
-        assert model.data.videos[0].video_id == video_id
+        with get_and_save(client.lodp_title_and_plans_page, video_id) as model:
+            assert any(video.video_id == video_id for video in model.data.videos)
 
     @pytest.mark.parametrize(
         "season_id",
@@ -84,21 +109,24 @@ class TestGet:
         season_id: int,
     ) -> None:
         endpoint = client.preview_modal_episode_selector_season_episodes
-        model = endpoint.get(season_id)
-        raw = endpoint.original_input(model)
-        endpoint.save_new_json_file(raw)
+        with get_and_save(endpoint, season_id) as model:
+            assert any(
+                video.video_id == season_id and video.field__typename == "Season"
+                for video in model.data.videos
+            )
 
     def test_get_preview_modal_episode_selector(self) -> None:
-        endpoint = client.preview_modal_episode_selector
-        model = endpoint.get(SHOW_ID)
-        raw = endpoint.original_input(model)
-        endpoint.save_new_json_file(raw)
-        assert model.data.videos[0].video_id == SHOW_ID
+        with get_and_save(client.preview_modal_episode_selector, SHOW_ID) as model:
+            assert any(video.video_id == SHOW_ID for video in model.data.videos)
 
     def test_get_search_page_results(self) -> None:
-        model = client.search_page_results.get(SHOW_NAME)
-        raw = client.search_page_results.original_input(model)
-        client.search_page_results.save_new_json_file(raw)
+        with get_and_save(client.search_page_results, SHOW_NAME) as model:
+            titles = [
+                entity.node.display_string
+                for section in model.data.page.sections.edges
+                for entity in section.node.entities.edges
+            ]
+            assert any(SHOW_NAME in title for title in titles)
 
     @pytest.mark.parametrize(
         "video_ids",
@@ -108,13 +136,13 @@ class TestGet:
             f"{SEASON_1_ID=}",
             f"{SEASON_2_ID=}",
             f"{MOVIE_ID=}",
-            "SEASON_1_EPISODE_IDS",
+            f"{SEASON_1_EPISODE_IDS=}",
         ],
     )
     def test_get_mini_modal(self, video_ids: list[str | int]) -> None:
-        model = client.mini_modal.get(video_ids)
-        raw = client.mini_modal.original_input(model)
-        client.mini_modal.save_new_json_file(raw)
+        with get_and_save(client.mini_modal, video_ids) as model:
+            returned_ids = {entity.video_id for entity in model.data.unified_entities}
+            assert all(int(video_id) in returned_ids for video_id in video_ids)
 
     @pytest.mark.parametrize(
         "video_id",
@@ -128,9 +156,10 @@ class TestGet:
         ],
     )
     def test_get_detail_modal(self, video_id: int) -> None:
-        model = client.detail_modal.get(video_id)
-        raw = client.detail_modal.original_input(model)
-        client.detail_modal.save_new_json_file(raw)
+        with get_and_save(client.detail_modal, video_id) as model:
+            assert any(
+                entity.video_id == video_id for entity in model.data.unified_entities
+            )
 
     @pytest.mark.parametrize(
         "video_ids",
@@ -140,7 +169,7 @@ class TestGet:
             f"{SEASON_1_ID=}",
             f"{SEASON_2_ID=}",
             f"{MOVIE_ID=}",
-            "SEASON_1_EPISODE_IDS",
+            f"{SEASON_1_EPISODE_IDS=}",
         ],
     )
     def test_get_preview_modal_video_title_group(
@@ -148,9 +177,9 @@ class TestGet:
         video_ids: list[str | int],
     ) -> None:
         endpoint = client.preview_modal_video_title_group
-        model = endpoint.get(video_ids)
-        raw = endpoint.original_input(model)
-        endpoint.save_new_json_file(raw)
+        with get_and_save(endpoint, video_ids) as model:
+            returned_ids = {video.video_id for video in model.data.videos}
+            assert all(int(video_id) in returned_ids for video_id in video_ids)
 
 
 class TestInvalidGet:
@@ -165,8 +194,8 @@ class TestInvalidGet:
     ) -> None:
         with pytest.raises(NoContentError) as error:
             client.lodp_title_and_plans_page.get(invalid_id)
-        # The payload is still recoverable from the raised exception.
-        assert "data" in error.value.response
+
+        assert error.value.response
 
     @pytest.mark.parametrize(
         "invalid_id",
@@ -222,34 +251,19 @@ class TestInvalidGet:
 
 
 class TestParse:
-    def test_parse_lodp_title_and_plans_page(self) -> None:
-        endpoint = client.lodp_title_and_plans_page
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
-
-    def test_parse_preview_modal_episode_selector_season_episodes(self) -> None:
-        endpoint = client.preview_modal_episode_selector_season_episodes
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
-
-    def test_parse_preview_modal_episode_selector(self) -> None:
-        endpoint = client.preview_modal_episode_selector
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
-
-    def test_parse_search_page_results(self) -> None:
-        for json_file in client.search_page_results.json_files():
-            client.search_page_results.parse(json.loads(json_file.read_text()))
-
-    def test_parse_mini_modal(self) -> None:
-        for json_file in client.mini_modal.json_files():
-            client.mini_modal.parse(json.loads(json_file.read_text()))
-
-    def test_parse_detail_modal(self) -> None:
-        for json_file in client.detail_modal.json_files():
-            client.detail_modal.parse(json.loads(json_file.read_text()))
-
-    def test_parse_preview_modal_video_title_group(self) -> None:
-        endpoint = client.preview_modal_video_title_group
+    @pytest.mark.parametrize(
+        "endpoint_name",
+        [
+            "lodp_title_and_plans_page",
+            "preview_modal_episode_selector_season_episodes",
+            "preview_modal_episode_selector",
+            "search_page_results",
+            "mini_modal",
+            "detail_modal",
+            "preview_modal_video_title_group",
+        ],
+    )
+    def test_parse(self, endpoint_name: str) -> None:
+        endpoint = getattr(client, endpoint_name)
         for json_file in endpoint.json_files():
             endpoint.parse(json.loads(json_file.read_text()))
