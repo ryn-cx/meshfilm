@@ -1,21 +1,14 @@
+# TODO: Validate
 from __future__ import annotations
 
 import json
-from contextlib import contextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING, Protocol
 
 import pytest
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import GAPIBaseModel
 
 from meshfilm import Meshfilm
 from meshfilm.exceptions import NoContentError
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
-
-    from good_ass_pydantic_integrator.constants import INPUT_TYPE
 
 ENV_FILE = Path(__file__).parent.parent / ".env"
 
@@ -50,29 +43,7 @@ MOVIE_ID = 81458424
 INVALID_SHOW_NAME = "qwertasdfgzxcvb"
 
 
-class _SavableEndpoint[ArgT, ModelT: GAPIBaseModel](Protocol):
-    """Endpoint that fetches a model and can round-trip its raw input to disk."""
-
-    def get(self, arg: ArgT, /) -> ModelT: ...
-    @staticmethod
-    def original_input(data: ModelT) -> INPUT_TYPE: ...
-    def save_new_json_file(self, data: INPUT_TYPE) -> Path: ...
-
-
-@contextmanager
-def get_and_save[ArgT, ModelT: GAPIBaseModel](
-    endpoint: _SavableEndpoint[ArgT, ModelT],
-    arg: ArgT,
-) -> Generator[ModelT]:
-    """Fetch ``arg``, yield the model to assert on, then save it once asserts pass."""
-    model = endpoint.get(arg)
-    yield model
-    endpoint.save_new_json_file(endpoint.original_input(model))
-
-
 class TestAliases:
-    """Domain-friendly aliases must resolve to the same wire endpoint object."""
-
     @pytest.mark.parametrize(
         ("alias", "operation"),
         [
@@ -96,8 +67,10 @@ class TestGet:
         ids=[f"{SHOW_ID=}", f"{EPISODE_ID=}", f"{MOVIE_ID=}"],
     )
     def test_get_lodp_title_and_plans_page(self, video_id: int) -> None:
-        with get_and_save(client.lodp_title_and_plans_page, video_id) as model:
-            assert any(video.video_id == video_id for video in model.data.videos)
+        endpoint = client.lodp_title_and_plans_page
+        model = endpoint.get(video_id)
+        assert any(video.video_id == video_id for video in model.data.videos)
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     @pytest.mark.parametrize(
         "season_id",
@@ -109,24 +82,29 @@ class TestGet:
         season_id: int,
     ) -> None:
         endpoint = client.preview_modal_episode_selector_season_episodes
-        with get_and_save(endpoint, season_id) as model:
-            assert any(
-                video.video_id == season_id and video.field__typename == "Season"
-                for video in model.data.videos
-            )
+        model = endpoint.get(season_id)
+        assert any(
+            video.video_id == season_id and video.field__typename == "Season"
+            for video in model.data.videos
+        )
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     def test_get_preview_modal_episode_selector(self) -> None:
-        with get_and_save(client.preview_modal_episode_selector, SHOW_ID) as model:
-            assert any(video.video_id == SHOW_ID for video in model.data.videos)
+        endpoint = client.preview_modal_episode_selector
+        model = endpoint.get(SHOW_ID)
+        assert any(video.video_id == SHOW_ID for video in model.data.videos)
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     def test_get_search_page_results(self) -> None:
-        with get_and_save(client.search_page_results, SHOW_NAME) as model:
-            titles = [
-                entity.node.display_string
-                for section in model.data.page.sections.edges
-                for entity in section.node.entities.edges
-            ]
-            assert any(SHOW_NAME in title for title in titles)
+        endpoint = client.search_page_results
+        model = endpoint.get(SHOW_NAME)
+        titles = [
+            entity.node.display_string
+            for section in model.data.page.sections.edges
+            for entity in section.node.entities.edges
+        ]
+        assert any(SHOW_NAME in title for title in titles)
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     @pytest.mark.parametrize(
         "video_ids",
@@ -140,9 +118,11 @@ class TestGet:
         ],
     )
     def test_get_mini_modal(self, video_ids: list[str | int]) -> None:
-        with get_and_save(client.mini_modal, video_ids) as model:
-            returned_ids = {entity.video_id for entity in model.data.unified_entities}
-            assert all(int(video_id) in returned_ids for video_id in video_ids)
+        endpoint = client.mini_modal
+        model = endpoint.get(video_ids)
+        returned_ids = {entity.video_id for entity in model.data.unified_entities}
+        assert all(int(video_id) in returned_ids for video_id in video_ids)
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     @pytest.mark.parametrize(
         "video_id",
@@ -156,10 +136,12 @@ class TestGet:
         ],
     )
     def test_get_detail_modal(self, video_id: int) -> None:
-        with get_and_save(client.detail_modal, video_id) as model:
-            assert any(
-                entity.video_id == video_id for entity in model.data.unified_entities
-            )
+        endpoint = client.detail_modal
+        model = endpoint.get(video_id)
+        assert any(
+            entity.video_id == video_id for entity in model.data.unified_entities
+        )
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
     @pytest.mark.parametrize(
         "video_ids",
@@ -177,9 +159,10 @@ class TestGet:
         video_ids: list[str | int],
     ) -> None:
         endpoint = client.preview_modal_video_title_group
-        with get_and_save(endpoint, video_ids) as model:
-            returned_ids = {video.video_id for video in model.data.videos}
-            assert all(int(video_id) in returned_ids for video_id in video_ids)
+        model = endpoint.get(video_ids)
+        returned_ids = {video.video_id for video in model.data.videos}
+        assert all(int(video_id) in returned_ids for video_id in video_ids)
+        endpoint.save_new_json_file(endpoint.original_input(model))
 
 
 class TestInvalidGet:
