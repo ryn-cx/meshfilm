@@ -1,4 +1,5 @@
-# TODO: Validate
+"""Rebuild Pydantic models for the Meshfilm package."""
+
 import logging
 
 from good_ass_pydantic_integrator.utils import rebuild_models

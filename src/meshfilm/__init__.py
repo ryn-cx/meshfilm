@@ -1,94 +1,123 @@
-# TODO: Validate
-"""meshfilm is a client for downloading and parsing public Netflix data."""
+"""Meshfilm, a Netflix GraphQL wrapper."""
 
 from __future__ import annotations
 
-import gzip
-import http.client
-import zlib
-from datetime import datetime
+import time
+from http import HTTPStatus
 from logging import NullHandler, getLogger
-from typing import Any
-from urllib.error import HTTPError as UrllibHTTPError
-from urllib.request import Request, urlopen
+from typing import TYPE_CHECKING, Any
 
-from meshfilm._graphql import extract_graphql
+from get_around import GetAround
+
+from meshfilm.detail_modal import DetailModal
 from meshfilm.exceptions import HTTPError
-from meshfilm.title import Title
+from meshfilm.lodp_title_and_plans_page import LodpTitleAndPlansPage
+from meshfilm.mini_modal import MiniModal
+from meshfilm.preview_modal_episode_selector import PreviewModalEpisodeSelector
+from meshfilm.preview_modal_episode_selector_season_episodes import (
+    PreviewModalEpisodeSelectorSeasonEpisodes,
+)
+from meshfilm.preview_modal_video_title_group import PreviewModalVideoTitleGroup
+from meshfilm.search_page_results import SearchPageResults
 
-DEFAULT_TIMEOUT = 30
+if TYPE_CHECKING:
+    from httpx import Response
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
 class MeshFilm:
-    """Interface for downloading and parsing public Netflix title data."""
+    """Meshfilm client."""
 
-    # A browser-like UA is needed or Netflix returns a stripped/redirect page.
-    USER_AGENT = (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
-    )
-
-    def __init__(self, timeout: int = DEFAULT_TIMEOUT) -> None:
-        """Initialize the meshfilm client."""
-        self.timeout = timeout
-        self.title = Title(self)
-
-    def _fetch_html(self, url: str) -> str:
-        """Fetch a page's HTML, handling gzip/deflate and partial reads.
-
-        gzip is requested because the plain (identity) response tends to drop the
-        connection mid-stream (``IncompleteRead``) before the GraphQL cache, which
-        sits near the end of the page.
-        """
-        request = Request(  # noqa: S310 - fixed https netflix host
-            url,
-            headers={
-                "User-Agent": self.USER_AGENT,
-                "Accept-Language": "en-US,en;q=0.9",
-                "Accept": "text/html,application/xhtml+xml",
-                "Accept-Encoding": "gzip, deflate",
-            },
-        )
-        logger.info("Downloading page: %s", url)
-        try:
-            with urlopen(request, timeout=self.timeout) as response:  # noqa: S310
-                try:
-                    raw = response.read()
-                except http.client.IncompleteRead as error:
-                    raw = error.partial  # salvage what arrived
-                encoding = (response.headers.get("Content-Encoding") or "").lower()
-                charset = response.headers.get_content_charset() or "utf-8"
-        except UrllibHTTPError as error:
-            msg = f"Unexpected response status code: {error.code}"
-            raise HTTPError(msg) from error
-
-        if encoding == "gzip":
-            raw = gzip.decompress(raw)
-        elif encoding == "deflate":
-            raw = zlib.decompress(raw)
-        return raw.decode(charset, errors="replace")
-
-    def download(self, url: str) -> dict[str, Any]:
-        """Download a Netflix page and return its raw embedded GraphQL cache.
-
-        The returned dict is the Apollo cache exactly as extracted from the page
-        (``{"data": {...}}``) plus a ``meshfilm`` key recording the request.
+    def __init__(self, get_around_client: GetAround | None = None) -> None:
+        """Initialize the meshfilm client.
 
         Args:
-            url: The full URL of the Netflix page to download.
+            get_around_client: The HTTP client used for every request. Defaults
+                to a direct `GetAround()` that does not route through a relay.
+        """
+        self.get_around_client = get_around_client or GetAround()
+        self.lodp_title_and_plans_page = LodpTitleAndPlansPage(self)
+        self.preview_modal_episode_selector = PreviewModalEpisodeSelector(self)
+        self.preview_modal_episode_selector_season_episodes = (
+            PreviewModalEpisodeSelectorSeasonEpisodes(self)
+        )
+        self.preview_modal_video_title_group = PreviewModalVideoTitleGroup(self)
+        self.search_page_results = SearchPageResults(self)
+        self.mini_modal = MiniModal(self)
+        self.detail_modal = DetailModal(self)
+
+    def _headers(self, payload: dict[str, Any]) -> dict[str, str]:
+        return {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+            " (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36",
+            "Accept": "*/*",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Accept-Encoding": "gzip, deflate",
+            "Content-Type": "application/json",
+            "Origin": "https://www.netflix.com",
+            "Referer": "https://www.netflix.com/",
+            "x-netflix.context.ui-flavor": "akira",
+            "x-netflix.context.app-version": "v232a5da5",
+            "x-netflix.context.locales": "en-us",
+            "x-netflix.context.operation-name": str(payload.get("operationName")),
+            "x-netflix.request.attempt": "1",
+            "x-netflix.request.client.context": '{"appstate":"foreground"}',
+        }
+
+    def _download_response(
+        self,
+        headers: dict[str, str],
+        body: dict[str, Any],
+        log_id: object = None,
+    ) -> Response:
+        operation = f"{body.get('operationName')} ({log_id})"
+        logger.debug("Downloading GraphQL response: %s", operation)
+        start = time.monotonic()
+        response = self.get_around_client.post(
+            url="https://web.prod.cloud.netflix.com/graphql",
+            json=body,
+            headers=headers,
+        )
+        logger.info(
+            "GraphQL query %s -> %s in %.0f ms",
+            operation,
+            response.status_code,
+            (time.monotonic() - start) * 1000,
+        )
+
+        if response.status_code != HTTPStatus.OK:
+            msg = f"Unexpected response status code: {response.status_code}"
+            raise HTTPError(msg)
+
+        return response
+
+    def download_graphql(
+        self,
+        payload: dict[str, Any],
+        log_id: object = None,
+    ) -> dict[str, Any]:
+        """Post a GraphQL query and return its response with request metadata.
+
+        Args:
+            payload: The GraphQL request payload.
+            log_id: An identifier for the request (e.g. the video or season ID)
+                included in log messages to distinguish requests.
 
         Returns:
-            The raw GraphQL cache, suitable for passing to ``parse()``.
+            The raw GraphQL response, suitable for passing to `parse()`.
         """
-        html = self._fetch_html(url)
-        output = extract_graphql(html)
+        response = self._download_response(
+            headers=self._headers(payload),
+            body=payload,
+            log_id=log_id,
+        )
+        output = response.json()
+
         output["meshfilm"] = {
-            "url": url,
-            "timestamp": (
-                datetime.now().astimezone().isoformat().replace("+00:00", "Z")
-            ),
+            "url": str(response.url),
+            "headers": self._headers(payload),
+            "body": payload,
         }
         return output

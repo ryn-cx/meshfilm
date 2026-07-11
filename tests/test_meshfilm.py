@@ -1,52 +1,236 @@
-# TODO: Validate
-"""Test for meshfilm."""
-
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
+from get_around.testing import build_client
 
 from meshfilm import MeshFilm
-from meshfilm.exceptions import GraphQLNotFoundError, HTTPError
 
-client = MeshFilm()
+ENV_FILE = Path(__file__).parent.parent / ".env"
 
-# Virgin River — a stable public title used as the reference throughout.
-VIRGIN_RIVER_ID = "80240027"
+client = MeshFilm(get_around_client=build_client(env_file=ENV_FILE))
+
+SHOW_NAME = "Disenchantment"
+"""A search term that matches a title."""
+SHOW_ID = 80095697
+"""show_id of Disenchantment."""
+SEASON_1_ID = 80117549
+"""season_id of Disenchantment Season 1."""
+SEASON_2_ID = 80174140
+"""season_id of Disenchantment Season 2."""
+EPISODE_ID = 80117711
+"""episode_id of Disenchantment Season 1 Episode 1."""
+INVALID_ID = 1
+SEASON_1_EPISODE_IDS: list[str | int] = [
+    80117711,
+    80145115,
+    80145117,
+    80145118,
+    80145119,
+    80145116,
+    80145120,
+    80145121,
+    80145122,
+    80145123,
+]
+"""Every episode from Disenchantment's first season."""
+MOVIE_ID = 81458424
+"movie_id of Watch Wake Up Dead Man: A Knives Out Mystery"
+INVALID_SHOW_NAME = "qwertasdfgzxcvb"
 
 
 class TestGet:
-    """Test live get requests across every endpoint."""
+    @pytest.mark.parametrize(
+        "video_id",
+        [SHOW_ID, EPISODE_ID, MOVIE_ID],
+        ids=[f"{SHOW_ID=}", f"{EPISODE_ID=}", f"{MOVIE_ID=}"],
+    )
+    def test_get_lodp_title_and_plans_page(self, video_id: int) -> None:
+        endpoint = client.lodp_title_and_plans_page
+        model = endpoint.get(video_id)
+        raw = endpoint.original_input(model)
+        endpoint.save_new_json_file(raw)
+        assert model.data.videos[0].video_id == video_id
 
-    def test_get_title(self) -> None:
-        """Test getting a title."""
-        model = client.title.get(VIRGIN_RIVER_ID)
-        raw = client.title.dump(model)
-        client.title.save_new_json_file(raw)
-        # The saved/dumped data is exactly the raw download (mixed type+id keys).
-        assert f'Show:{{"videoId":{VIRGIN_RIVER_ID}}}' in raw["data"]
-        # But modify_data groups it, so the parsed model exposes per-type lists.
-        assert any(show.title == "Virgin River" for show in model.shows)
+    @pytest.mark.parametrize(
+        "season_id",
+        [SEASON_1_ID, SEASON_2_ID],
+        ids=[f"{SEASON_1_ID=}", f"{SEASON_2_ID=}"],
+    )
+    def test_get_preview_modal_episode_selector_season_episodes(
+        self,
+        season_id: int,
+    ) -> None:
+        endpoint = client.preview_modal_episode_selector_season_episodes
+        model = endpoint.get(season_id)
+        raw = endpoint.original_input(model)
+        endpoint.save_new_json_file(raw)
+
+    def test_get_preview_modal_episode_selector(self) -> None:
+        endpoint = client.preview_modal_episode_selector
+        model = endpoint.get(SHOW_ID)
+        raw = endpoint.original_input(model)
+        endpoint.save_new_json_file(raw)
+        assert model.data.videos[0].video_id == SHOW_ID
+
+    def test_get_search_page_results(self) -> None:
+        model = client.search_page_results.get(SHOW_NAME)
+        raw = client.search_page_results.original_input(model)
+        client.search_page_results.save_new_json_file(raw)
+
+    @pytest.mark.parametrize(
+        "video_ids",
+        [[SHOW_ID], [SEASON_1_ID], [SEASON_2_ID], [MOVIE_ID], SEASON_1_EPISODE_IDS],
+        ids=[
+            f"{SHOW_ID=}",
+            f"{SEASON_1_ID=}",
+            f"{SEASON_2_ID=}",
+            f"{MOVIE_ID=}",
+            "SEASON_1_EPISODE_IDS",
+        ],
+    )
+    def test_get_mini_modal(self, video_ids: list[str | int]) -> None:
+        model = client.mini_modal.get(video_ids)
+        raw = client.mini_modal.original_input(model)
+        client.mini_modal.save_new_json_file(raw)
+
+    @pytest.mark.parametrize(
+        "video_id",
+        [EPISODE_ID, SHOW_ID, SEASON_1_ID, SEASON_2_ID, MOVIE_ID],
+        ids=[
+            f"{EPISODE_ID=}",
+            f"{SHOW_ID=}",
+            f"{SEASON_1_ID=}",
+            f"{SEASON_2_ID=}",
+            f"{MOVIE_ID=}",
+        ],
+    )
+    def test_get_detail_modal(self, video_id: int) -> None:
+        model = client.detail_modal.get(video_id)
+        raw = client.detail_modal.original_input(model)
+        client.detail_modal.save_new_json_file(raw)
+
+    @pytest.mark.parametrize(
+        "video_ids",
+        [[SHOW_ID], [SEASON_1_ID], [SEASON_2_ID], [MOVIE_ID], SEASON_1_EPISODE_IDS],
+        ids=[
+            f"{SHOW_ID=}",
+            f"{SEASON_1_ID=}",
+            f"{SEASON_2_ID=}",
+            f"{MOVIE_ID=}",
+            "SEASON_1_EPISODE_IDS",
+        ],
+    )
+    def test_get_preview_modal_video_title_group(
+        self,
+        video_ids: list[str | int],
+    ) -> None:
+        endpoint = client.preview_modal_video_title_group
+        model = endpoint.get(video_ids)
+        raw = endpoint.original_input(model)
+        endpoint.save_new_json_file(raw)
 
 
+# An id that belongs to a different media type and a non-existent id use different
+# methods to validate so both need to be checked.
 class TestInvalidGet:
-    """Test get requests for missing or invalid resources."""
+    @pytest.mark.parametrize(
+        "invalid_id",
+        [SEASON_1_ID, SEASON_2_ID, INVALID_ID],
+        ids=[f"{SEASON_1_ID=}", f"{SEASON_2_ID=}", f"{INVALID_ID=}"],
+    )
+    def test_invalid_get_lodp_title_and_plans_page(
+        self,
+        invalid_id: int,
+    ) -> None:
+        endpoint = client.lodp_title_and_plans_page
+        response = endpoint.download(invalid_id)
+        assert not endpoint.has_content(response, invalid_id)
 
-    def test_invalid_get_title(self) -> None:
-        """Test getting an invalid title.
+    @pytest.mark.parametrize(
+        "invalid_id",
+        [SHOW_ID, EPISODE_ID, MOVIE_ID, INVALID_ID],
+        ids=[f"{SHOW_ID=}", f"{EPISODE_ID=}", f"{MOVIE_ID=}", f"{INVALID_ID=}"],
+    )
+    def test_invalid_get_preview_modal_episode_selector_season_episodes(
+        self,
+        invalid_id: int,
+    ) -> None:
+        endpoint = client.preview_modal_episode_selector_season_episodes
+        response = endpoint.download(invalid_id)
+        assert not endpoint.has_content(response, invalid_id)
 
-        Netflix serves a challenge/redirect page (no GraphQL cache) or a 404 for
-        an unknown title ID, so either error is acceptable.
-        """
-        with pytest.raises((HTTPError, GraphQLNotFoundError)):
-            client.title.get("0000000")
+    @pytest.mark.parametrize(
+        "invalid_id",
+        [SEASON_1_ID, SEASON_2_ID, EPISODE_ID, MOVIE_ID, INVALID_ID],
+        ids=[
+            f"{SEASON_1_ID=}",
+            f"{SEASON_2_ID=}",
+            f"{EPISODE_ID=}",
+            f"{MOVIE_ID=}",
+            f"{INVALID_ID=}",
+        ],
+    )
+    def test_invalid_get_preview_modal_episode_selector(
+        self,
+        invalid_id: int,
+    ) -> None:
+        endpoint = client.preview_modal_episode_selector
+        response = endpoint.download(invalid_id)
+        assert not endpoint.has_content(response, invalid_id)
+
+    def test_invalid_get_mini_modal(self) -> None:
+        endpoint = client.mini_modal
+        response = endpoint.download([INVALID_ID])
+        assert not endpoint.has_content(response, [INVALID_ID])
+
+    def test_invalid_get_preview_modal_video_title_group(self) -> None:
+        endpoint = client.preview_modal_video_title_group
+        response = endpoint.download([INVALID_ID])
+        assert not endpoint.has_content(response, [INVALID_ID])
+
+    def test_invalid_get_detail_modal(self) -> None:
+        endpoint = client.detail_modal
+        response = endpoint.download(INVALID_ID)
+        assert not endpoint.has_content(response)
+
+    def test_invalid_get_search_page_results(self) -> None:
+        endpoint = client.search_page_results
+        response = endpoint.download(INVALID_SHOW_NAME)
+        assert not endpoint.has_content(response)
 
 
 class TestParse:
-    """Test parsing every saved file for each endpoint."""
+    def test_parse_lodp_title_and_plans_page(self) -> None:
+        endpoint = client.lodp_title_and_plans_page
+        for json_file in endpoint.json_files():
+            endpoint.parse(json.loads(json_file.read_text()))
 
-    def test_parse_title(self) -> None:
-        """Test parsing every saved file."""
-        for json_file in client.title.json_files():
-            client.title.parse(json.loads(json_file.read_text()))
+    def test_parse_preview_modal_episode_selector_season_episodes(self) -> None:
+        endpoint = client.preview_modal_episode_selector_season_episodes
+        for json_file in endpoint.json_files():
+            endpoint.parse(json.loads(json_file.read_text()))
+
+    def test_parse_preview_modal_episode_selector(self) -> None:
+        endpoint = client.preview_modal_episode_selector
+        for json_file in endpoint.json_files():
+            endpoint.parse(json.loads(json_file.read_text()))
+
+    def test_parse_search_page_results(self) -> None:
+        for json_file in client.search_page_results.json_files():
+            client.search_page_results.parse(json.loads(json_file.read_text()))
+
+    def test_parse_mini_modal(self) -> None:
+        for json_file in client.mini_modal.json_files():
+            client.mini_modal.parse(json.loads(json_file.read_text()))
+
+    def test_parse_detail_modal(self) -> None:
+        for json_file in client.detail_modal.json_files():
+            client.detail_modal.parse(json.loads(json_file.read_text()))
+
+    def test_parse_preview_modal_video_title_group(self) -> None:
+        endpoint = client.preview_modal_video_title_group
+        for json_file in endpoint.json_files():
+            endpoint.parse(json.loads(json_file.read_text()))

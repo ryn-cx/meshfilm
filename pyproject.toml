@@ -5,11 +5,13 @@ description = "Unofficial Netflix public-title metadata API."
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+  "get-around",
   "good-ass-pydantic-integrator",
 ]
 
 [dependency-groups]
 dev = [
+  "get-around[testing]",
   "pytest>=8.4.2",
   "ruff>=0.13.3",
 ]
@@ -20,6 +22,16 @@ build-backend = "uv_build"
 
 [tool.ruff.lint]
 select = ["ALL"]
+ignore = [
+  "D100",
+  "D101",
+  "D102",
+  "D103",
+  "D104",
+  "D105",
+  "D106",
+  "D107",
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
@@ -28,4 +40,5 @@ convention = "google"
 "tests/**/*.py" = ["S101"]  # Asserts should be allowed in tests.
 
 [tool.uv.sources]
+get-around = { git = "https://github.com/ryn-cx/get-around" }
 good-ass-pydantic-integrator = { git = "https://github.com/ryn-cx/good-ass-pydantic-integrator" }
