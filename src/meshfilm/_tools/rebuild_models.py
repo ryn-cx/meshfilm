@@ -1,4 +1,4 @@
-"""Rebuild Pydantic models for the Meshfilm package."""
+"""Rebuild Meshfilm Pydantic models."""
 
 import logging
 
