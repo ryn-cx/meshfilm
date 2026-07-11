@@ -44,7 +44,7 @@ class LodpTitleAndPlansPage(BaseEndpoint[LodpTitleAndPlansPageModel]):
         Returns:
             The raw GraphQL response, suitable for passing to `parse()`.
         """
-        return self._client.download_graphql(self._payload(video_id), video_id)
+        return self._client.download(self._payload(video_id), video_id)
 
     @staticmethod
     def has_content(response: dict[str, Any], video_id: str | int) -> bool:

@@ -47,7 +47,7 @@ class PreviewModalEpisodeSelector(
         Returns:
             The raw GraphQL response, suitable for passing to `parse()`.
         """
-        return self._client.download_graphql(
+        return self._client.download(
             self._payload(show_id, season_count),
             show_id,
         )

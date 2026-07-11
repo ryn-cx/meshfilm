@@ -45,7 +45,7 @@ class MiniModal(BaseEndpoint[MiniModalModel]):
         Returns:
             The raw GraphQL response, suitable for passing to `parse()`.
         """
-        return self._client.download_graphql(self._payload(video_ids), video_ids)
+        return self._client.download(self._payload(video_ids), video_ids)
 
     @staticmethod
     def has_content(response: dict[str, Any], video_ids: list[str | int]) -> bool:

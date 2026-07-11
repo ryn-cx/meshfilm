@@ -157,7 +157,7 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
         Returns:
             The raw GraphQL response, suitable for passing to `parse()`.
         """
-        return self._client.download_graphql(
+        return self._client.download(
             self._payload(search_term, end_cursor),
             search_term,
         )

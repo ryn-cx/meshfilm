@@ -93,7 +93,7 @@ class MeshFilm:
 
         return response
 
-    def download_graphql(
+    def download(
         self,
         payload: dict[str, Any],
         log_id: object = None,
