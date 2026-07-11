@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, override
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.mini_modal.models import MiniModalModel
@@ -48,8 +48,8 @@ class MiniModal(BaseEndpoint[MiniModalModel]):
         return self._client.download(self._payload(video_ids), video_ids)
 
     @staticmethod
+    @override
     def has_content(response: dict[str, Any], video_ids: list[str | int]) -> bool:
-        """Return whether the response has meaningful content."""
         entities = response["data"]["unifiedEntities"]
         found_ids = {entity["videoId"] for entity in entities}
         return any(int(video_id) in found_ids for video_id in video_ids)
@@ -63,5 +63,13 @@ class MiniModal(BaseEndpoint[MiniModalModel]):
 
         Returns:
             A MiniModal model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
-        return self.parse(self.download(video_ids))
+        response = self.download(video_ids)
+        return self._parse_or_raise(
+            response,
+            has_content=self.has_content(response, video_ids),
+        )

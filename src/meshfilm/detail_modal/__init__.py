@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, override
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.detail_modal.models import DetailModalModel
@@ -50,8 +50,8 @@ class DetailModal(BaseEndpoint[DetailModalModel]):
         return self._client.download(self._payload(video_id), video_id)
 
     @staticmethod
+    @override
     def has_content(response: dict[str, Any]) -> bool:
-        """Return whether the response has meaningful content."""
         return bool(response["data"]["unifiedEntities"])
 
     def get(self, video_id: str | int) -> DetailModalModel:
@@ -63,5 +63,10 @@ class DetailModal(BaseEndpoint[DetailModalModel]):
 
         Returns:
             A DetailModal model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
-        return self.parse(self.download(video_id))
+        response = self.download(video_id)
+        return self._parse_or_raise(response, has_content=self.has_content(response))

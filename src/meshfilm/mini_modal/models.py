@@ -365,4 +365,4 @@ class MiniModalModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     errors: list[Error]
     data: Data
-    meshfilm: Meshfilm
+    meshfilm: Meshfilm | None = None

@@ -137,4 +137,4 @@ class Meshfilm(GAPIBaseModel):
 class PreviewModalEpisodeSelectorModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
-    meshfilm: Meshfilm
+    meshfilm: Meshfilm | None = None

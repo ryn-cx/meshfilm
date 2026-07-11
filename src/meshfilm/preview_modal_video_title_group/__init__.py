@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, override
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.preview_modal_video_title_group.models import (
@@ -41,8 +41,8 @@ class PreviewModalVideoTitleGroup(BaseEndpoint[PreviewModalVideoTitleGroupModel]
         return self._client.download(self._payload(video_ids), video_ids)
 
     @staticmethod
+    @override
     def has_content(response: dict[str, Any], video_ids: list[str | int]) -> bool:
-        """Return whether the response has meaningful content."""
         videos = response["data"]["videos"]
         return any(
             index < len(videos) and videos[index] is not None
@@ -58,5 +58,13 @@ class PreviewModalVideoTitleGroup(BaseEndpoint[PreviewModalVideoTitleGroupModel]
 
         Returns:
             A PreviewModalVideoTitleGroup model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
-        return self.parse(self.download(video_ids))
+        response = self.download(video_ids)
+        return self._parse_or_raise(
+            response,
+            has_content=self.has_content(response, video_ids),
+        )

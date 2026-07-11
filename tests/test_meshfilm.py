@@ -4,13 +4,14 @@ import json
 from pathlib import Path
 
 import pytest
-from get_around.testing import build_client
+from get_around import build_client_automatically
 
-from meshfilm import MeshFilm
+from meshfilm import Meshfilm
+from meshfilm.exceptions import NoContentError
 
 ENV_FILE = Path(__file__).parent.parent / ".env"
 
-client = MeshFilm(get_around_client=build_client(env_file=ENV_FILE))
+client = Meshfilm(build_client_automatically())
 
 SHOW_NAME = "Disenchantment"
 """A search term that matches a title."""
@@ -39,6 +40,25 @@ SEASON_1_EPISODE_IDS: list[str | int] = [
 MOVIE_ID = 81458424
 "movie_id of Watch Wake Up Dead Man: A Knives Out Mystery"
 INVALID_SHOW_NAME = "qwertasdfgzxcvb"
+
+
+class TestAliases:
+    """Domain-friendly aliases must resolve to the same wire endpoint object."""
+
+    @pytest.mark.parametrize(
+        ("alias", "operation"),
+        [
+            ("title_page", "lodp_title_and_plans_page"),
+            ("details", "detail_modal"),
+            ("seasons", "preview_modal_episode_selector"),
+            ("episodes", "preview_modal_episode_selector_season_episodes"),
+            ("previews", "preview_modal_video_title_group"),
+            ("mini_previews", "mini_modal"),
+            ("search", "search_page_results"),
+        ],
+    )
+    def test_alias_is_operation(self, alias: str, operation: str) -> None:
+        assert getattr(client, alias) is getattr(client, operation)
 
 
 class TestGet:
@@ -133,8 +153,6 @@ class TestGet:
         endpoint.save_new_json_file(raw)
 
 
-# An id that belongs to a different media type and a non-existent id use different
-# methods to validate so both need to be checked.
 class TestInvalidGet:
     @pytest.mark.parametrize(
         "invalid_id",
@@ -145,9 +163,10 @@ class TestInvalidGet:
         self,
         invalid_id: int,
     ) -> None:
-        endpoint = client.lodp_title_and_plans_page
-        response = endpoint.download(invalid_id)
-        assert not endpoint.has_content(response, invalid_id)
+        with pytest.raises(NoContentError) as error:
+            client.lodp_title_and_plans_page.get(invalid_id)
+        # The payload is still recoverable from the raised exception.
+        assert "data" in error.value.response
 
     @pytest.mark.parametrize(
         "invalid_id",
@@ -158,9 +177,9 @@ class TestInvalidGet:
         self,
         invalid_id: int,
     ) -> None:
-        endpoint = client.preview_modal_episode_selector_season_episodes
-        response = endpoint.download(invalid_id)
-        assert not endpoint.has_content(response, invalid_id)
+        with pytest.raises(NoContentError) as error:
+            client.preview_modal_episode_selector_season_episodes.get(invalid_id)
+        assert "data" in error.value.response
 
     @pytest.mark.parametrize(
         "invalid_id",
@@ -177,29 +196,29 @@ class TestInvalidGet:
         self,
         invalid_id: int,
     ) -> None:
-        endpoint = client.preview_modal_episode_selector
-        response = endpoint.download(invalid_id)
-        assert not endpoint.has_content(response, invalid_id)
+        with pytest.raises(NoContentError) as error:
+            client.preview_modal_episode_selector.get(invalid_id)
+        assert "data" in error.value.response
 
     def test_invalid_get_mini_modal(self) -> None:
-        endpoint = client.mini_modal
-        response = endpoint.download([INVALID_ID])
-        assert not endpoint.has_content(response, [INVALID_ID])
+        with pytest.raises(NoContentError) as error:
+            client.mini_modal.get([INVALID_ID])
+        assert "data" in error.value.response
 
     def test_invalid_get_preview_modal_video_title_group(self) -> None:
-        endpoint = client.preview_modal_video_title_group
-        response = endpoint.download([INVALID_ID])
-        assert not endpoint.has_content(response, [INVALID_ID])
+        with pytest.raises(NoContentError) as error:
+            client.preview_modal_video_title_group.get([INVALID_ID])
+        assert "data" in error.value.response
 
     def test_invalid_get_detail_modal(self) -> None:
-        endpoint = client.detail_modal
-        response = endpoint.download(INVALID_ID)
-        assert not endpoint.has_content(response)
+        with pytest.raises(NoContentError) as error:
+            client.detail_modal.get(INVALID_ID)
+        assert "data" in error.value.response
 
     def test_invalid_get_search_page_results(self) -> None:
-        endpoint = client.search_page_results
-        response = endpoint.download(INVALID_SHOW_NAME)
-        assert not endpoint.has_content(response)
+        with pytest.raises(NoContentError) as error:
+            client.search_page_results.get(INVALID_SHOW_NAME)
+        assert "data" in error.value.response
 
 
 class TestParse:

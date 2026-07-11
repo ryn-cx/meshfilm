@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, override
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.preview_modal_episode_selector.models import (
@@ -53,8 +53,8 @@ class PreviewModalEpisodeSelector(
         )
 
     @staticmethod
+    @override
     def has_content(response: dict[str, Any], show_id: str | int) -> bool:
-        """Return whether the response has meaningful content."""
         videos: list[dict[str, Any] | None] = response["data"]["videos"] or []
         entity = next(
             (v for v in videos if v and v.get("videoId") == int(show_id)),
@@ -76,5 +76,13 @@ class PreviewModalEpisodeSelector(
 
         Returns:
             A PreviewModalEpisodeSelector model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
-        return self.parse(self.download(show_id, season_count))
+        response = self.download(show_id, season_count)
+        return self._parse_or_raise(
+            response,
+            has_content=self.has_content(response, show_id),
+        )

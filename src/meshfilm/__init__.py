@@ -1,4 +1,4 @@
-"""Meshfilm, a Netflix GraphQL wrapper."""
+"""Netflix API wrapper."""
 
 from __future__ import annotations
 
@@ -27,17 +27,17 @@ logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
-class MeshFilm:
-    """Meshfilm client."""
+class Meshfilm:
+    """Netflix API wrapper."""
 
     def __init__(self, get_around_client: GetAround | None = None) -> None:
         """Initialize the meshfilm client.
 
         Args:
-            get_around_client: The HTTP client used for every request. Defaults
-                to a direct `GetAround()` that does not route through a relay.
+            get_around_client: The HTTP client used for every request.
         """
         self.get_around_client = get_around_client or GetAround()
+
         self.lodp_title_and_plans_page = LodpTitleAndPlansPage(self)
         self.preview_modal_episode_selector = PreviewModalEpisodeSelector(self)
         self.preview_modal_episode_selector_season_episodes = (
@@ -47,6 +47,14 @@ class MeshFilm:
         self.search_page_results = SearchPageResults(self)
         self.mini_modal = MiniModal(self)
         self.detail_modal = DetailModal(self)
+
+        self.title_page = self.lodp_title_and_plans_page
+        self.seasons = self.preview_modal_episode_selector
+        self.episodes = self.preview_modal_episode_selector_season_episodes
+        self.previews = self.preview_modal_video_title_group
+        self.search = self.search_page_results
+        self.mini_previews = self.mini_modal
+        self.details = self.detail_modal
 
     def _headers(self, payload: dict[str, Any]) -> dict[str, str]:
         return {
@@ -61,7 +69,7 @@ class MeshFilm:
             "x-netflix.context.ui-flavor": "akira",
             "x-netflix.context.app-version": "v232a5da5",
             "x-netflix.context.locales": "en-us",
-            "x-netflix.context.operation-name": str(payload.get("operationName")),
+            "x-netflix.context.operation-name": payload["operationName"],
             "x-netflix.request.attempt": "1",
             "x-netflix.request.client.context": '{"appstate":"foreground"}',
         }
@@ -73,23 +81,19 @@ class MeshFilm:
         log_id: object = None,
     ) -> Response:
         operation = f"{body.get('operationName')} ({log_id})"
-        logger.debug("Downloading GraphQL response: %s", operation)
+        logger.debug("Downloading: %s", operation)
         start = time.monotonic()
         response = self.get_around_client.post(
             url="https://web.prod.cloud.netflix.com/graphql",
             json=body,
             headers=headers,
         )
-        logger.info(
-            "GraphQL query %s -> %s in %.0f ms",
-            operation,
-            response.status_code,
-            (time.monotonic() - start) * 1000,
-        )
 
         if response.status_code != HTTPStatus.OK:
             msg = f"Unexpected response status code: {response.status_code}"
             raise HTTPError(msg)
+
+        logger.debug("Downloaded %s (%.4f s)", operation, time.monotonic() - start)
 
         return response
 
@@ -113,11 +117,4 @@ class MeshFilm:
             body=payload,
             log_id=log_id,
         )
-        output = response.json()
-
-        output["meshfilm"] = {
-            "url": str(response.url),
-            "headers": self._headers(payload),
-            "body": payload,
-        }
-        return output
+        return response.json()

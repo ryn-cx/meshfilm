@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from typing import Any
+from typing import Any, override
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.search_page_results.models import SearchPageResultsModel
@@ -163,11 +163,10 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
         )
 
     @staticmethod
+    @override
     def has_content(response: dict[str, Any]) -> bool:
-        """Return whether the response has meaningful content.
-
-        Results will usually still include recommendations even if no matches are found.
-        """
+        # Results usually still include recommendations even when nothing
+        # matches, so a present page isn't enough -- check for real edges.
         page = response["data"]["page"]
         sections = page["sections"] if page else None
         if not sections:
@@ -190,5 +189,10 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
 
         Returns:
             A SearchPageResults model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
-        return self.parse(self.download(search_term, end_cursor))
+        response = self.download(search_term, end_cursor)
+        return self._parse_or_raise(response, has_content=self.has_content(response))

@@ -16,6 +16,11 @@ Point it at a Netflix video ID and get a fully-validated model. There is no step
   `preview_modal_video_title_group` and `mini_modal` (batch hover-preview data),
   `detail_modal` (a video's detail modal), and `search_page_results` (search). Each one
   is grounded in a persisted GraphQL query the site actually ships.
+- **Two names for every endpoint.** Each surface also carries a domain-friendly alias
+  that resolves to the same object: `title_page`, `details`, `seasons`, `episodes`,
+  `previews`, `mini_previews`, and `search`. Reach for the Netflix operation name when
+  you care about the wire, the alias when you care about the domain — both are the same
+  endpoint.
 - **Typed all the way down.** Every response is a Pydantic model with camelCase Netflix
   fields mapped to Pythonic snake_case — so `client.lodp_title_and_plans_page.get(id)
   .data.videos[0].video_id` is real, autocompleted, and checked.

@@ -602,4 +602,4 @@ class Meshfilm(GAPIBaseModel):
 class LodpTitleAndPlansPageModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
-    meshfilm: Meshfilm
+    meshfilm: Meshfilm | None = None

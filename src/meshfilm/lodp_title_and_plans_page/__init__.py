@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, override
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.lodp_title_and_plans_page.models import LodpTitleAndPlansPageModel
@@ -47,8 +47,8 @@ class LodpTitleAndPlansPage(BaseEndpoint[LodpTitleAndPlansPageModel]):
         return self._client.download(self._payload(video_id), video_id)
 
     @staticmethod
+    @override
     def has_content(response: dict[str, Any], video_id: str | int) -> bool:
-        """Return whether the response has meaningful content."""
         videos: list[dict[str, Any] | None] = response["data"]["videos"] or []
         entity = next(
             (v for v in videos if v and v.get("videoId") == int(video_id)),
@@ -65,5 +65,13 @@ class LodpTitleAndPlansPage(BaseEndpoint[LodpTitleAndPlansPageModel]):
 
         Returns:
             A LodpTitleAndPlansPage model containing the parsed data.
+
+        Raises:
+            NoContentError: If the response has no meaningful content. The raw
+                response is available on the exception's `response` attribute.
         """
-        return self.parse(self.download(video_id))
+        response = self.download(video_id)
+        return self._parse_or_raise(
+            response,
+            has_content=self.has_content(response, video_id),
+        )

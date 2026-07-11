@@ -454,4 +454,4 @@ class Meshfilm(GAPIBaseModel):
 class SearchPageResultsModel(GAPIBaseModel):
     model_config = ConfigDict(extra="forbid")
     data: Data
-    meshfilm: Meshfilm
+    meshfilm: Meshfilm | None = None

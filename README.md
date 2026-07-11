@@ -17,16 +17,26 @@ uv sync
 Every endpoint has `get()` (parsed, typed model) and `download()` (raw GraphQL JSON).
 
 ```python
-from meshfilm import MeshFilm
+from meshfilm import Meshfilm
 
-client = MeshFilm()
+client = Meshfilm()
 
 # Available endpoints
-lodp_title_and_plans_page = client.lodp_title_and_plans_page.get(80095697)  # Disenchantment
-detail_modal = client.detail_modal.get(80095697)
-preview_modal_episode_selector = client.preview_modal_episode_selector.get(80095697)
-preview_modal_episode_selector_season_episodes = client.preview_modal_episode_selector_season_episodes.get(80117549)
-mini_modal = client.mini_modal.get([80095697, 81458424])
-preview_modal_video_title_group = client.preview_modal_video_title_group.get([80095697, 81458424])
-search_page_results = client.search_page_results.get("Disenchantment")
+title_page = client.title_page.get(80095697)
+seasons = client.seasons.get(80095697)
+episodes = client.episodes.get(80117549)
+previews = client.previews.get([80095697, 81458424])
+results = client.search.get("Disenchantment")
 ```
+
+Endpoints can also be accessed using Netflix's oprartionName.
+
+| Meshfilm Alias | Netflix oprartionName |
+| --- | --- |
+| `title_page` | `lodp_title_and_plans_page` |
+| `details` | `detail_modal` |
+| `seasons` | `preview_modal_episode_selector` |
+| `episodes` | `preview_modal_episode_selector_season_episodes` |
+| `previews` | `preview_modal_video_title_group` |
+| `mini_previews` | `mini_modal` |
+| `search` | `search_page_results` |
