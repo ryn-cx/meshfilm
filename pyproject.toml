@@ -1,7 +1,7 @@
 [project]
 name = "meshfilm"
 version = "0.1.0"
-description = "Netflix API Wrapper."
+description = "Netflix API wrapper."
 readme = "README.md"
 requires-python = ">=3.14"
 authors = [
