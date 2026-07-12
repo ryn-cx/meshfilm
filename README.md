@@ -10,12 +10,12 @@ Around](https://github.com/ryn-cx/get-around).
 Requires Python 3.14+. Install with [uv](https://docs.astral.sh/uv/):
 
 ```bash
-uv sync
+uv add git+https://github.com/ryn-cx/meshfilm
 ```
 
 ## Usage
 
-Every endpoint has `get()` (parsed, typed model) and `download()` (raw GraphQL JSON).
+Every endpoint has `get()` (parsed, typed model) and `download()` (raw JSON).
 
 ```python
 from meshfilm import Meshfilm

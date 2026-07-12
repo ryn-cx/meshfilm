@@ -1,4 +1,6 @@
 # TODO: Validate
+"""Contains the LodpTitleAndPlansPage class."""
+
 from __future__ import annotations
 
 from typing import Any, override
@@ -11,7 +13,7 @@ _TITLE_TYPENAMES = {"Show", "Movie", "Episode"}
 
 
 class LodpTitleAndPlansPage(BaseEndpoint[LodpTitleAndPlansPageModel]):
-    """A title's details, related titles, and subscription plans."""
+    """Manage the lodp title and plans page file."""
 
     _response_model = LodpTitleAndPlansPageModel
 
@@ -36,16 +38,11 @@ class LodpTitleAndPlansPage(BaseEndpoint[LodpTitleAndPlansPageModel]):
         }
 
     def download(self, video_id: str | int) -> dict[str, Any]:
-        """Downloads the LodpTitleAndPlansPage for a given Netflix video ID.
-
-        Args:
-            video_id: The numeric Netflix video ID of a Show, also accepts a
-            Movie or Episode.
-
-        Returns:
-            The raw GraphQL response, suitable for passing to `parse()`.
-        """
-        return self._client.download(self._payload(video_id), video_id)
+        """Downloads the lodp title and plans page file."""
+        return self._client.download(
+            self._payload(video_id),
+            log_id=f"{self.__class__.__name__} {video_id}",
+        )
 
     @staticmethod
     @override
@@ -58,21 +55,11 @@ class LodpTitleAndPlansPage(BaseEndpoint[LodpTitleAndPlansPageModel]):
         return entity is not None and entity.get("__typename") in _TITLE_TYPENAMES
 
     def get(self, video_id: str | int) -> LodpTitleAndPlansPageModel:
-        """Downloads and parses the LodpTitleAndPlansPage for a given Netflix video ID.
-
-        Args:
-            video_id: The numeric Netflix video ID of a Show, also accepts a
-            Movie or Episode.
-
-        Returns:
-            A LodpTitleAndPlansPage model containing the parsed data.
+        """Downloads and parses the lodp title and plans page file.
 
         Raises:
             NoContentError: If the response has no meaningful content. The raw
                 response is available on the exception's `response` attribute.
         """
         response = self.download(video_id)
-        return self._parse_or_raise(
-            response,
-            has_content=self.has_content(response, video_id),
-        )
+        return self._parse_or_raise(response, f"{self.__class__.__name__} {video_id}")

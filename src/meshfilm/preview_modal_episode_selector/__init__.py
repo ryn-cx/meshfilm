@@ -1,4 +1,6 @@
 # TODO: Validate
+"""Contains the PreviewModalEpisodeSelector class."""
+
 from __future__ import annotations
 
 from typing import Any, override
@@ -14,7 +16,7 @@ DEFAULT_SEASON_COUNT = 5
 class PreviewModalEpisodeSelector(
     BaseEndpoint[PreviewModalEpisodeSelectorModel],
 ):
-    """The seasons of a show, for the preview-modal episode selector."""
+    """Manage the preview modal episode selector file."""
 
     _response_model = PreviewModalEpisodeSelectorModel
 
@@ -38,19 +40,10 @@ class PreviewModalEpisodeSelector(
         show_id: str | int,
         season_count: int = DEFAULT_SEASON_COUNT,
     ) -> dict[str, Any]:
-        """Downloads the season selector for a given Netflix show ID.
-
-        Args:
-            show_id: The numeric Netflix video ID of a Show; no other type is
-            accepted.
-            season_count: The maximum number of seasons to request
-
-        Returns:
-            The raw GraphQL response, suitable for passing to `parse()`.
-        """
+        """Downloads the preview modal episode selector file."""
         return self._client.download(
             self._payload(show_id, season_count),
-            show_id,
+            log_id=f"{self.__class__.__name__} {show_id}",
         )
 
     @staticmethod
@@ -68,22 +61,11 @@ class PreviewModalEpisodeSelector(
         show_id: str | int,
         season_count: int = DEFAULT_SEASON_COUNT,
     ) -> PreviewModalEpisodeSelectorModel:
-        """Downloads and parses the season selector for a given Netflix show ID.
-
-        Args:
-            show_id: The numeric Netflix video ID of a Show; no other type is
-            accepted.
-            season_count: The maximum number of seasons to request
-
-        Returns:
-            A PreviewModalEpisodeSelector model containing the parsed data.
+        """Downloads and parses the preview modal episode selector file.
 
         Raises:
             NoContentError: If the response has no meaningful content. The raw
                 response is available on the exception's `response` attribute.
         """
         response = self.download(show_id, season_count)
-        return self._parse_or_raise(
-            response,
-            has_content=self.has_content(response, show_id),
-        )
+        return self._parse_or_raise(response, f"{self.__class__.__name__} {show_id}")

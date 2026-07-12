@@ -1,4 +1,6 @@
 # TODO: Validate
+"""Contains the DetailModal class."""
+
 from __future__ import annotations
 
 from typing import Any, override
@@ -8,7 +10,7 @@ from meshfilm.detail_modal.models import DetailModalModel
 
 
 class DetailModal(BaseEndpoint[DetailModalModel]):
-    """A video's detail-modal data and its playback availability."""
+    """Manage the detail modal file."""
 
     _response_model = DetailModalModel
 
@@ -39,16 +41,11 @@ class DetailModal(BaseEndpoint[DetailModalModel]):
         }
 
     def download(self, video_id: str | int) -> dict[str, Any]:
-        """Downloads the DetailModal for a given Netflix video ID.
-
-        Args:
-            video_id: The numeric Netflix video ID of an Episode, also accepts a Show,
-            Movie, or Season.
-
-        Returns:
-            The raw GraphQL response, suitable for passing to `parse()`.
-        """
-        return self._client.download(self._payload(video_id), video_id)
+        """Downloads the detail modal file."""
+        return self._client.download(
+            self._payload(video_id),
+            log_id=f"{self.__class__.__name__} {video_id}",
+        )
 
     @staticmethod
     @override
@@ -56,18 +53,11 @@ class DetailModal(BaseEndpoint[DetailModalModel]):
         return bool(response["data"]["unifiedEntities"])
 
     def get(self, video_id: str | int) -> DetailModalModel:
-        """Downloads and parses the DetailModal for a given Netflix video ID.
-
-        Args:
-            video_id: The numeric Netflix video ID of an Episode, also accepts a Show,
-            Movie, or Season.
-
-        Returns:
-            A DetailModal model containing the parsed data.
+        """Downloads and parses the detail modal file.
 
         Raises:
             NoContentError: If the response has no meaningful content. The raw
                 response is available on the exception's `response` attribute.
         """
         response = self.download(video_id)
-        return self._parse_or_raise(response, has_content=self.has_content(response))
+        return self._parse_or_raise(response, f"{self.__class__.__name__} {video_id}")

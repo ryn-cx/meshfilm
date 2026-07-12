@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Netflix API wrapper."""
+"""Contains the Meshfilm class."""
 
 from __future__ import annotations
 
@@ -32,11 +32,7 @@ class Meshfilm:
     """Netflix API wrapper."""
 
     def __init__(self, get_around_client: GetAround | None = None) -> None:
-        """Initialize the Meshfilm client.
-
-        Args:
-            get_around_client: The HTTP client used for every request.
-        """
+        """Initialize the Meshfilm client."""
         self.get_around_client = get_around_client or GetAround()
 
         self.lodp_title_and_plans_page = LodpTitleAndPlansPage(self)
@@ -79,7 +75,8 @@ class Meshfilm:
         self,
         headers: dict[str, str],
         body: dict[str, Any],
-        log_id: object = None,
+        *,
+        log_id: str,
     ) -> Response:
         operation = f"{body.get('operationName')} ({log_id})"
         logger.debug("Downloading: %s", operation)
@@ -101,18 +98,10 @@ class Meshfilm:
     def download(
         self,
         payload: dict[str, Any],
-        log_id: object = None,
+        *,
+        log_id: str,
     ) -> dict[str, Any]:
-        """Post a GraphQL query and return its response with request metadata.
-
-        Args:
-            payload: The GraphQL request payload.
-            log_id: An identifier for the request (e.g. the video or season ID)
-                included in log messages to distinguish requests.
-
-        Returns:
-            The raw GraphQL response, suitable for passing to `parse()`.
-        """
+        """Post a GraphQL query and return its response with request metadata."""
         response = self._download_response(
             headers=self._headers(payload),
             body=payload,

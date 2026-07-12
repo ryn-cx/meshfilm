@@ -1,4 +1,6 @@
 # TODO: Validate
+"""Contains the SearchPageResults class."""
+
 from __future__ import annotations
 
 import uuid
@@ -106,7 +108,7 @@ _PAGE_CAPABILITIES: dict[str, Any] = {
 
 
 class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
-    """Search results."""
+    """Manage the search page results file."""
 
     _response_model = SearchPageResultsModel
 
@@ -148,19 +150,10 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
         search_term: str,
         end_cursor: str | None = None,
     ) -> dict[str, Any]:
-        """Downloads the SearchPageResults for a given search term.
-
-        Args:
-            search_term: The text to search for
-            end_cursor: Pagination cursor from a previous response, or `None`
-                for the first page
-
-        Returns:
-            The raw GraphQL response, suitable for passing to `parse()`.
-        """
+        """Downloads the search page results file."""
         return self._client.download(
             self._payload(search_term, end_cursor),
-            search_term,
+            log_id=f"{self.__class__.__name__} {search_term}",
         )
 
     @staticmethod
@@ -181,19 +174,14 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
         search_term: str,
         end_cursor: str | None = None,
     ) -> SearchPageResultsModel:
-        """Downloads and parses the SearchPageResults for a given search term.
-
-        Args:
-            search_term: The text to search for
-            end_cursor: Pagination cursor from a previous response, or `None`
-                for the first page
-
-        Returns:
-            A SearchPageResults model containing the parsed data.
+        """Downloads and parses the search page results file.
 
         Raises:
             NoContentError: If the response has no meaningful content. The raw
                 response is available on the exception's `response` attribute.
         """
         response = self.download(search_term, end_cursor)
-        return self._parse_or_raise(response, has_content=self.has_content(response))
+        return self._parse_or_raise(
+            response,
+            f"{self.__class__.__name__} {search_term}",
+        )

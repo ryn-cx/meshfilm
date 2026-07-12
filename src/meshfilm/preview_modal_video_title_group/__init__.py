@@ -1,4 +1,6 @@
 # TODO: Validate
+"""Contains the PreviewModalVideoTitleGroup class."""
+
 from __future__ import annotations
 
 from typing import Any, override
@@ -10,7 +12,7 @@ from meshfilm.preview_modal_video_title_group.models import (
 
 
 class PreviewModalVideoTitleGroup(BaseEndpoint[PreviewModalVideoTitleGroupModel]):
-    """Title-group preview data for a batch of videos."""
+    """Manage the preview modal video title group file."""
 
     _response_model = PreviewModalVideoTitleGroupModel
 
@@ -30,16 +32,12 @@ class PreviewModalVideoTitleGroup(BaseEndpoint[PreviewModalVideoTitleGroupModel]
         }
 
     def download(self, video_ids: list[str | int]) -> dict[str, Any]:
-        """Downloads the title-group preview for a batch of Netflix video IDs.
-
-        Args:
-            video_ids: The numeric Netflix video IDs of Shows, also accepts
-            Movies, Episodes, or Seasons.
-
-        Returns:
-            The raw GraphQL response, suitable for passing to `parse()`.
-        """
-        return self._client.download(self._payload(video_ids), video_ids)
+        """Downloads the preview modal video title group file."""
+        joined_ids = "/".join(str(video_id) for video_id in video_ids)
+        return self._client.download(
+            self._payload(video_ids),
+            log_id=f"{self.__class__.__name__} {joined_ids}",
+        )
 
     @staticmethod
     @override
@@ -51,21 +49,15 @@ class PreviewModalVideoTitleGroup(BaseEndpoint[PreviewModalVideoTitleGroupModel]
         )
 
     def get(self, video_ids: list[str | int]) -> PreviewModalVideoTitleGroupModel:
-        """Downloads and parses the title-group preview for a batch of video IDs.
-
-        Args:
-            video_ids: The numeric Netflix video IDs of Shows, also accepts
-            Movies, Episodes, or Seasons.
-
-        Returns:
-            A PreviewModalVideoTitleGroup model containing the parsed data.
+        """Downloads and parses the preview modal video title group file.
 
         Raises:
             NoContentError: If the response has no meaningful content. The raw
                 response is available on the exception's `response` attribute.
         """
+        joined_ids = "/".join(str(video_id) for video_id in video_ids)
         response = self.download(video_ids)
         return self._parse_or_raise(
             response,
-            has_content=self.has_content(response, video_ids),
+            f"{self.__class__.__name__} {joined_ids}",
         )

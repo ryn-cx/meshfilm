@@ -1,4 +1,6 @@
 # TODO: Validate
+"""Contains the MiniModal class."""
+
 from __future__ import annotations
 
 from typing import Any, override
@@ -8,7 +10,7 @@ from meshfilm.mini_modal.models import MiniModalModel
 
 
 class MiniModal(BaseEndpoint[MiniModalModel]):
-    """Hover-preview data for a batch of videos."""
+    """Manage the mini modal file."""
 
     _response_model = MiniModalModel
 
@@ -37,16 +39,12 @@ class MiniModal(BaseEndpoint[MiniModalModel]):
         }
 
     def download(self, video_ids: list[str | int]) -> dict[str, Any]:
-        """Downloads the MiniModal for a batch of Netflix video IDs.
-
-        Args:
-            video_ids: The numeric Netflix video IDs of Shows, also accepts
-            Movies, Episodes, or Seasons.
-
-        Returns:
-            The raw GraphQL response, suitable for passing to `parse()`.
-        """
-        return self._client.download(self._payload(video_ids), video_ids)
+        """Downloads the mini modal file."""
+        joined_ids = "/".join(str(video_id) for video_id in video_ids)
+        return self._client.download(
+            self._payload(video_ids),
+            log_id=f"{self.__class__.__name__} {joined_ids}",
+        )
 
     @staticmethod
     @override
@@ -56,21 +54,15 @@ class MiniModal(BaseEndpoint[MiniModalModel]):
         return any(int(video_id) in found_ids for video_id in video_ids)
 
     def get(self, video_ids: list[str | int]) -> MiniModalModel:
-        """Downloads and parses the MiniModal for a batch of Netflix video IDs.
-
-        Args:
-            video_ids: The numeric Netflix video IDs of Shows, also accepts
-            Movies, Episodes, or Seasons.
-
-        Returns:
-            A MiniModal model containing the parsed data.
+        """Downloads and parses the mini modal file.
 
         Raises:
             NoContentError: If the response has no meaningful content. The raw
                 response is available on the exception's `response` attribute.
         """
+        joined_ids = "/".join(str(video_id) for video_id in video_ids)
         response = self.download(video_ids)
         return self._parse_or_raise(
             response,
-            has_content=self.has_content(response, video_ids),
+            f"{self.__class__.__name__} {joined_ids}",
         )
