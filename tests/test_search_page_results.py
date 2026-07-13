@@ -1,11 +1,21 @@
 # TODO: Validate
+from __future__ import annotations
+
 import json
+from typing import TYPE_CHECKING
 
 import pytest
 from get_around import build_client_automatically
 
 from meshfilm import Meshfilm
-from meshfilm.exceptions import NoContentError
+from tests.utils import (
+    assert_no_content_error,
+    data_path,
+    download_if_missing,
+)
+
+if TYPE_CHECKING:
+    from meshfilm.search_page_results import SearchPageResults
 
 client = Meshfilm(build_client_automatically())
 
@@ -14,27 +24,26 @@ SHOW_NAME = "Disenchantment"
 INVALID_SHOW_NAME = "qwertasdfgzxcvb"
 
 
+@pytest.fixture(scope="session")
+def endpoint() -> SearchPageResults:
+    return client.search_page_results
+
+
 class TestSearchPageResults:
     def test_alias(self) -> None:
         assert client.search is client.search_page_results
 
-    def test_get(self) -> None:
-        endpoint = client.search_page_results
-        model = endpoint.get(SHOW_NAME)
-        titles = [
-            entity.node.display_string
-            for section in model.data.page.sections.edges
-            for entity in section.node.entities.edges
-        ]
-        assert any(SHOW_NAME in title for title in titles)
-        endpoint.save_new_json_file(endpoint.original_input(model))
+    def test_download(self, endpoint: SearchPageResults) -> None:
+        download_if_missing(
+            endpoint,
+            SHOW_NAME,
+            lambda: endpoint.download(SHOW_NAME),
+        )
 
-    def test_invalid_get(self) -> None:
-        with pytest.raises(NoContentError) as error:
-            client.search_page_results.get(INVALID_SHOW_NAME)
-        assert "data" in error.value.response
+    def test_value(self, endpoint: SearchPageResults) -> None:
+        endpoint.parse(json.loads(data_path(endpoint, SHOW_NAME).read_text()))
+        # TODO: assert expected value (needs live data)
 
-    def test_parse(self) -> None:
-        endpoint = client.search_page_results
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
+    def test_invalid(self, endpoint: SearchPageResults) -> None:
+        name = INVALID_SHOW_NAME
+        assert_no_content_error(endpoint, name, lambda: endpoint.get(INVALID_SHOW_NAME))

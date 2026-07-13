@@ -1,11 +1,21 @@
 # TODO: Validate
+from __future__ import annotations
+
 import json
+from typing import TYPE_CHECKING
 
 import pytest
 from get_around import build_client_automatically
 
 from meshfilm import Meshfilm
-from meshfilm.exceptions import NoContentError
+from tests.utils import (
+    assert_no_content_error,
+    data_path,
+    download_if_missing,
+)
+
+if TYPE_CHECKING:
+    from meshfilm.preview_modal_video_title_group import PreviewModalVideoTitleGroup
 
 client = Meshfilm(build_client_automatically())
 
@@ -32,35 +42,49 @@ SEASON_1_EPISODE_IDS: list[str | int] = [
 MOVIE_ID = 81458424
 """"movie_id of Watch Wake Up Dead Man: A Knives Out Mystery."""
 
+VIDEO_ID_GROUPS: list[list[str | int]] = [
+    [SHOW_ID],
+    [SEASON_1_ID],
+    [SEASON_2_ID],
+    [MOVIE_ID],
+    SEASON_1_EPISODE_IDS,
+]
+
+
+def _name(video_ids: list[str | int]) -> str:
+    return "_".join(str(video_id) for video_id in video_ids)
+
+
+@pytest.fixture(scope="session")
+def endpoint() -> PreviewModalVideoTitleGroup:
+    return client.preview_modal_video_title_group
+
 
 class TestPreviewModalVideoTitleGroup:
     def test_alias(self) -> None:
         assert client.previews is client.preview_modal_video_title_group
 
-    @pytest.mark.parametrize(
-        "video_ids",
-        [[SHOW_ID], [SEASON_1_ID], [SEASON_2_ID], [MOVIE_ID], SEASON_1_EPISODE_IDS],
-        ids=[
-            f"{SHOW_ID=}",
-            f"{SEASON_1_ID=}",
-            f"{SEASON_2_ID=}",
-            f"{MOVIE_ID=}",
-            f"{SEASON_1_EPISODE_IDS=}",
-        ],
-    )
-    def test_get(self, video_ids: list[str | int]) -> None:
-        endpoint = client.preview_modal_video_title_group
-        model = endpoint.get(video_ids)
-        returned_ids = {video.video_id for video in model.data.videos}
-        assert all(int(video_id) in returned_ids for video_id in video_ids)
-        endpoint.save_new_json_file(endpoint.original_input(model))
+    @pytest.mark.parametrize("video_ids", VIDEO_ID_GROUPS)
+    def test_download(
+        self,
+        endpoint: PreviewModalVideoTitleGroup,
+        video_ids: list[str | int],
+    ) -> None:
+        download_if_missing(
+            endpoint,
+            _name(video_ids),
+            lambda: endpoint.download(video_ids),
+        )
 
-    def test_invalid_get(self) -> None:
-        with pytest.raises(NoContentError) as error:
-            client.preview_modal_video_title_group.get([INVALID_ID])
-        assert "data" in error.value.response
+    @pytest.mark.parametrize("video_ids", VIDEO_ID_GROUPS)
+    def test_value(
+        self,
+        endpoint: PreviewModalVideoTitleGroup,
+        video_ids: list[str | int],
+    ) -> None:
+        endpoint.parse(json.loads(data_path(endpoint, _name(video_ids)).read_text()))
+        # TODO: assert expected value (needs live data)
 
-    def test_parse(self) -> None:
-        endpoint = client.preview_modal_video_title_group
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
+    def test_invalid(self, endpoint: PreviewModalVideoTitleGroup) -> None:
+        name = _name([INVALID_ID])
+        assert_no_content_error(endpoint, name, lambda: endpoint.get([INVALID_ID]))

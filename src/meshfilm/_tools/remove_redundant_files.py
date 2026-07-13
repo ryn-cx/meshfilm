@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Remove redundant Meshfilm files."""
+"""Removes redundant Meshfilm files."""
 
 import logging
 

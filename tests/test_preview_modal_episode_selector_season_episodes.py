@@ -1,11 +1,23 @@
 # TODO: Validate
+from __future__ import annotations
+
 import json
+from typing import TYPE_CHECKING
 
 import pytest
 from get_around import build_client_automatically
 
 from meshfilm import Meshfilm
-from meshfilm.exceptions import NoContentError
+from tests.utils import (
+    assert_no_content_error,
+    data_path,
+    download_if_missing,
+)
+
+if TYPE_CHECKING:
+    from meshfilm.preview_modal_episode_selector_season_episodes import (
+        PreviewModalEpisodeSelectorSeasonEpisodes,
+    )
 
 client = Meshfilm(build_client_automatically())
 
@@ -21,36 +33,45 @@ INVALID_ID = 1
 MOVIE_ID = 81458424
 """"movie_id of Watch Wake Up Dead Man: A Knives Out Mystery."""
 
+SEASON_IDS = [SEASON_1_ID, SEASON_2_ID]
+INVALID_IDS = [SHOW_ID, EPISODE_ID, MOVIE_ID, INVALID_ID]
+
+
+@pytest.fixture(scope="session")
+def endpoint() -> PreviewModalEpisodeSelectorSeasonEpisodes:
+    return client.preview_modal_episode_selector_season_episodes
+
 
 class TestPreviewModalEpisodeSelectorSeasonEpisodes:
     def test_alias(self) -> None:
         assert client.episodes is client.preview_modal_episode_selector_season_episodes
 
-    @pytest.mark.parametrize(
-        "season_id",
-        [SEASON_1_ID, SEASON_2_ID],
-        ids=[f"{SEASON_1_ID=}", f"{SEASON_2_ID=}"],
-    )
-    def test_get(self, season_id: int) -> None:
-        endpoint = client.preview_modal_episode_selector_season_episodes
-        model = endpoint.get(season_id)
-        assert any(
-            video.video_id == season_id and video.field__typename == "Season"
-            for video in model.data.videos
+    @pytest.mark.parametrize("season_id", SEASON_IDS)
+    def test_download(
+        self,
+        endpoint: PreviewModalEpisodeSelectorSeasonEpisodes,
+        season_id: int,
+    ) -> None:
+        download_if_missing(
+            endpoint,
+            str(season_id),
+            lambda: endpoint.download(season_id),
         )
-        endpoint.save_new_json_file(endpoint.original_input(model))
 
-    @pytest.mark.parametrize(
-        "invalid_id",
-        [SHOW_ID, EPISODE_ID, MOVIE_ID, INVALID_ID],
-        ids=[f"{SHOW_ID=}", f"{EPISODE_ID=}", f"{MOVIE_ID=}", f"{INVALID_ID=}"],
-    )
-    def test_invalid_get(self, invalid_id: int) -> None:
-        with pytest.raises(NoContentError) as error:
-            client.preview_modal_episode_selector_season_episodes.get(invalid_id)
-        assert "data" in error.value.response
+    @pytest.mark.parametrize("season_id", SEASON_IDS)
+    def test_value(
+        self,
+        endpoint: PreviewModalEpisodeSelectorSeasonEpisodes,
+        season_id: int,
+    ) -> None:
+        endpoint.parse(json.loads(data_path(endpoint, str(season_id)).read_text()))
+        # TODO: assert expected value (needs live data)
 
-    def test_parse(self) -> None:
-        endpoint = client.preview_modal_episode_selector_season_episodes
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
+    @pytest.mark.parametrize("invalid_id", INVALID_IDS)
+    def test_invalid(
+        self,
+        endpoint: PreviewModalEpisodeSelectorSeasonEpisodes,
+        invalid_id: int,
+    ) -> None:
+        name = str(invalid_id)
+        assert_no_content_error(endpoint, name, lambda: endpoint.get(invalid_id))

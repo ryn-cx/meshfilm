@@ -1,11 +1,21 @@
 # TODO: Validate
+from __future__ import annotations
+
 import json
+from typing import TYPE_CHECKING
 
 import pytest
 from get_around import build_client_automatically
 
 from meshfilm import Meshfilm
-from meshfilm.exceptions import NoContentError
+from tests.utils import (
+    assert_no_content_error,
+    data_path,
+    download_if_missing,
+)
+
+if TYPE_CHECKING:
+    from meshfilm.lodp_title_and_plans_page import LodpTitleAndPlansPage
 
 client = Meshfilm(build_client_automatically())
 
@@ -21,34 +31,33 @@ INVALID_ID = 1
 MOVIE_ID = 81458424
 """"movie_id of Watch Wake Up Dead Man: A Knives Out Mystery."""
 
+VIDEO_IDS = [SHOW_ID, EPISODE_ID, MOVIE_ID]
+INVALID_IDS = [SEASON_1_ID, SEASON_2_ID, INVALID_ID]
+
+
+@pytest.fixture(scope="session")
+def endpoint() -> LodpTitleAndPlansPage:
+    return client.lodp_title_and_plans_page
+
 
 class TestLodpTitleAndPlansPage:
     def test_alias(self) -> None:
         assert client.title_page is client.lodp_title_and_plans_page
 
-    @pytest.mark.parametrize(
-        "video_id",
-        [SHOW_ID, EPISODE_ID, MOVIE_ID],
-        ids=[f"{SHOW_ID=}", f"{EPISODE_ID=}", f"{MOVIE_ID=}"],
-    )
-    def test_get(self, video_id: int) -> None:
-        endpoint = client.lodp_title_and_plans_page
-        model = endpoint.get(video_id)
-        assert any(video.video_id == video_id for video in model.data.videos)
-        endpoint.save_new_json_file(endpoint.original_input(model))
+    @pytest.mark.parametrize("video_id", VIDEO_IDS)
+    def test_download(self, endpoint: LodpTitleAndPlansPage, video_id: int) -> None:
+        download_if_missing(
+            endpoint,
+            str(video_id),
+            lambda: endpoint.download(video_id),
+        )
 
-    @pytest.mark.parametrize(
-        "invalid_id",
-        [SEASON_1_ID, SEASON_2_ID, INVALID_ID],
-        ids=[f"{SEASON_1_ID=}", f"{SEASON_2_ID=}", f"{INVALID_ID=}"],
-    )
-    def test_invalid_get(self, invalid_id: int) -> None:
-        with pytest.raises(NoContentError) as error:
-            client.lodp_title_and_plans_page.get(invalid_id)
+    @pytest.mark.parametrize("video_id", VIDEO_IDS)
+    def test_value(self, endpoint: LodpTitleAndPlansPage, video_id: int) -> None:
+        endpoint.parse(json.loads(data_path(endpoint, str(video_id)).read_text()))
+        # TODO: assert expected value (needs live data)
 
-        assert error.value.response
-
-    def test_parse(self) -> None:
-        endpoint = client.lodp_title_and_plans_page
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
+    @pytest.mark.parametrize("invalid_id", INVALID_IDS)
+    def test_invalid(self, endpoint: LodpTitleAndPlansPage, invalid_id: int) -> None:
+        name = str(invalid_id)
+        assert_no_content_error(endpoint, name, lambda: endpoint.get(invalid_id))

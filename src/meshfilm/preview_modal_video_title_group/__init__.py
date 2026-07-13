@@ -60,4 +60,5 @@ class PreviewModalVideoTitleGroup(BaseEndpoint[PreviewModalVideoTitleGroupModel]
         return self._parse_or_raise(
             response,
             f"{self.__class__.__name__} {joined_ids}",
+            video_ids,
         )

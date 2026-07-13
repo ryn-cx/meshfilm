@@ -62,4 +62,8 @@ class LodpTitleAndPlansPage(BaseEndpoint[LodpTitleAndPlansPageModel]):
                 response is available on the exception's `response` attribute.
         """
         response = self.download(video_id)
-        return self._parse_or_raise(response, f"{self.__class__.__name__} {video_id}")
+        return self._parse_or_raise(
+            response,
+            f"{self.__class__.__name__} {video_id}",
+            video_id,
+        )

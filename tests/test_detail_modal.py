@@ -1,11 +1,21 @@
 # TODO: Validate
+from __future__ import annotations
+
 import json
+from typing import TYPE_CHECKING
 
 import pytest
 from get_around import build_client_automatically
 
 from meshfilm import Meshfilm
-from meshfilm.exceptions import NoContentError
+from tests.utils import (
+    assert_no_content_error,
+    data_path,
+    download_if_missing,
+)
+
+if TYPE_CHECKING:
+    from meshfilm.detail_modal import DetailModal
 
 client = Meshfilm(build_client_automatically())
 
@@ -21,36 +31,31 @@ INVALID_ID = 1
 MOVIE_ID = 81458424
 """"movie_id of Watch Wake Up Dead Man: A Knives Out Mystery."""
 
+VIDEO_IDS = [EPISODE_ID, SHOW_ID, SEASON_1_ID, SEASON_2_ID, MOVIE_ID]
+
+
+@pytest.fixture(scope="session")
+def endpoint() -> DetailModal:
+    return client.detail_modal
+
 
 class TestDetailModal:
     def test_alias(self) -> None:
         assert client.details is client.detail_modal
 
-    @pytest.mark.parametrize(
-        "video_id",
-        [EPISODE_ID, SHOW_ID, SEASON_1_ID, SEASON_2_ID, MOVIE_ID],
-        ids=[
-            f"{EPISODE_ID=}",
-            f"{SHOW_ID=}",
-            f"{SEASON_1_ID=}",
-            f"{SEASON_2_ID=}",
-            f"{MOVIE_ID=}",
-        ],
-    )
-    def test_get(self, video_id: int) -> None:
-        endpoint = client.detail_modal
-        model = endpoint.get(video_id)
-        assert any(
-            entity.video_id == video_id for entity in model.data.unified_entities
+    @pytest.mark.parametrize("video_id", VIDEO_IDS)
+    def test_download(self, endpoint: DetailModal, video_id: int) -> None:
+        download_if_missing(
+            endpoint,
+            str(video_id),
+            lambda: endpoint.download(video_id),
         )
-        endpoint.save_new_json_file(endpoint.original_input(model))
 
-    def test_invalid_get(self) -> None:
-        with pytest.raises(NoContentError) as error:
-            client.detail_modal.get(INVALID_ID)
-        assert "data" in error.value.response
+    @pytest.mark.parametrize("video_id", VIDEO_IDS)
+    def test_value(self, endpoint: DetailModal, video_id: int) -> None:
+        endpoint.parse(json.loads(data_path(endpoint, str(video_id)).read_text()))
+        # TODO: assert expected value (needs live data)
 
-    def test_parse(self) -> None:
-        endpoint = client.detail_modal
-        for json_file in endpoint.json_files():
-            endpoint.parse(json.loads(json_file.read_text()))
+    def test_invalid(self, endpoint: DetailModal) -> None:
+        name = str(INVALID_ID)
+        assert_no_content_error(endpoint, name, lambda: endpoint.get(INVALID_ID))

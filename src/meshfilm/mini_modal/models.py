@@ -1,4 +1,3 @@
-# TODO: Validate
 # ruff: noqa: TC003
 from typing import Any
 from uuid import UUID

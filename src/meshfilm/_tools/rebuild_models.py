@@ -1,5 +1,5 @@
 # TODO: Validate
-"""Rebuild Meshfilm Pydantic models."""
+"""Rebuilds Meshfilm models."""
 
 import logging
 

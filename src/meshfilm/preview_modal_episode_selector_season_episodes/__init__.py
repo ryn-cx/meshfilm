@@ -69,4 +69,8 @@ class PreviewModalEpisodeSelectorSeasonEpisodes(
                 response is available on the exception's `response` attribute.
         """
         response = self.download(season_id)
-        return self._parse_or_raise(response, f"{self.__class__.__name__} {season_id}")
+        return self._parse_or_raise(
+            response,
+            f"{self.__class__.__name__} {season_id}",
+            season_id,
+        )
