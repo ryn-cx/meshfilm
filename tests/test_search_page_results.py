@@ -1,49 +1,45 @@
 # TODO: Validate
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
 import pytest
-from get_around import build_client_automatically
 
-from meshfilm import Meshfilm
-from tests.utils import (
-    assert_no_content_error,
-    data_path,
-    download_if_missing,
-)
+from tests.utils import download_and_save, parse_json
 
 if TYPE_CHECKING:
+    from meshfilm import Meshfilm
     from meshfilm.search_page_results import SearchPageResults
-
-client = Meshfilm(build_client_automatically())
 
 SHOW_NAME = "Disenchantment"
 """A search term that matches a title."""
-INVALID_SHOW_NAME = "qwertasdfgzxcvb"
 
 
 @pytest.fixture(scope="session")
-def endpoint() -> SearchPageResults:
+def endpoint(client: Meshfilm) -> SearchPageResults:
     return client.search_page_results
 
 
 class TestSearchPageResults:
-    def test_alias(self) -> None:
+    def test_alias(self, client: Meshfilm) -> None:
         assert client.search is client.search_page_results
 
     def test_download(self, endpoint: SearchPageResults) -> None:
-        download_if_missing(
+        download_and_save(
             endpoint,
             SHOW_NAME,
             lambda: endpoint.download(SHOW_NAME),
         )
 
-    def test_value(self, endpoint: SearchPageResults) -> None:
-        endpoint.parse(json.loads(data_path(endpoint, SHOW_NAME).read_text()))
+    def test_parse(self, endpoint: SearchPageResults) -> None:
+        parse_json(endpoint, SHOW_NAME)
         # TODO: assert expected value (needs live data)
 
-    def test_invalid(self, endpoint: SearchPageResults) -> None:
-        name = INVALID_SHOW_NAME
-        assert_no_content_error(endpoint, name, lambda: endpoint.get(INVALID_SHOW_NAME))
+
+@pytest.mark.parametrize("end_cursor", [None, "cursor-token"])
+def test_log_id(endpoint: SearchPageResults, end_cursor: str | None) -> None:
+    kwargs = {} if end_cursor is None else {"end_cursor": end_cursor}
+    expected = f"SearchPageResults search_term={SHOW_NAME!r}"
+    if end_cursor is not None:
+        expected += f" end_cursor={end_cursor!r}"
+    assert endpoint.get_log_id(SHOW_NAME, **kwargs) == expected

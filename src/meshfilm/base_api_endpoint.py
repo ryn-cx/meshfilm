@@ -3,13 +3,11 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from good_ass_pydantic_integrator import GAPIBaseModel, GAPIClient
 
 from meshfilm.constants import FILES_PATH
-from meshfilm.exceptions import NoContentError
 
 if TYPE_CHECKING:
     from meshfilm import Meshfilm
@@ -25,24 +23,12 @@ class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
         self._client = client
 
     @staticmethod
-    @abstractmethod
-    def has_content(*args: Any, **kwargs: Any) -> bool:  # noqa: ANN401
-        """Return whether the response has meaningful content."""
-
-    def _parse_or_raise(
-        self,
-        response: dict[str, Any],
+    def append_non_default_args(
         log_id: str,
-        *content_args: Any,  # noqa: ANN401
-    ) -> T:
-        """Parse `response`, or raise `NoContentError` if it is empty.
-
-        `content_args` are forwarded to `has_content` for endpoints whose
-        emptiness check depends on the requested identifiers.
-
-        Raises:
-            NoContentError: If `has_content` is false.
-        """
-        if not self.has_content(response, *content_args):
-            raise NoContentError(response, log_id)
-        return self.parse(response)
+        **args: tuple[object, object],
+    ) -> str:
+        """Append ``name=value`` for each arg whose value differs from its default."""
+        for name, (value, default) in args.items():
+            if value != default:
+                log_id += f" {name}={value!r}"
+        return log_id

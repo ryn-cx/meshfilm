@@ -3,12 +3,16 @@
 
 from __future__ import annotations
 
-from typing import Any, override
+from logging import NullHandler, getLogger
+from typing import Any
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.preview_modal_episode_selector_season_episodes.models import (
     PreviewModalEpisodeSelectorSeasonEpisodesModel,
 )
+
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
 
 DEFAULT_EPISODE_COUNT = 30
 
@@ -19,6 +23,17 @@ class PreviewModalEpisodeSelectorSeasonEpisodes(
     """Manage the preview modal episode selector season episodes file."""
 
     _response_model = PreviewModalEpisodeSelectorSeasonEpisodesModel
+
+    def get_log_id(
+        self,
+        season_id: str | int,
+        count: int = DEFAULT_EPISODE_COUNT,
+    ) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {season_id=}",
+            count=(count, DEFAULT_EPISODE_COUNT),
+        )
 
     def _payload(self, season_id: str | int, count: int) -> dict[str, Any]:
         return {
@@ -45,32 +60,13 @@ class PreviewModalEpisodeSelectorSeasonEpisodes(
         """Downloads the preview modal episode selector season episodes file."""
         return self._client.download(
             self._payload(season_id, count),
-            log_id=f"{self.__class__.__name__} {season_id}",
+            log_id=self.get_log_id(season_id, count),
         )
 
-    @staticmethod
-    @override
-    def has_content(response: dict[str, Any], season_id: str | int) -> bool:
-        videos: list[dict[str, Any] | None] = response["data"]["videos"] or []
-        entity = next(
-            (v for v in videos if v and v.get("videoId") == int(season_id)),
-            None,
-        )
-        return entity is not None and entity.get("__typename") == "Season"
-
-    def get(
+    def download_and_parse(
         self,
         season_id: str | int,
+        count: int = DEFAULT_EPISODE_COUNT,
     ) -> PreviewModalEpisodeSelectorSeasonEpisodesModel:
-        """Downloads and parses the preview modal episode selector season episodes file.
-
-        Raises:
-            NoContentError: If the response has no meaningful content. The raw
-                response is available on the exception's `response` attribute.
-        """
-        response = self.download(season_id)
-        return self._parse_or_raise(
-            response,
-            f"{self.__class__.__name__} {season_id}",
-            season_id,
-        )
+        """Downloads and parses the preview modal episode selector season episodes."""
+        return self.parse(self.download(season_id, count))

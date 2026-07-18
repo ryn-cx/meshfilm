@@ -4,10 +4,14 @@
 from __future__ import annotations
 
 import uuid
-from typing import Any, override
+from logging import NullHandler, getLogger
+from typing import Any
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.search_page_results.models import SearchPageResultsModel
+
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
 
 
 def _image_params(artwork_type: str, **features: bool) -> dict[str, Any]:
@@ -112,6 +116,13 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
 
     _response_model = SearchPageResultsModel
 
+    def get_log_id(self, search_term: str, end_cursor: str | None = None) -> str:
+        """Build the log id for a download."""
+        return self.append_non_default_args(
+            f"{self.__class__.__name__} {search_term=}",
+            end_cursor=(end_cursor, None),
+        )
+
     def _payload(
         self,
         search_term: str,
@@ -153,35 +164,13 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
         """Downloads the search page results file."""
         return self._client.download(
             self._payload(search_term, end_cursor),
-            log_id=f"{self.__class__.__name__} {search_term}",
+            log_id=self.get_log_id(search_term, end_cursor),
         )
 
-    @staticmethod
-    @override
-    def has_content(response: dict[str, Any]) -> bool:
-        # Results usually still include recommendations even when nothing
-        # matches, so a present page isn't enough -- check for real edges.
-        page = response["data"]["page"]
-        sections = page["sections"] if page else None
-        if not sections:
-            return False
-        return any(
-            section["node"]["entities"]["edges"] for section in sections["edges"]
-        )
-
-    def get(
+    def download_and_parse(
         self,
         search_term: str,
         end_cursor: str | None = None,
     ) -> SearchPageResultsModel:
-        """Downloads and parses the search page results file.
-
-        Raises:
-            NoContentError: If the response has no meaningful content. The raw
-                response is available on the exception's `response` attribute.
-        """
-        response = self.download(search_term, end_cursor)
-        return self._parse_or_raise(
-            response,
-            f"{self.__class__.__name__} {search_term}",
-        )
+        """Downloads and parses the search page results file."""
+        return self.parse(self.download(search_term, end_cursor))

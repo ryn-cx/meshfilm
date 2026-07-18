@@ -34,8 +34,7 @@ Point it at a Netflix video ID and get a fully-validated model. There is no step
 - **Batch in a single call.** `mini_modal` and `preview_modal_video_title_group` take a
   list of IDs and fetch them all in one round trip.
 - **Raw or refined, your call.** Every endpoint offers `download()` for the untouched
-  GraphQL JSON and `get()` for the parsed model — plus `has_content()` to ask a raw
-  response whether the ID actually resolved before you commit to it.
+  GraphQL JSON and `get()` for the parsed model.
 
 ## Sixty seconds to your first model
 
@@ -51,9 +50,8 @@ print(show.data.videos[0].video_id)  # -> 80095697
 # Batch endpoints take a list of IDs and resolve them in one request.
 previews = client.mini_modal.get([80095697, 81458424])
 
-# Check a raw response before trusting it.
+# Need the untouched payload? download() returns the raw GraphQL JSON.
 raw = client.detail_modal.download(80095697)
-assert client.detail_modal.has_content(raw)
 ```
 
 ## Tested against Netflix itself
@@ -65,9 +63,9 @@ The suite doesn't mock — it hits the real API and holds the models to it.
   Netflix payloads.
 - **Happy path, verified.** `TestGet` fetches live data for shows, movies, seasons,
   episodes, and search, parses it, and confirms the IDs come back exactly as requested.
-- **Failure path, verified.** `TestInvalidGet` proves `has_content()` correctly reports
-  emptiness for wrong-type IDs, nonexistent IDs, and searches with no matches — the edge
-  cases that quietly break lesser wrappers.
+- **Empty payloads, handled.** Wrong-type IDs, nonexistent IDs, and searches with no
+  matches simply parse into a valid, empty model rather than raising — no special-casing
+  required at the call site.
 
 ## Setup
 

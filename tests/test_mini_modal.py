@@ -1,23 +1,15 @@
 # TODO: Validate
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
 import pytest
-from get_around import build_client_automatically
 
-from meshfilm import Meshfilm
-from tests.utils import (
-    assert_no_content_error,
-    data_path,
-    download_if_missing,
-)
+from tests.utils import download_and_save, parse_json
 
 if TYPE_CHECKING:
+    from meshfilm import Meshfilm
     from meshfilm.mini_modal import MiniModal
-
-client = Meshfilm(build_client_automatically())
 
 SHOW_ID = 80095697
 """show_id of Disenchantment."""
@@ -25,7 +17,6 @@ SEASON_1_ID = 80117549
 """season_id of Disenchantment Season 1."""
 SEASON_2_ID = 80174140
 """season_id of Disenchantment Season 2."""
-INVALID_ID = 1
 SEASON_1_EPISODE_IDS: list[str | int] = [
     80117711,
     80145115,
@@ -56,27 +47,28 @@ def _name(video_ids: list[str | int]) -> str:
 
 
 @pytest.fixture(scope="session")
-def endpoint() -> MiniModal:
+def endpoint(client: Meshfilm) -> MiniModal:
     return client.mini_modal
 
 
 class TestMiniModal:
-    def test_alias(self) -> None:
+    def test_alias(self, client: Meshfilm) -> None:
         assert client.mini_previews is client.mini_modal
 
     @pytest.mark.parametrize("video_ids", VIDEO_ID_GROUPS)
     def test_download(self, endpoint: MiniModal, video_ids: list[str | int]) -> None:
-        download_if_missing(
+        download_and_save(
             endpoint,
             _name(video_ids),
             lambda: endpoint.download(video_ids),
         )
 
     @pytest.mark.parametrize("video_ids", VIDEO_ID_GROUPS)
-    def test_value(self, endpoint: MiniModal, video_ids: list[str | int]) -> None:
-        endpoint.parse(json.loads(data_path(endpoint, _name(video_ids)).read_text()))
+    def test_parse(self, endpoint: MiniModal, video_ids: list[str | int]) -> None:
+        parse_json(endpoint, _name(video_ids))
         # TODO: assert expected value (needs live data)
 
-    def test_invalid(self, endpoint: MiniModal) -> None:
-        name = _name([INVALID_ID])
-        assert_no_content_error(endpoint, name, lambda: endpoint.get([INVALID_ID]))
+
+@pytest.mark.parametrize("video_ids", VIDEO_ID_GROUPS)
+def test_log_id(endpoint: MiniModal, video_ids: list[str | int]) -> None:
+    assert endpoint.get_log_id(video_ids) == f"MiniModal video_ids={video_ids!r}"

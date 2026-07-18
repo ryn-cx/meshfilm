@@ -1,49 +1,33 @@
 # TODO: Validate
 from __future__ import annotations
 
-import json
 from typing import TYPE_CHECKING
 
 import pytest
-from get_around import build_client_automatically
 
-from meshfilm import Meshfilm
-from tests.utils import (
-    assert_no_content_error,
-    data_path,
-    download_if_missing,
-)
+from tests.utils import download_and_save, parse_json
 
 if TYPE_CHECKING:
+    from meshfilm import Meshfilm
     from meshfilm.preview_modal_episode_selector_season_episodes import (
         PreviewModalEpisodeSelectorSeasonEpisodes,
     )
 
-client = Meshfilm(build_client_automatically())
-
-SHOW_ID = 80095697
-"""show_id of Disenchantment."""
 SEASON_1_ID = 80117549
 """season_id of Disenchantment Season 1."""
 SEASON_2_ID = 80174140
 """season_id of Disenchantment Season 2."""
-EPISODE_ID = 80117711
-"""episode_id of Disenchantment Season 1 Episode 1."""
-INVALID_ID = 1
-MOVIE_ID = 81458424
-""""movie_id of Watch Wake Up Dead Man: A Knives Out Mystery."""
 
 SEASON_IDS = [SEASON_1_ID, SEASON_2_ID]
-INVALID_IDS = [SHOW_ID, EPISODE_ID, MOVIE_ID, INVALID_ID]
 
 
 @pytest.fixture(scope="session")
-def endpoint() -> PreviewModalEpisodeSelectorSeasonEpisodes:
+def endpoint(client: Meshfilm) -> PreviewModalEpisodeSelectorSeasonEpisodes:
     return client.preview_modal_episode_selector_season_episodes
 
 
 class TestPreviewModalEpisodeSelectorSeasonEpisodes:
-    def test_alias(self) -> None:
+    def test_alias(self, client: Meshfilm) -> None:
         assert client.episodes is client.preview_modal_episode_selector_season_episodes
 
     @pytest.mark.parametrize("season_id", SEASON_IDS)
@@ -52,26 +36,29 @@ class TestPreviewModalEpisodeSelectorSeasonEpisodes:
         endpoint: PreviewModalEpisodeSelectorSeasonEpisodes,
         season_id: int,
     ) -> None:
-        download_if_missing(
+        download_and_save(
             endpoint,
             str(season_id),
             lambda: endpoint.download(season_id),
         )
 
     @pytest.mark.parametrize("season_id", SEASON_IDS)
-    def test_value(
+    def test_parse(
         self,
         endpoint: PreviewModalEpisodeSelectorSeasonEpisodes,
         season_id: int,
     ) -> None:
-        endpoint.parse(json.loads(data_path(endpoint, str(season_id)).read_text()))
+        parse_json(endpoint, str(season_id))
         # TODO: assert expected value (needs live data)
 
-    @pytest.mark.parametrize("invalid_id", INVALID_IDS)
-    def test_invalid(
-        self,
-        endpoint: PreviewModalEpisodeSelectorSeasonEpisodes,
-        invalid_id: int,
-    ) -> None:
-        name = str(invalid_id)
-        assert_no_content_error(endpoint, name, lambda: endpoint.get(invalid_id))
+
+@pytest.mark.parametrize("count", [None, 10])
+def test_log_id(
+    endpoint: PreviewModalEpisodeSelectorSeasonEpisodes,
+    count: int | None,
+) -> None:
+    kwargs = {} if count is None else {"count": count}
+    expected = f"PreviewModalEpisodeSelectorSeasonEpisodes season_id={SEASON_1_ID!r}"
+    if count is not None:
+        expected += f" count={count!r}"
+    assert endpoint.get_log_id(SEASON_1_ID, **kwargs) == expected

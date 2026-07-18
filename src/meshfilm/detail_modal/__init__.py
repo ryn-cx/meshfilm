@@ -3,16 +3,24 @@
 
 from __future__ import annotations
 
-from typing import Any, override
+from logging import NullHandler, getLogger
+from typing import Any
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.detail_modal.models import DetailModalModel
+
+logger = getLogger(__name__)
+logger.addHandler(NullHandler())
 
 
 class DetailModal(BaseEndpoint[DetailModalModel]):
     """Manage the detail modal file."""
 
     _response_model = DetailModalModel
+
+    def get_log_id(self, video_id: str | int) -> str:
+        """Build the log id for a download."""
+        return f"{self.__class__.__name__} {video_id=}"
 
     def _payload(self, video_id: str | int) -> dict[str, Any]:
         return {
@@ -44,20 +52,9 @@ class DetailModal(BaseEndpoint[DetailModalModel]):
         """Downloads the detail modal file."""
         return self._client.download(
             self._payload(video_id),
-            log_id=f"{self.__class__.__name__} {video_id}",
+            log_id=self.get_log_id(video_id),
         )
 
-    @staticmethod
-    @override
-    def has_content(response: dict[str, Any]) -> bool:
-        return bool(response["data"]["unifiedEntities"])
-
-    def get(self, video_id: str | int) -> DetailModalModel:
-        """Downloads and parses the detail modal file.
-
-        Raises:
-            NoContentError: If the response has no meaningful content. The raw
-                response is available on the exception's `response` attribute.
-        """
-        response = self.download(video_id)
-        return self._parse_or_raise(response, f"{self.__class__.__name__} {video_id}")
+    def download_and_parse(self, video_id: str | int) -> DetailModalModel:
+        """Downloads and parses the detail modal file."""
+        return self.parse(self.download(video_id))
