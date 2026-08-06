@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from meshfilm import Meshfilm
@@ -32,17 +32,5 @@ class TestPreviewModalEpisodeSelector:
         )
 
     def test_parse(self, endpoint: PreviewModalEpisodeSelector) -> None:
-        parse_json(endpoint, str(SHOW_ID))
+        parsed_json(endpoint, str(SHOW_ID))
         # TODO: assert expected value (needs live data)
-
-
-@pytest.mark.parametrize("season_count", [None, 3])
-def test_log_id(
-    endpoint: PreviewModalEpisodeSelector,
-    season_count: int | None,
-) -> None:
-    kwargs = {} if season_count is None else {"season_count": season_count}
-    expected = f"PreviewModalEpisodeSelector show_id={SHOW_ID!r}"
-    if season_count is not None:
-        expected += f" season_count={season_count!r}"
-    assert endpoint.get_log_id(SHOW_ID, **kwargs) == expected

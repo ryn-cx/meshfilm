@@ -8,6 +8,7 @@ from typing import Any
 
 from meshfilm.base_api_endpoint import BaseEndpoint
 from meshfilm.detail_modal.models import DetailModalModel
+from meshfilm.exceptions import InvalidFileError
 
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
@@ -17,10 +18,6 @@ class DetailModal(BaseEndpoint[DetailModalModel]):
     """Manage the detail modal file."""
 
     _response_model = DetailModalModel
-
-    def get_log_id(self, video_id: str | int) -> str:
-        """Build the log id for a download."""
-        return f"{self.__class__.__name__} {video_id=}"
 
     def _payload(self, video_id: str | int) -> dict[str, Any]:
         return {
@@ -50,10 +47,15 @@ class DetailModal(BaseEndpoint[DetailModalModel]):
 
     def download(self, video_id: str | int) -> dict[str, Any]:
         """Downloads the detail modal file."""
-        return self._client.download(
+        log_id = self.get_log_id(self.download, locals())
+        data = self._client.download(
             self._payload(video_id),
-            log_id=self.get_log_id(video_id),
+            log_id=log_id,
         )
+        entities = data.get("data", {}).get("unifiedEntities") or [{}]
+        if entities[0].get("videoId") != int(video_id):
+            raise InvalidFileError(field="video id", expected=int(video_id))
+        return data
 
     def download_and_parse(self, video_id: str | int) -> DetailModalModel:
         """Downloads and parses the detail modal file."""

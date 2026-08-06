@@ -7,6 +7,7 @@ from logging import NullHandler, getLogger
 from typing import Any
 
 from meshfilm.base_api_endpoint import BaseEndpoint
+from meshfilm.exceptions import InvalidFileError
 from meshfilm.preview_modal_episode_selector_season_episodes.models import (
     PreviewModalEpisodeSelectorSeasonEpisodesModel,
 )
@@ -23,17 +24,6 @@ class PreviewModalEpisodeSelectorSeasonEpisodes(
     """Manage the preview modal episode selector season episodes file."""
 
     _response_model = PreviewModalEpisodeSelectorSeasonEpisodesModel
-
-    def get_log_id(
-        self,
-        season_id: str | int,
-        count: int = DEFAULT_EPISODE_COUNT,
-    ) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {season_id=}",
-            count=(count, DEFAULT_EPISODE_COUNT),
-        )
 
     def _payload(self, season_id: str | int, count: int) -> dict[str, Any]:
         return {
@@ -58,10 +48,15 @@ class PreviewModalEpisodeSelectorSeasonEpisodes(
         count: int = DEFAULT_EPISODE_COUNT,
     ) -> dict[str, Any]:
         """Downloads the preview modal episode selector season episodes file."""
-        return self._client.download(
+        log_id = self.get_log_id(self.download, locals())
+        data = self._client.download(
             self._payload(season_id, count),
-            log_id=self.get_log_id(season_id, count),
+            log_id=log_id,
         )
+        videos = data.get("data", {}).get("videos") or [{}]
+        if videos[0].get("videoId") != int(season_id):
+            raise InvalidFileError(field="season id", expected=int(season_id))
+        return data
 
     def download_and_parse(
         self,

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from meshfilm import Meshfilm
@@ -44,10 +44,5 @@ class TestDetailModal:
 
     @pytest.mark.parametrize("video_id", VIDEO_IDS)
     def test_parse(self, endpoint: DetailModal, video_id: int) -> None:
-        parse_json(endpoint, str(video_id))
+        parsed_json(endpoint, str(video_id))
         # TODO: assert expected value (needs live data)
-
-
-@pytest.mark.parametrize("video_id", VIDEO_IDS)
-def test_log_id(endpoint: DetailModal, video_id: int) -> None:
-    assert endpoint.get_log_id(video_id) == f"DetailModal video_id={video_id!r}"

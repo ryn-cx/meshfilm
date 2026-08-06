@@ -88,8 +88,7 @@ class Meshfilm:
         )
 
         if response.status_code != HTTPStatus.OK:
-            msg = f"Unexpected response status code: {response.status_code}"
-            raise HTTPError(msg)
+            raise HTTPError(response.status_code, response.text)
 
         logger.debug("Downloaded %s (%.4f s)", operation, time.monotonic() - start)
 

@@ -8,6 +8,7 @@ from logging import NullHandler, getLogger
 from typing import Any
 
 from meshfilm.base_api_endpoint import BaseEndpoint
+from meshfilm.exceptions import InvalidFileError
 from meshfilm.search_page_results.models import SearchPageResultsModel
 
 logger = getLogger(__name__)
@@ -116,13 +117,6 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
 
     _response_model = SearchPageResultsModel
 
-    def get_log_id(self, search_term: str, end_cursor: str | None = None) -> str:
-        """Build the log id for a download."""
-        return self.append_non_default_args(
-            f"{self.__class__.__name__} {search_term=}",
-            end_cursor=(end_cursor, None),
-        )
-
     def _payload(
         self,
         search_term: str,
@@ -162,10 +156,15 @@ class SearchPageResults(BaseEndpoint[SearchPageResultsModel]):
         end_cursor: str | None = None,
     ) -> dict[str, Any]:
         """Downloads the search page results file."""
-        return self._client.download(
+        log_id = self.get_log_id(self.download, locals())
+        data = self._client.download(
             self._payload(search_term, end_cursor),
-            log_id=self.get_log_id(search_term, end_cursor),
+            log_id=log_id,
         )
+        # The response carries no echo of the search term, so only its shape is checked.
+        if data.get("data", {}).get("page", {}).get("sections") is None:
+            raise InvalidFileError(field="search page")
+        return data
 
     def download_and_parse(
         self,

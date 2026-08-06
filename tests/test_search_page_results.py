@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parse_json
+from tests.utils import download_and_save, parsed_json
 
 if TYPE_CHECKING:
     from meshfilm import Meshfilm
@@ -32,14 +32,5 @@ class TestSearchPageResults:
         )
 
     def test_parse(self, endpoint: SearchPageResults) -> None:
-        parse_json(endpoint, SHOW_NAME)
+        parsed_json(endpoint, SHOW_NAME)
         # TODO: assert expected value (needs live data)
-
-
-@pytest.mark.parametrize("end_cursor", [None, "cursor-token"])
-def test_log_id(endpoint: SearchPageResults, end_cursor: str | None) -> None:
-    kwargs = {} if end_cursor is None else {"end_cursor": end_cursor}
-    expected = f"SearchPageResults search_term={SHOW_NAME!r}"
-    if end_cursor is not None:
-        expected += f" end_cursor={end_cursor!r}"
-    assert endpoint.get_log_id(SHOW_NAME, **kwargs) == expected

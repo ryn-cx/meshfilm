@@ -7,6 +7,7 @@ from logging import NullHandler, getLogger
 from typing import Any
 
 from meshfilm.base_api_endpoint import BaseEndpoint
+from meshfilm.exceptions import InvalidFileError
 from meshfilm.preview_modal_video_title_group.models import (
     PreviewModalVideoTitleGroupModel,
 )
@@ -19,10 +20,6 @@ class PreviewModalVideoTitleGroup(BaseEndpoint[PreviewModalVideoTitleGroupModel]
     """Manage the preview modal video title group file."""
 
     _response_model = PreviewModalVideoTitleGroupModel
-
-    def get_log_id(self, video_ids: list[str | int]) -> str:
-        """Build the log id for a download."""
-        return f"{self.__class__.__name__} {video_ids=}"
 
     def _payload(self, video_ids: list[str | int]) -> dict[str, Any]:
         return {
@@ -41,10 +38,18 @@ class PreviewModalVideoTitleGroup(BaseEndpoint[PreviewModalVideoTitleGroupModel]
 
     def download(self, video_ids: list[str | int]) -> dict[str, Any]:
         """Downloads the preview modal video title group file."""
-        return self._client.download(
+        log_id = self.get_log_id(self.download, locals())
+        data = self._client.download(
             self._payload(video_ids),
-            log_id=self.get_log_id(video_ids),
+            log_id=log_id,
         )
+        # Unavailable ids are dropped from the response, so the returned ids only
+        # have to be some of the requested ones.
+        videos = data.get("data", {}).get("videos") or []
+        found = {video.get("videoId") for video in videos}
+        if not found or not found <= {int(video_id) for video_id in video_ids}:
+            raise InvalidFileError(field="video ids", expected=video_ids)
+        return data
 
     def download_and_parse(
         self,

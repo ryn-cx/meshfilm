@@ -7,6 +7,7 @@ from logging import NullHandler, getLogger
 from typing import Any
 
 from meshfilm.base_api_endpoint import BaseEndpoint
+from meshfilm.exceptions import InvalidFileError
 from meshfilm.mini_modal.models import MiniModalModel
 
 logger = getLogger(__name__)
@@ -17,10 +18,6 @@ class MiniModal(BaseEndpoint[MiniModalModel]):
     """Manage the mini modal file."""
 
     _response_model = MiniModalModel
-
-    def get_log_id(self, video_ids: list[str | int]) -> str:
-        """Build the log id for a download."""
-        return f"{self.__class__.__name__} {video_ids=}"
 
     def _payload(self, video_ids: list[str | int]) -> dict[str, Any]:
         return {
@@ -48,10 +45,18 @@ class MiniModal(BaseEndpoint[MiniModalModel]):
 
     def download(self, video_ids: list[str | int]) -> dict[str, Any]:
         """Downloads the mini modal file."""
-        return self._client.download(
+        log_id = self.get_log_id(self.download, locals())
+        data = self._client.download(
             self._payload(video_ids),
-            log_id=self.get_log_id(video_ids),
+            log_id=log_id,
         )
+        # Unavailable ids are dropped from the response, so the returned ids only
+        # have to be some of the requested ones.
+        entities = data.get("data", {}).get("unifiedEntities") or []
+        found = {entity.get("videoId") for entity in entities}
+        if not found or not found <= {int(video_id) for video_id in video_ids}:
+            raise InvalidFileError(field="video ids", expected=video_ids)
+        return data
 
     def download_and_parse(self, video_ids: list[str | int]) -> MiniModalModel:
         """Downloads and parses the mini modal file."""
