@@ -6,25 +6,22 @@ from __future__ import annotations
 from inspect import Parameter, signature
 from typing import TYPE_CHECKING, Any
 
-from good_ass_pydantic_integrator import GAPIBaseModel, GAPIClient
-
-from meshfilm.constants import FILES_PATH
-
 if TYPE_CHECKING:
     from collections.abc import Callable
 
     from meshfilm import Meshfilm
 
 
-class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
+# TODO: Validate
+class BaseEndpoint:
     """Base class for API endpoints."""
 
-    JSON_FILES_ROOT = FILES_PATH
-
+    # TODO: Validate
     def __init__(self, client: Meshfilm) -> None:
-        """Initialize the endpoint with the MeshFilm client."""
+        """Initialize the endpoint with the Meshfilm client."""
         self._client = client
 
+    # TODO: Validate
     @staticmethod
     def non_default_args(
         func: Callable[..., Any],
@@ -39,8 +36,9 @@ class BaseEndpoint[T: GAPIBaseModel](GAPIClient[T]):
             and values[name] != param.default
         }
 
+    # TODO: Validate
     def get_log_id(self, func: Callable[..., Any], values: dict[str, Any]) -> str:
-        """Gets the log id.
+        """Get the log id.
 
         Example: ClassName (arg1='value1' arg2='value2')
         """

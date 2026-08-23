@@ -5,44 +5,52 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parsed_json
+from meshfilm.detail_modal.models import DetailModalModel
+from meshfilm.exceptions import VideoNotFoundError
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from meshfilm import Meshfilm
-    from meshfilm.detail_modal import DetailModal
 
-SHOW_ID = 80095697
-"""show_id of Disenchantment."""
-SEASON_1_ID = 80117549
-"""season_id of Disenchantment Season 1."""
-SEASON_2_ID = 80174140
-"""season_id of Disenchantment Season 2."""
-EPISODE_ID = 80117711
-"""episode_id of Disenchantment Season 1 Episode 1."""
-MOVIE_ID = 81458424
-""""movie_id of Watch Wake Up Dead Man: A Knives Out Mystery."""
-
-VIDEO_IDS = [EPISODE_ID, SHOW_ID, SEASON_1_ID, SEASON_2_ID, MOVIE_ID]
+VIDEO_IDS = [
+    # https://www.netflix.com/title/80095697
+    pytest.param(80095697, id="disenchantment show"),
+    # https://www.netflix.com/title/80117711
+    pytest.param(80117711, id="disenchantment first episode"),
+    # https://www.netflix.com/title/81458424
+    pytest.param(81458424, id="wake up dead man movie"),
+]
 
 
-@pytest.fixture(scope="session")
-def endpoint(client: Meshfilm) -> DetailModal:
-    return client.detail_modal
+# TODO: Validate
+class DetailModalTest(RecordedEndpoint):
+    MODEL = DetailModalModel
 
 
-class TestDetailModal:
-    def test_alias(self, client: Meshfilm) -> None:
-        assert client.details is client.detail_modal
+# TODO: Validate
+@pytest.mark.parametrize("video_id", VIDEO_IDS)
+def test_download(client: Meshfilm, video_id: int) -> None:
+    DetailModalTest.download_test(
+        video_id,
+        lambda: client.detail_modal.download(video_id),
+    )
 
-    @pytest.mark.parametrize("video_id", VIDEO_IDS)
-    def test_download(self, endpoint: DetailModal, video_id: int) -> None:
-        download_and_save(
-            endpoint,
-            str(video_id),
-            lambda: endpoint.download(video_id),
-        )
 
-    @pytest.mark.parametrize("video_id", VIDEO_IDS)
-    def test_parse(self, endpoint: DetailModal, video_id: int) -> None:
-        parsed_json(endpoint, str(video_id))
-        # TODO: assert expected value (needs live data)
+# TODO: Validate
+@pytest.mark.parametrize("video_id", VIDEO_IDS)
+def test_parse(client: Meshfilm, video_id: int) -> None:
+    data = client.detail_modal.load(DetailModalTest.recorded_content(video_id))
+    assert data.data.unified_entities[0].video_id == video_id
+
+
+# TODO: Validate
+@pytest.mark.parametrize(
+    "video_id",
+    [pytest.param(1, id="video that does not exist")],
+)
+def test_download_invalid(client: Meshfilm, video_id: int) -> None:
+    DetailModalTest.error_test(
+        video_id,
+        lambda: client.detail_modal.download(video_id),
+        VideoNotFoundError,
+    )

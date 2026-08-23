@@ -5,73 +5,50 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parsed_json
+from meshfilm.preview_modal_video_title_group.models import (
+    PreviewModalVideoTitleGroupModel,
+)
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from meshfilm import Meshfilm
-    from meshfilm.preview_modal_video_title_group import PreviewModalVideoTitleGroup
 
-SHOW_ID = 80095697
-"""show_id of Disenchantment."""
-SEASON_1_ID = 80117549
-"""season_id of Disenchantment Season 1."""
-SEASON_2_ID = 80174140
-"""season_id of Disenchantment Season 2."""
-SEASON_1_EPISODE_IDS: list[str | int] = [
-    80117711,
-    80145115,
-    80145117,
-    80145118,
-    80145119,
-    80145116,
-    80145120,
-    80145121,
-    80145122,
-    80145123,
-]
-"""Every episode from Disenchantment's first season."""
-MOVIE_ID = 81458424
-""""movie_id of Watch Wake Up Dead Man: A Knives Out Mystery."""
-
-VIDEO_ID_GROUPS: list[list[str | int]] = [
-    [SHOW_ID],
-    [SEASON_1_ID],
-    [SEASON_2_ID],
-    [MOVIE_ID],
-    SEASON_1_EPISODE_IDS,
+# The endpoint is asked about a batch of titles at a time, and every id in the
+# batch is part of the name the response is recorded under.
+VIDEO_ID_BATCHES = [
+    pytest.param((80095697, 81458424), id="disenchantment and wake up dead man"),
+    # An id nothing is under keeps its place in the answer as a null.
+    pytest.param((80095697, 1), id="disenchantment and a video that does not exist"),
 ]
 
 
-def _name(video_ids: list[str | int]) -> str:
+# TODO: Validate
+class PreviewModalVideoTitleGroupTest(RecordedEndpoint):
+    MODEL = PreviewModalVideoTitleGroupModel
+
+
+# TODO: Validate
+def recorded_name(video_ids: Sequence[int]) -> str:
+    """Return the name the response for a batch of ids is recorded under."""
     return "_".join(str(video_id) for video_id in video_ids)
 
 
-@pytest.fixture(scope="session")
-def endpoint(client: Meshfilm) -> PreviewModalVideoTitleGroup:
-    return client.preview_modal_video_title_group
+# TODO: Validate
+@pytest.mark.parametrize("video_ids", VIDEO_ID_BATCHES)
+def test_download(client: Meshfilm, video_ids: Sequence[int]) -> None:
+    PreviewModalVideoTitleGroupTest.download_test(
+        recorded_name(video_ids),
+        lambda: client.preview_modal_video_title_group.download(video_ids),
+    )
 
 
-class TestPreviewModalVideoTitleGroup:
-    def test_alias(self, client: Meshfilm) -> None:
-        assert client.previews is client.preview_modal_video_title_group
-
-    @pytest.mark.parametrize("video_ids", VIDEO_ID_GROUPS)
-    def test_download(
-        self,
-        endpoint: PreviewModalVideoTitleGroup,
-        video_ids: list[str | int],
-    ) -> None:
-        download_and_save(
-            endpoint,
-            _name(video_ids),
-            lambda: endpoint.download(video_ids),
-        )
-
-    @pytest.mark.parametrize("video_ids", VIDEO_ID_GROUPS)
-    def test_parse(
-        self,
-        endpoint: PreviewModalVideoTitleGroup,
-        video_ids: list[str | int],
-    ) -> None:
-        parsed_json(endpoint, _name(video_ids))
-        # TODO: assert expected value (needs live data)
+# TODO: Validate
+@pytest.mark.parametrize("video_ids", VIDEO_ID_BATCHES)
+def test_parse(client: Meshfilm, video_ids: Sequence[int]) -> None:
+    data = client.preview_modal_video_title_group.load(
+        PreviewModalVideoTitleGroupTest.recorded_content(recorded_name(video_ids)),
+    )
+    # Every id keeps its place in the answer, whether or not it was found.
+    assert len(data.data.videos) == len(video_ids)

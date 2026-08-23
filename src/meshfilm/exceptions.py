@@ -1,32 +1,100 @@
 # TODO: Validate
+"""Exceptions."""
+
 from __future__ import annotations
 
-
-class MeshFilmError(Exception):
-    """Base exception for the meshfilm library."""
+from typing import Any
 
 
-class HTTPError(MeshFilmError):
-    """Raised when an HTTP request fails with an unexpected status code."""
+# TODO: Validate
+class MeshfilmError(Exception):
+    """Base exception for Meshfilm."""
 
-    def __init__(self, status_code: int, body: str) -> None:
+    response: str | dict[str, Any] | None = None
+
+
+# TODO: Validate
+class HTTPError(MeshfilmError):
+    """Raised when HTTP request fails with unexpected status code."""
+
+    # TODO: Validate
+    def __init__(
+        self,
+        status_code: int,
+        response: str | dict[str, Any] | None,
+    ) -> None:
         """Initialize the HTTPError with the status code and response body."""
         self.status_code = status_code
-        self.body = body
-        super().__init__(f"Unexpected response status code: {status_code}\n{body}")
+        self.response = response
+        super().__init__(f"Unexpected response status code: {status_code}")
 
 
-class InvalidFileError(MeshFilmError):
-    """Raised when a downloaded file does not match what was requested."""
+# TODO: Validate
+class ResourceNotFoundError(HTTPError):
+    """Raised when the API reports that the requested resource does not exist."""
 
-    def __init__(self, field: str, expected: object = None) -> None:
-        """Initialize the InvalidFileError with the field and its expected value.
 
-        `expected` is left out when the check is only that the field has a value.
-        """
+# TODO: Validate
+class VideoNotFoundError(ResourceNotFoundError):
+    """Raised when the requested video does not exist."""
+
+    # TODO: Validate
+    def __init__(
+        self,
+        video_id: int,
+        status_code: int,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize with the video id and the originating response."""
+        self.video_id = video_id
+        super().__init__(status_code, response)
+
+
+# TODO: Validate
+class ShowNotFoundError(ResourceNotFoundError):
+    """Raised when the requested show does not exist."""
+
+    # TODO: Validate
+    def __init__(
+        self,
+        show_id: int,
+        status_code: int,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize with the show id and the originating response."""
+        self.show_id = show_id
+        super().__init__(status_code, response)
+
+
+# TODO: Validate
+class SeasonNotFoundError(ResourceNotFoundError):
+    """Raised when the requested season does not exist."""
+
+    # TODO: Validate
+    def __init__(
+        self,
+        season_id: int,
+        status_code: int,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize with the season id and the originating response."""
+        self.season_id = season_id
+        super().__init__(status_code, response)
+
+
+# TODO: Validate
+class InvalidFileError(MeshfilmError):
+    """Raised when a downloaded file is not for what was requested."""
+
+    # TODO: Validate
+    def __init__(
+        self,
+        field: str,
+        expected: object,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize with the field, the value it should hold, and the response."""
         self.field = field
         self.expected = expected
-        if expected is None:
-            super().__init__(f"Downloaded file has no {field}")
-        else:
-            super().__init__(f"Downloaded file is not for {field} {expected!r}")
+        self.response = response
+        super().__init__(f"Downloaded file is not for {field} {expected!r}")

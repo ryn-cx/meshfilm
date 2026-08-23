@@ -5,32 +5,38 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from tests.utils import download_and_save, parsed_json
+from meshfilm.search_page_results.models import SearchPageResultsModel
+from tests.utils import RecordedEndpoint
 
 if TYPE_CHECKING:
     from meshfilm import Meshfilm
-    from meshfilm.search_page_results import SearchPageResults
 
-SHOW_NAME = "Disenchantment"
-"""A search term that matches a title."""
-
-
-@pytest.fixture(scope="session")
-def endpoint(client: Meshfilm) -> SearchPageResults:
-    return client.search_page_results
+SEARCH_TERMS = [
+    pytest.param("Disenchantment", id="a term with an exact match"),
+    # Netflix never answers a search with nothing: a term it matches badly is
+    # answered with whatever it matches at all.
+    pytest.param("zzzzqqqxxnomatch", id="a term with no exact match"),
+]
 
 
-class TestSearchPageResults:
-    def test_alias(self, client: Meshfilm) -> None:
-        assert client.search is client.search_page_results
+# TODO: Validate
+class SearchPageResultsTest(RecordedEndpoint):
+    MODEL = SearchPageResultsModel
 
-    def test_download(self, endpoint: SearchPageResults) -> None:
-        download_and_save(
-            endpoint,
-            SHOW_NAME,
-            lambda: endpoint.download(SHOW_NAME),
-        )
 
-    def test_parse(self, endpoint: SearchPageResults) -> None:
-        parsed_json(endpoint, SHOW_NAME)
-        # TODO: assert expected value (needs live data)
+# TODO: Validate
+@pytest.mark.parametrize("search_term", SEARCH_TERMS)
+def test_download(client: Meshfilm, search_term: str) -> None:
+    SearchPageResultsTest.download_test(
+        search_term,
+        lambda: client.search_page_results.download(search_term),
+    )
+
+
+# TODO: Validate
+@pytest.mark.parametrize("search_term", SEARCH_TERMS)
+def test_parse(client: Meshfilm, search_term: str) -> None:
+    data = client.search_page_results.load(
+        SearchPageResultsTest.recorded_content(search_term),
+    )
+    assert data.data.page.sections.edges
