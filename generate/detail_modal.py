@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from generate.constants import FILES_PATH, MESHFILM_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 from meshfilm import Meshfilm
 
-VIDEO_IDS = [80095697, 80117711, 81458424]
+VIDEO_IDS = load_ids("DetailModalModel")
 
 
 # TODO: Validate
@@ -25,7 +24,7 @@ def generate_detail_modal(client: Meshfilm) -> None:
             video_id,
             lambda video_id=video_id: client.detail_modal.download(video_id),
         )
-    generate_model(FILES_PATH, MESHFILM_PATH, "DetailModalModel")
+    rebuild_model(FILES_PATH, MESHFILM_PATH, "DetailModalModel")
 
 
 if __name__ == "__main__":

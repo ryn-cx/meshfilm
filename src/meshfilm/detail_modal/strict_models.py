@@ -376,7 +376,7 @@ class UnifiedEntity(BaseModel):
     number: int | None = None
     parent_season: ParentSeason2 | None = Field(None, alias='parentSeason')
     badges: list[str] | None = None
-    bookmark: None = None
+    bookmark: None = Field(None)
     runtime_sec: int | None = Field(None, alias='runtimeSec')
 
 class Data(BaseModel):

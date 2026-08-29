@@ -6,13 +6,12 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from generate.constants import FILES_PATH, MESHFILM_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 from meshfilm import Meshfilm
 
-SEARCH_TERMS = ["Disenchantment", "zzzzqqqxxnomatch"]
+SEARCH_TERMS = load_ids("SearchPageResultsModel")
 
 
 # TODO: Validate
@@ -27,7 +26,7 @@ def generate_search_page_results(client: Meshfilm) -> None:
                 search_term,
             ),
         )
-    generate_model(FILES_PATH, MESHFILM_PATH, "SearchPageResultsModel")
+    rebuild_model(FILES_PATH, MESHFILM_PATH, "SearchPageResultsModel")
 
 
 if __name__ == "__main__":

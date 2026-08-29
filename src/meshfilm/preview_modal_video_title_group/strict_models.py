@@ -95,7 +95,7 @@ class Videos(BaseModel):
     current_episode: CurrentEpisode | None = Field(None, alias='currentEpisode')
     num_seasons_label: str | None = Field(None, alias='numSeasonsLabel')
     seasons: Seasons | None = None
-    bookmark: None = None
+    bookmark: None = Field(None)
     display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
 
 class Data(BaseModel):

@@ -6,16 +6,15 @@ from __future__ import annotations
 import logging
 
 from get_around import build_client_automatically
-from good_ass_pydantic_integrator import generate_model
 
 from generate.constants import FILES_PATH, MESHFILM_PATH
-from generate.utils import download_if_missing
+from generate.utils import download_if_missing, load_ids, rebuild_model
 from meshfilm import Meshfilm
 from meshfilm.preview_modal_episode_selector_season_episodes import EPISODE_COUNT
 
 MODEL_NAME = "PreviewModalEpisodeSelectorSeasonEpisodesModel"
 
-SEASONS = [(80117549, 2), (81458424, None)]
+SEASONS = load_ids("PreviewModalEpisodeSelectorSeasonEpisodesModel")
 """Each season and how many episodes it was asked for, None for the default."""
 
 
@@ -35,7 +34,14 @@ def generate_preview_modal_episode_selector_season_episodes(
                 EPISODE_COUNT if count is None else count,
             ),
         )
-    generate_model(FILES_PATH, MESHFILM_PATH, MODEL_NAME)
+    rebuild_model(
+        FILES_PATH,
+        MESHFILM_PATH,
+        MODEL_NAME,
+        name_of=lambda season: (
+            str(season[0]) if season[1] is None else f"{season[0]}_{season[1]}"
+        ),
+    )
 
 
 if __name__ == "__main__":

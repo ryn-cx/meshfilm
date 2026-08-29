@@ -209,7 +209,7 @@ class UnifiedEntities(BaseModel):
     most_liked_messages: list[MostLikedMessage] = Field(..., alias='mostLikedMessages')
     badges: list[str]
     live_event: None = Field(None, alias='liveEvent')
-    bookmark: None = None
+    bookmark: None = Field(None)
     runtime_sec: int | None = Field(None, alias='runtimeSec')
     display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
 
