@@ -1,17 +1,21 @@
 from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 
 class Extensions(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     error_type: str = Field(..., alias='errorType')
     origin: str
 
 class Error(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     message: str
     path: list[int | str]
     extensions: Extensions
 
 class Artwork(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     height: int
     key: str
@@ -19,11 +23,13 @@ class Artwork(BaseModel):
     width: int
 
 class ContextualSynopsis(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     evidence_key: str = Field(..., alias='evidenceKey')
     text: str
 
 class Node(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     number: int
     video_id: int = Field(..., alias='videoId')
@@ -47,25 +53,30 @@ class Node(BaseModel):
     playlist_actions: None = Field(..., alias='playlistActions')
 
 class Edge(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     cursor: str
     node: Node
 
 class PageInfo(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     end_cursor: str = Field(..., alias='endCursor')
     has_next_page: bool = Field(..., alias='hasNextPage')
 
 class Episodes(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     edges: list[Edge]
     page_info: PageInfo = Field(..., alias='pageInfo')
 
 class CurrentEpisode(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     video_id: int = Field(..., alias='videoId')
 
 class ParentShow(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     current_episode: CurrentEpisode = Field(..., alias='currentEpisode')
     has_recurring_releases: bool = Field(..., alias='hasRecurringReleases')
@@ -75,6 +86,7 @@ class ParentShow(BaseModel):
     unplayable_causes: None = Field(..., alias='unplayableCauses')
 
 class Video(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     video_id: int = Field(..., alias='videoId')
     episodes: Episodes | None = None
@@ -84,9 +96,11 @@ class Video(BaseModel):
     title: str | None = None
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     videos: list[Video]
 
 class PreviewModalEpisodeSelectorSeasonEpisodesModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     errors: list[Error] | None = None
     data: Data
     _raw_input: Any = PrivateAttr(default=None)

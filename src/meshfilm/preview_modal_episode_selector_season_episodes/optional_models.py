@@ -4,18 +4,18 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import Any
 
 class Extensions(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     error_type: str | None = Field(None, alias='errorType')
     origin: str | None = None
 
 class Error(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     message: str | None = None
     path: list[int | str] | None = None
     extensions: Extensions | None = None
 
 class Artwork(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     height: int | None = None
     key: str | None = None
@@ -23,13 +23,13 @@ class Artwork(BaseModel):
     width: int | None = None
 
 class ContextualSynopsis(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     evidence_key: str | None = Field(None, alias='evidenceKey')
     text: str | None = None
 
 class Node(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     number: int | None = None
     video_id: int | None = Field(None, alias='videoId')
@@ -53,30 +53,30 @@ class Node(BaseModel):
     playlist_actions: Any | None = Field(None, alias='playlistActions')
 
 class Edge(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cursor: str | None = None
     node: Node | None = None
 
 class PageInfo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     end_cursor: str | None = Field(None, alias='endCursor')
     has_next_page: bool | None = Field(None, alias='hasNextPage')
 
 class Episodes(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class CurrentEpisode(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
 
 class ParentShow(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     current_episode: CurrentEpisode | None = Field(None, alias='currentEpisode')
     has_recurring_releases: bool | None = Field(None, alias='hasRecurringReleases')
@@ -86,7 +86,7 @@ class ParentShow(BaseModel):
     unplayable_causes: Any | None = Field(None, alias='unplayableCauses')
 
 class Video(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     episodes: Episodes | None = None
@@ -96,11 +96,11 @@ class Video(BaseModel):
     title: str | None = None
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     videos: list[Video] | None = None
 
 class PreviewModalEpisodeSelectorSeasonEpisodesModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     errors: list[Error] | None = None
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)

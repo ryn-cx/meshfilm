@@ -1,18 +1,22 @@
 from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 
 class Episodes(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     total_count: int = Field(..., alias='totalCount')
 
 class Reason(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     icon_id: int = Field(..., alias='iconId')
     level: str
     text: str
 
 class ContentAdvisory(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     board_id: int = Field(..., alias='boardId')
     board_name: str = Field(..., alias='boardName')
@@ -25,6 +29,7 @@ class ContentAdvisory(BaseModel):
     video_specific_rating_reason: None = Field(..., alias='videoSpecificRatingReason')
 
 class Node(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     episodes: Episodes
     hidden_episode_numbers: bool = Field(..., alias='hiddenEpisodeNumbers')
@@ -33,30 +38,36 @@ class Node(BaseModel):
     content_advisory: ContentAdvisory = Field(..., alias='contentAdvisory')
 
 class Edge(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     cursor: str
     node: Node
 
 class PageInfo(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     end_cursor: str = Field(..., alias='endCursor')
     has_next_page: bool = Field(..., alias='hasNextPage')
     start_cursor: str = Field(..., alias='startCursor')
 
 class Seasons(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     edges: list[Edge]
     page_info: PageInfo = Field(..., alias='pageInfo')
 
 class Video(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     video_id: int = Field(..., alias='videoId')
     seasons: Seasons | None = None
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     videos: list[Video]
 
 class PreviewModalEpisodeSelectorModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     data: Data
     _raw_input: Any = PrivateAttr(default=None)
 

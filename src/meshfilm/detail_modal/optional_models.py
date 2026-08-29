@@ -4,113 +4,113 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import Any
 
 class Extensions(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     error_type: str | None = Field(None, alias='errorType')
     origin: str | None = None
 
 class Error(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     message: str | None = None
     path: list[int | str] | None = None
     extensions: Extensions | None = None
 
 class PlaybackEntity(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
 
 class BroadcastInfo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     distributor_name: Any | None = Field(None, alias='distributorName')
     release_date: Any | None = Field(None, alias='releaseDate')
 
 class Node(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     name: str | None = None
     person_id: int | None = Field(None, alias='personId')
 
 class Edge(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cursor: str | None = None
     node: Node | None = None
 
 class PageInfo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     has_next_page: bool | None = Field(None, alias='hasNextPage')
 
 class Cast(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Edge1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cursor: str | None = None
     node: Node | None = None
 
 class Creators(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge1] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Edge2(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cursor: str | None = None
     node: Node | None = None
 
 class Directors(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge2] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Edge3(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cursor: str | None = None
     node: Node | None = None
 
 class Writers(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge3] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Node4(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     genre_id: int | None = Field(None, alias='genreId')
     name: str | None = None
 
 class Edge4(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cursor: str | None = None
     node: Node4 | None = None
 
 class GenreTags(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge4] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Reason(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     icon_id: int | None = Field(None, alias='iconId')
     level: str | None = None
     text: str | None = None
 
 class ContentAdvisory(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     board_id: int | None = Field(None, alias='boardId')
     board_name: str | None = Field(None, alias='boardName')
@@ -123,7 +123,7 @@ class ContentAdvisory(BaseModel):
     video_specific_rating_reason: str | None = Field(None, alias='videoSpecificRatingReason')
 
 class MoodTag(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     display_name: str | None = Field(None, alias='displayName')
     id: int | None = None
@@ -131,18 +131,18 @@ class MoodTag(BaseModel):
     is_mood: bool | None = Field(None, alias='isMood')
 
 class ContextualSynopsis(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     evidence_key: str | None = Field(None, alias='evidenceKey')
     text: str | None = None
 
 class Episodes(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     total_count: int | None = Field(None, alias='totalCount')
 
 class ParentSeason(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     episodes: Episodes | None = None
     video_id: int | None = Field(None, alias='videoId')
@@ -152,7 +152,7 @@ class ParentSeason(BaseModel):
     title: str | None = None
 
 class CurrentEpisode(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     parent_season: ParentSeason | None = Field(None, alias='parentSeason')
     video_id: int | None = Field(None, alias='videoId')
@@ -166,51 +166,51 @@ class CurrentEpisode(BaseModel):
     bookmark: Any | None = None
 
 class Seasons(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     total_count: int | None = Field(None, alias='totalCount')
 
 class MostLikedMessage(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     tagline: str | None = None
     typed_classification: str | None = Field(None, alias='typedClassification')
 
 class TaglineMessage(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cta_message: Any | None = Field(None, alias='ctaMessage')
     tagline: str | None = None
     typed_classification: str | None = Field(None, alias='typedClassification')
 
 class Similar(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
 
 class Node5(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
 
 class Edge5(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node5 | None = None
 
 class SupplementalVideosList(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge5] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Sibling(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
 
 class TitleGroupMembership(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     id: str | None = None
     kind: str | None = None
@@ -218,7 +218,7 @@ class TitleGroupMembership(BaseModel):
     title: str | None = None
 
 class Boxart(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -229,7 +229,7 @@ class Boxart(BaseModel):
     width: int | None = None
 
 class BoxartHighRes(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -240,7 +240,7 @@ class BoxartHighRes(BaseModel):
     width: int | None = None
 
 class BrandLogoSmall(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -251,13 +251,13 @@ class BrandLogoSmall(BaseModel):
     width: int | None = None
 
 class FocalPoint(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     x: float | None = None
     y: float | None = None
 
 class StoryArt(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: FocalPoint | None = Field(None, alias='focalPoint')
@@ -268,7 +268,7 @@ class StoryArt(BaseModel):
     width: int | None = None
 
 class TitleLogoBranded(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -279,7 +279,7 @@ class TitleLogoBranded(BaseModel):
     width: int | None = None
 
 class TitleLogoUnbranded(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -290,19 +290,19 @@ class TitleLogoUnbranded(BaseModel):
     width: int | None = None
 
 class ParentSeason1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     episodes: Episodes | None = None
     video_id: int | None = Field(None, alias='videoId')
 
 class CurrentEpisode1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     parent_season: ParentSeason1 | None = Field(None, alias='parentSeason')
     video_id: int | None = Field(None, alias='videoId')
 
 class ParentShow(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     current_episode: CurrentEpisode1 | None = Field(None, alias='currentEpisode')
     num_seasons_label: str | None = Field(None, alias='numSeasonsLabel')
@@ -311,7 +311,7 @@ class ParentShow(BaseModel):
     title_group_memberships: list[Any] | None = Field(None, alias='titleGroupMemberships')
 
 class ParentSeason2(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     hide_episode_numbers: bool | None = Field(None, alias='hideEpisodeNumbers')
     number: int | None = None
@@ -320,7 +320,7 @@ class ParentSeason2(BaseModel):
     video_id: int | None = Field(None, alias='videoId')
 
 class UnifiedEntity(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     is_available: bool | None = Field(None, alias='isAvailable')
@@ -379,12 +379,12 @@ class UnifiedEntity(BaseModel):
     runtime_sec: int | None = Field(None, alias='runtimeSec')
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     playback_entities: list[PlaybackEntity] | None = Field(None, alias='playbackEntities')
     unified_entities: list[UnifiedEntity] | None = Field(None, alias='unifiedEntities')
 
 class DetailModalModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     errors: list[Error] | None = None
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)

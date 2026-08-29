@@ -1,18 +1,22 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from typing import Any
 
 class Extensions(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     error_type: str = Field(..., alias='errorType')
     origin: str
 
 class Error(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     message: str
     path: list[int | str]
     extensions: Extensions
 
 class Boxart(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
     focal_point: None = Field(..., alias='focalPoint')
@@ -23,6 +27,7 @@ class Boxart(BaseModel):
     width: int
 
 class BoxartHighRes(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
     focal_point: None = Field(..., alias='focalPoint')
@@ -33,6 +38,7 @@ class BoxartHighRes(BaseModel):
     width: int
 
 class BrandLogoSmall(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
     focal_point: None = Field(..., alias='focalPoint')
@@ -43,11 +49,13 @@ class BrandLogoSmall(BaseModel):
     width: int
 
 class FocalPoint(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     x: float
     y: float
 
 class StoryArt(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
     focal_point: FocalPoint = Field(..., alias='focalPoint')
@@ -58,6 +66,7 @@ class StoryArt(BaseModel):
     width: int
 
 class TitleLogoBranded(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
     focal_point: None = Field(..., alias='focalPoint')
@@ -68,6 +77,7 @@ class TitleLogoBranded(BaseModel):
     width: int
 
 class TitleLogoUnbranded(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
     focal_point: None = Field(..., alias='focalPoint')
@@ -78,10 +88,12 @@ class TitleLogoUnbranded(BaseModel):
     width: int
 
 class Episodes(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     total_count: int = Field(..., alias='totalCount')
 
 class ParentSeason(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     episodes: Episodes
     video_id: int = Field(..., alias='videoId')
@@ -91,6 +103,7 @@ class ParentSeason(BaseModel):
     title: str
 
 class CurrentEpisode(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     video_id: int = Field(..., alias='videoId')
     runtime_sec: int = Field(..., alias='runtimeSec')
@@ -103,32 +116,38 @@ class CurrentEpisode(BaseModel):
     badges: list[str]
 
 class TaglineMessage(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     cta_message: None = Field(..., alias='ctaMessage')
     tagline: str
     typed_classification: str = Field(..., alias='typedClassification')
 
 class PrimaryCoreGenreMetadata(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     primary_core_genre: str = Field(..., alias='primaryCoreGenre')
 
 class ContentMetadata(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     content_label: str = Field(..., alias='contentLabel')
     primary_core_genre_metadata: PrimaryCoreGenreMetadata = Field(..., alias='primaryCoreGenreMetadata')
 
 class TextEvidenceItem(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     key: str
     text: str
 
 class Reason(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     icon_id: int = Field(..., alias='iconId')
     level: str
     text: str
 
 class ContentAdvisory(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     board_id: int = Field(..., alias='boardId')
     board_name: str = Field(..., alias='boardName')
@@ -141,15 +160,18 @@ class ContentAdvisory(BaseModel):
     video_specific_rating_reason: str | None = Field(..., alias='videoSpecificRatingReason')
 
 class Seasons(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     total_count: int = Field(..., alias='totalCount')
 
 class MostLikedMessage(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     tagline: str
     typed_classification: str = Field(..., alias='typedClassification')
 
 class UnifiedEntities(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     video_id: int = Field(..., alias='videoId')
     thumbs_rating: None = Field(..., alias='thumbsRating')
@@ -187,14 +209,16 @@ class UnifiedEntities(BaseModel):
     most_liked_messages: list[MostLikedMessage] = Field(..., alias='mostLikedMessages')
     badges: list[str]
     live_event: None = Field(None, alias='liveEvent')
-    bookmark: None = Field(None)
+    bookmark: None = None
     runtime_sec: int | None = Field(None, alias='runtimeSec')
     display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     unified_entities: list[UnifiedEntities | None] = Field(..., alias='unifiedEntities')
 
 class MiniModalModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     errors: list[Error]
     data: Data
     _raw_input: Any = PrivateAttr(default=None)

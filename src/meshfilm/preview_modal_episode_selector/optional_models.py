@@ -4,19 +4,19 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import Any
 
 class Episodes(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     total_count: int | None = Field(None, alias='totalCount')
 
 class Reason(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     icon_id: int | None = Field(None, alias='iconId')
     level: str | None = None
     text: str | None = None
 
 class ContentAdvisory(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     board_id: int | None = Field(None, alias='boardId')
     board_name: str | None = Field(None, alias='boardName')
@@ -29,7 +29,7 @@ class ContentAdvisory(BaseModel):
     video_specific_rating_reason: Any | None = Field(None, alias='videoSpecificRatingReason')
 
 class Node(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     episodes: Episodes | None = None
     hidden_episode_numbers: bool | None = Field(None, alias='hiddenEpisodeNumbers')
@@ -38,36 +38,36 @@ class Node(BaseModel):
     content_advisory: ContentAdvisory | None = Field(None, alias='contentAdvisory')
 
 class Edge(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cursor: str | None = None
     node: Node | None = None
 
 class PageInfo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     end_cursor: str | None = Field(None, alias='endCursor')
     has_next_page: bool | None = Field(None, alias='hasNextPage')
     start_cursor: str | None = Field(None, alias='startCursor')
 
 class Seasons(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Video(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     seasons: Seasons | None = None
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     videos: list[Video] | None = None
 
 class PreviewModalEpisodeSelectorModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 

@@ -1,17 +1,21 @@
 from typing import Any, Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 
 class Extensions(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     error_type: str = Field(..., alias='errorType')
     origin: str
 
 class Error(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     message: str
     path: list[int | str]
     extensions: Extensions
 
 class Boxart(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
     focal_point: None = Field(..., alias='focalPoint')
@@ -22,17 +26,20 @@ class Boxart(BaseModel):
     width: int
 
 class ContextualSynopsis(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     evidence_key: str = Field(..., alias='evidenceKey')
     text: str
 
 class Reason(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     icon_id: int = Field(..., alias='iconId')
     level: str
     text: str
 
 class ContentAdvisory(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     board_id: int = Field(..., alias='boardId')
     board_name: str = Field(..., alias='boardName')
@@ -45,24 +52,29 @@ class ContentAdvisory(BaseModel):
     video_specific_rating_reason: str | None = Field(..., alias='videoSpecificRatingReason')
 
 class Episodes(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     total_count: int = Field(..., alias='totalCount')
 
 class ParentSeason(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     episodes: Episodes
     video_id: int = Field(..., alias='videoId')
 
 class CurrentEpisode(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     parent_season: ParentSeason = Field(..., alias='parentSeason')
     video_id: int = Field(..., alias='videoId')
 
 class Seasons(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     total_count: int = Field(..., alias='totalCount')
 
 class Videos(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     video_id: int = Field(..., alias='videoId')
     boxart: Boxart
@@ -83,13 +95,15 @@ class Videos(BaseModel):
     current_episode: CurrentEpisode | None = Field(None, alias='currentEpisode')
     num_seasons_label: str | None = Field(None, alias='numSeasonsLabel')
     seasons: Seasons | None = None
-    bookmark: None = Field(None)
+    bookmark: None = None
     display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
 
 class Data(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     videos: list[Videos | None]
 
 class PreviewModalVideoTitleGroupModel(BaseModel):
+    model_config = ConfigDict(defer_build=True)
     errors: list[Error]
     data: Data
     _raw_input: Any = PrivateAttr(default=None)

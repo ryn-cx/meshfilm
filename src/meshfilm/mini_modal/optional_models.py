@@ -4,18 +4,18 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import Any
 
 class Extensions(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     error_type: str | None = Field(None, alias='errorType')
     origin: str | None = None
 
 class Error(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     message: str | None = None
     path: list[int | str] | None = None
     extensions: Extensions | None = None
 
 class Boxart(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -26,7 +26,7 @@ class Boxart(BaseModel):
     width: int | None = None
 
 class BoxartHighRes(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -37,7 +37,7 @@ class BoxartHighRes(BaseModel):
     width: int | None = None
 
 class BrandLogoSmall(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -48,13 +48,13 @@ class BrandLogoSmall(BaseModel):
     width: int | None = None
 
 class FocalPoint(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     x: float | None = None
     y: float | None = None
 
 class StoryArt(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: FocalPoint | None = Field(None, alias='focalPoint')
@@ -65,7 +65,7 @@ class StoryArt(BaseModel):
     width: int | None = None
 
 class TitleLogoBranded(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -76,7 +76,7 @@ class TitleLogoBranded(BaseModel):
     width: int | None = None
 
 class TitleLogoUnbranded(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -87,12 +87,12 @@ class TitleLogoUnbranded(BaseModel):
     width: int | None = None
 
 class Episodes(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     total_count: int | None = Field(None, alias='totalCount')
 
 class ParentSeason(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     episodes: Episodes | None = None
     video_id: int | None = Field(None, alias='videoId')
@@ -102,7 +102,7 @@ class ParentSeason(BaseModel):
     title: str | None = None
 
 class CurrentEpisode(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     runtime_sec: int | None = Field(None, alias='runtimeSec')
@@ -115,38 +115,38 @@ class CurrentEpisode(BaseModel):
     badges: list[str] | None = None
 
 class TaglineMessage(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     cta_message: Any | None = Field(None, alias='ctaMessage')
     tagline: str | None = None
     typed_classification: str | None = Field(None, alias='typedClassification')
 
 class PrimaryCoreGenreMetadata(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     primary_core_genre: str | None = Field(None, alias='primaryCoreGenre')
 
 class ContentMetadata(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     content_label: str | None = Field(None, alias='contentLabel')
     primary_core_genre_metadata: PrimaryCoreGenreMetadata | None = Field(None, alias='primaryCoreGenreMetadata')
 
 class TextEvidenceItem(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     key: str | None = None
     text: str | None = None
 
 class Reason(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     icon_id: int | None = Field(None, alias='iconId')
     level: str | None = None
     text: str | None = None
 
 class ContentAdvisory(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     board_id: int | None = Field(None, alias='boardId')
     board_name: str | None = Field(None, alias='boardName')
@@ -159,18 +159,18 @@ class ContentAdvisory(BaseModel):
     video_specific_rating_reason: str | None = Field(None, alias='videoSpecificRatingReason')
 
 class Seasons(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     total_count: int | None = Field(None, alias='totalCount')
 
 class MostLikedMessage(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     tagline: str | None = None
     typed_classification: str | None = Field(None, alias='typedClassification')
 
 class UnifiedEntities(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     thumbs_rating: Any | None = Field(None, alias='thumbsRating')
@@ -213,11 +213,11 @@ class UnifiedEntities(BaseModel):
     display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     unified_entities: list[Any | UnifiedEntities] | None = Field(None, alias='unifiedEntities')
 
 class MiniModalModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     errors: list[Error] | None = None
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)

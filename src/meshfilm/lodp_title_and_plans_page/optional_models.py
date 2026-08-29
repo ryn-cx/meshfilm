@@ -4,21 +4,21 @@ from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from typing import Any
 
 class Price(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     price_formatted: str | None = Field(None, alias='priceFormatted')
     price_in_cents: int | None = Field(None, alias='priceInCents')
     price_tier: str | None = Field(None, alias='priceTier')
 
 class Attributes(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     audio_quality: str | None = Field(None, alias='audioQuality')
     has_ads: bool | None = Field(None, alias='hasAds')
     video_quality: str | None = Field(None, alias='videoQuality')
 
 class Plan(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     plan_id: str | None = Field(None, alias='planId')
     price: Price | None = None
@@ -27,13 +27,13 @@ class Plan(BaseModel):
     tag: Any | None = None
 
 class Plans(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     offer: Any | None = None
     plans: list[Plan] | None = None
 
 class Boxshot300(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -44,30 +44,30 @@ class Boxshot300(BaseModel):
     width: int | None = None
 
 class Video(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     title: str | None = None
     boxshot300: Boxshot300 | None = None
 
 class Collection(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     videos: list[Video] | None = None
 
 class TrifectaRows(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     collections: list[Collection] | None = None
 
 class FocalPoint(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     x: float | None = None
     y: float | None = None
 
 class MerchStill300(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: FocalPoint | None = Field(None, alias='focalPoint')
@@ -78,7 +78,7 @@ class MerchStill300(BaseModel):
     width: int | None = None
 
 class Node1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     number: int | None = None
@@ -88,23 +88,23 @@ class Node1(BaseModel):
     merch_still300: MerchStill300 | None = Field(None, alias='merchStill300')
 
 class Edge1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node1 | None = None
 
 class PageInfo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     has_next_page: bool | None = Field(None, alias='hasNextPage')
 
 class Episodes(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge1] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Node(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     episodes: Episodes | None = None
     number_label_v2: str | None = Field(None, alias='numberLabelV2')
@@ -115,19 +115,19 @@ class Node(BaseModel):
     video_id: int | None = Field(None, alias='videoId')
 
 class Edge(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node | None = None
 
 class Seasons(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
     total_count: int | None = Field(None, alias='totalCount')
 
 class BrandLogoCropped48h(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -138,7 +138,7 @@ class BrandLogoCropped48h(BaseModel):
     width: int | None = None
 
 class LogoStackCropped350(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: Any | None = Field(None, alias='focalPoint')
@@ -149,14 +149,14 @@ class LogoStackCropped350(BaseModel):
     width: int | None = None
 
 class TaglineMessage(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     badge_prefix: Any | None = Field(None, alias='badgePrefix')
     render_countdown_timer: bool | None = Field(None, alias='renderCountdownTimer')
     tagline: str | None = None
 
 class BillboardOrStoryArt960(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: FocalPoint | None = Field(None, alias='focalPoint')
@@ -167,7 +167,7 @@ class BillboardOrStoryArt960(BaseModel):
     width: int | None = None
 
 class EclipseBillboardRedux1280(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: FocalPoint | None = Field(None, alias='focalPoint')
@@ -178,7 +178,7 @@ class EclipseBillboardRedux1280(BaseModel):
     width: int | None = None
 
 class EclipseBillboardRedux1920(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: FocalPoint | None = Field(None, alias='focalPoint')
@@ -189,12 +189,12 @@ class EclipseBillboardRedux1920(BaseModel):
     width: int | None = None
 
 class PlayableVideo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     url: str | None = None
 
 class BillboardOrStoryArt1280(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: FocalPoint | None = Field(None, alias='focalPoint')
@@ -205,7 +205,7 @@ class BillboardOrStoryArt1280(BaseModel):
     width: int | None = None
 
 class Video2(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     playable_video: PlayableVideo | None = Field(None, alias='playableVideo')
@@ -216,24 +216,24 @@ class Video2(BaseModel):
     display_runtime_ms: int | None = Field(None, alias='displayRuntimeMs')
 
 class PromoVideo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     id: int | None = None
     video: Video2 | None = None
 
 class ShareTaglineMessage(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     tagline: str | None = None
     typed_classification: str | None = Field(None, alias='typedClassification')
 
 class Artwork(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     url: str | None = None
 
 class Node2(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     artwork: Artwork | None = None
     playable_video: PlayableVideo | None = Field(None, alias='playableVideo')
@@ -243,120 +243,120 @@ class Node2(BaseModel):
     video_id: int | None = Field(None, alias='videoId')
 
 class Edge2(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node2 | None = None
 
 class Trailers(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge2] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class ContentAdvisory(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     certification_value: str | None = Field(None, alias='certificationValue')
 
 class Node3(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     genre_id: int | None = Field(None, alias='genreId')
     name: str | None = None
 
 class Edge3(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node3 | None = None
 
 class PrimaryGenres(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge3] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Node4(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     name: str | None = None
     person_id: int | None = Field(None, alias='personId')
 
 class Edge4(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node4 | None = None
 
 class Actors(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge4] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Edge5(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node4 | None = None
 
 class Creators(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge5] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class AudioTrack(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     language: str | None = None
 
 class Subtitle(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     language: str | None = None
 
 class MediaTracks(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     audio_tracks: list[AudioTrack] | None = Field(None, alias='audioTracks')
     subtitles: list[Subtitle] | None = None
 
 class Node6(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     genre_id: int | None = Field(None, alias='genreId')
     title: str | None = None
 
 class Edge6(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node6 | None = None
 
 class Genres(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge6] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Tag(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     display_name: str | None = Field(None, alias='displayName')
     id: int | None = None
     is_displayable: bool | None = Field(None, alias='isDisplayable')
 
 class TudumTitle(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     slug: str | None = None
 
 class SimilarVideo(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     title: str | None = None
     boxshot300: Boxshot300 | None = None
 
 class BillboardOrStoryArt12801(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
     focal_point: FocalPoint | None = Field(None, alias='focalPoint')
@@ -367,46 +367,46 @@ class BillboardOrStoryArt12801(BaseModel):
     width: int | None = None
 
 class Node7(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     genre_id: int | None = Field(None, alias='genreId')
     name: str | None = None
 
 class Edge7(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node7 | None = None
 
 class CoreGenres(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge7] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class Node8(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     name: str | None = None
     person_id: int | None = Field(None, alias='personId')
 
 class Edge8(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     node: Node8 | None = None
 
 class Directors(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Edge8] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
 class ThumbnailClips(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     edges: list[Any] | None = None
 
 class Video1(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     title: str | None = None
     video_id: int | None = Field(None, alias='videoId')
@@ -449,13 +449,13 @@ class Video1(BaseModel):
     live_event: Any | None = Field(None, alias='liveEvent')
 
 class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     plans: Plans | None = None
     trifecta_rows: TrifectaRows | None = Field(None, alias='trifectaRows')
     videos: list[Video1] | None = None
 
 class LodpTitleAndPlansPageModel(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore', defer_build=True)
     data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 

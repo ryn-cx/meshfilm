@@ -95,4 +95,4 @@ class LodpTitleAndPlansPage(BaseEndpoint):
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> LodpTitleAndPlansPageModel:
         """Read a downloaded title page file into its model."""
-        return model_validate_json(data, log_id or type(self).__name__)
+        return model_validate_json(data, log_id or self.default_log_id)
