@@ -10,7 +10,9 @@ from typing import TYPE_CHECKING
 
 from good_ass_pydantic_integrator import load
 
-from .optional_models import PreviewModalEpisodeSelectorSeasonEpisodesModel as OptionalModel
+from .optional_models import (
+    PreviewModalEpisodeSelectorSeasonEpisodesModel as OptionalModel,
+)
 from .strict_models import PreviewModalEpisodeSelectorSeasonEpisodesModel as StrictModel
 
 if TYPE_CHECKING:
@@ -64,6 +66,8 @@ __all__ = [
 ]
 
 
-def model_validate_json(data: str | bytes | object, log_id: str) -> PreviewModalEpisodeSelectorSeasonEpisodesModel:
+def model_validate_json(
+    data: str | bytes | object, log_id: str
+) -> PreviewModalEpisodeSelectorSeasonEpisodesModel:
     """Read a downloaded file into PreviewModalEpisodeSelectorSeasonEpisodesModel."""
     return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

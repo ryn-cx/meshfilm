@@ -3,114 +3,133 @@ from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 
+
 class ContentAdvisory(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    maturity_level: int = Field(..., alias='maturityLevel')
+    field__typename: str = Field(..., alias="__typename")
+    maturity_level: int = Field(..., alias="maturityLevel")
+
 
 class UnifiedEntity(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    unified_entity_id: str = Field(..., alias='unifiedEntityId')
-    content_advisory: ContentAdvisory = Field(..., alias='contentAdvisory')
-    video_id: int = Field(..., alias='videoId')
+    field__typename: str = Field(..., alias="__typename")
+    unified_entity_id: str = Field(..., alias="unifiedEntityId")
+    content_advisory: ContentAdvisory = Field(..., alias="contentAdvisory")
+    video_id: int = Field(..., alias="videoId")
+
 
 class Artwork(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
+    field__typename: str = Field(..., alias="__typename")
     height: int
     key: str
     url: str
     width: int
 
+
 class ContextualArtwork(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    field_id: str = Field(..., alias='_id')
+    field__typename: str = Field(..., alias="__typename")
+    field_id: str = Field(..., alias="_id")
     artwork: Artwork
-    image_congruence_context: None = Field(..., alias='imageCongruenceContext')
+    image_congruence_context: None = Field(..., alias="imageCongruenceContext")
+
 
 class Node1(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    display_string: str = Field(..., alias='displayString')
-    unified_entity: UnifiedEntity = Field(..., alias='unifiedEntity')
-    contextual_artwork: ContextualArtwork = Field(..., alias='contextualArtwork')
+    field__typename: str = Field(..., alias="__typename")
+    display_string: str = Field(..., alias="displayString")
+    unified_entity: UnifiedEntity = Field(..., alias="unifiedEntity")
+    contextual_artwork: ContextualArtwork = Field(..., alias="contextualArtwork")
+
 
 class Edge1(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
+    field__typename: str = Field(..., alias="__typename")
     node: Node1
+
 
 class PageInfo(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    end_cursor: str = Field(..., alias='endCursor')
-    has_next_page: bool = Field(..., alias='hasNextPage')
+    field__typename: str = Field(..., alias="__typename")
+    end_cursor: str = Field(..., alias="endCursor")
+    has_next_page: bool = Field(..., alias="hasNextPage")
+
 
 class Entities(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
+    field__typename: str = Field(..., alias="__typename")
     edges: list[Edge1]
-    page_info: PageInfo = Field(..., alias='pageInfo')
-    total_count: int = Field(..., alias='totalCount')
+    page_info: PageInfo = Field(..., alias="pageInfo")
+    total_count: int = Field(..., alias="totalCount")
+
 
 class LoggingData(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    section_logging_id: str = Field(..., alias='sectionLoggingId')
-    track_id: int = Field(..., alias='trackId')
+    field__typename: str = Field(..., alias="__typename")
+    section_logging_id: str = Field(..., alias="sectionLoggingId")
+    track_id: int = Field(..., alias="trackId")
+
 
 class SectionTreatment(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
+    field__typename: str = Field(..., alias="__typename")
+
 
 class Node(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    display_string: str = Field(..., alias='displayString')
+    field__typename: str = Field(..., alias="__typename")
+    display_string: str = Field(..., alias="displayString")
     entities: Entities
     id: str
-    logging_data: LoggingData = Field(..., alias='loggingData')
-    section_treatment: SectionTreatment = Field(..., alias='sectionTreatment')
+    logging_data: LoggingData = Field(..., alias="loggingData")
+    section_treatment: SectionTreatment = Field(..., alias="sectionTreatment")
+
 
 class Edge(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
+    field__typename: str = Field(..., alias="__typename")
     node: Node
+
 
 class Sections(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
+    field__typename: str = Field(..., alias="__typename")
     edges: list[Edge]
-    total_count: int = Field(..., alias='totalCount')
+    total_count: int = Field(..., alias="totalCount")
+
 
 class TrackingInfo(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    request_id: str = Field(..., alias='requestId')
+    field__typename: str = Field(..., alias="__typename")
+    request_id: str = Field(..., alias="requestId")
+
 
 class Page(BaseModel):
     model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    field_id: str = Field(..., alias='_id')
-    display_string: None = Field(..., alias='displayString')
+    field__typename: str = Field(..., alias="__typename")
+    field_id: str = Field(..., alias="_id")
+    display_string: None = Field(..., alias="displayString")
     expires: AwareDatetime
     sections: Sections
-    tracking_info: TrackingInfo = Field(..., alias='trackingInfo')
+    tracking_info: TrackingInfo = Field(..., alias="trackingInfo")
+
 
 class Data(BaseModel):
     model_config = ConfigDict(defer_build=True)
     page: Page
+
 
 class SearchPageResultsModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
-    @model_validator(mode='wrap')
+    @model_validator(mode="wrap")
     @classmethod
-    def _capture_raw_input(cls, data: Any, handler: ModelWrapValidatorHandler[Self]) -> Self:
+    def _capture_raw_input(
+        cls, data: Any, handler: ModelWrapValidatorHandler[Self]
+    ) -> Self:
         """Validate the model and keep the input it was built from."""
         model = handler(data)
         model._raw_input = data

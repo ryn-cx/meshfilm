@@ -64,6 +64,8 @@ __all__ = [
 ]
 
 
-def model_validate_json(data: str | bytes | object, log_id: str) -> PreviewModalVideoTitleGroupModel:
+def model_validate_json(
+    data: str | bytes | object, log_id: str
+) -> PreviewModalVideoTitleGroupModel:
     """Read a downloaded file into PreviewModalVideoTitleGroupModel."""
     return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

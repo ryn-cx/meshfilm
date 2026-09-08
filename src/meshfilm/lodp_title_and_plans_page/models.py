@@ -208,6 +208,8 @@ __all__ = [
 ]
 
 
-def model_validate_json(data: str | bytes | object, log_id: str) -> LodpTitleAndPlansPageModel:
+def model_validate_json(
+    data: str | bytes | object, log_id: str
+) -> LodpTitleAndPlansPageModel:
     """Read a downloaded file into LodpTitleAndPlansPageModel."""
     return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

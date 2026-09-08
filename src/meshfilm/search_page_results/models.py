@@ -76,6 +76,8 @@ __all__ = [
 ]
 
 
-def model_validate_json(data: str | bytes | object, log_id: str) -> SearchPageResultsModel:
+def model_validate_json(
+    data: str | bytes | object, log_id: str
+) -> SearchPageResultsModel:
     """Read a downloaded file into SearchPageResultsModel."""
     return load.model_validate_json(StrictModel, OptionalModel, data, log_id)

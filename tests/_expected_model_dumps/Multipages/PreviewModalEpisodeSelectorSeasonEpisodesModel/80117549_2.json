@@ -1,0 +1,897 @@
+[
+  {
+    "errors": [
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      }
+    ],
+    "data": {
+      "videos": [
+        {
+          "field__typename": "Season",
+          "video_id": 80117549,
+          "episodes": {
+            "field__typename": "EpisodesConnection",
+            "edges": [
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "MA==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 1,
+                  "video_id": 80117711,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|bef18850-8700-11e8-b891-12d88964a344|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABXfsgNyUaElYosYtnuBWTvaAtLGE4TPJsIUq4tHdTWRTtFi7yswlcE0UfIYYo1spp4ZJ3mENflY18ITKMtIo4RIIAGqi3IKFJKbQNFuV3aXdeukAyZ5E1sVJ.jpg?r=498",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 2192,
+                  "is_in_remind_me_list": false,
+                  "title": "A Princess, an Elf, and a Demon Walk Into a Bar",
+                  "bookmark": null,
+                  "runtime_sec": 2192,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80117711_INFORMATIVE|en",
+                    "text": "Princess Bean already has the wedding day blues when a mysterious figure arrives, claiming he's her personal demon. Elfo hates his happy homeland."
+                  },
+                  "unified_entity_id": "Video:80117711",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              },
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "MQ==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 2,
+                  "video_id": 80145115,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|24367770-7103-11e8-b1e3-0aba9426afd8|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABe_vr-p3dd59UyhZe5i84S0u5eqXkb3vYrBNSsIUuCQWbfhkWrWSx4QjSQLql7xXq1G8cdWC_rhvd2mIUz4SYuT6c9DGqNknG5kQAMJ1Ounv3WsXnTGQ6-Gw.jpg?r=141",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1700,
+                  "is_in_remind_me_list": false,
+                  "title": "For Whom the Pig Oinks",
+                  "bookmark": null,
+                  "runtime_sec": 1700,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145115_INFORMATIVE|en",
+                    "text": "How to get rid of an unwanted fianc\u00e9? Bean's plan involves a party barge and mermaids. King Z\u00f8g tries to make Elfo's blood into an immortality potion."
+                  },
+                  "unified_entity_id": "Video:80145115",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              }
+            ],
+            "page_info": {
+              "field__typename": "PageInfo",
+              "end_cursor": "MQ==",
+              "has_next_page": true
+            }
+          },
+          "hide_episode_numbers": false,
+          "number": 1,
+          "parent_show": {
+            "field__typename": "Show",
+            "current_episode": {
+              "field__typename": "Episode",
+              "video_id": 80117711
+            },
+            "has_recurring_releases": false,
+            "video_id": 80095697,
+            "is_available": true,
+            "is_playable": true,
+            "unplayable_causes": null
+          },
+          "title": "Part 1"
+        }
+      ]
+    }
+  },
+  {
+    "errors": [
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      }
+    ],
+    "data": {
+      "videos": [
+        {
+          "field__typename": "Season",
+          "video_id": 80117549,
+          "episodes": {
+            "field__typename": "EpisodesConnection",
+            "edges": [
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "Mg==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 3,
+                  "video_id": 80145117,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|c36273d0-7103-11e8-ac71-0a0bedd2c9ea|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABbLaQONF5ll77X-ekd6wo9bSASJSxJprfvr0-6Q7Ck9SjemP-DICss2q86UHx4TF0GiewD-Y7YSEScNr1JYwFJpi5W0R2vjsLzeVTMTivzLA6xSDJnEyuAoh.jpg?r=2ff",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1753,
+                  "is_in_remind_me_list": false,
+                  "title": "The Princess of Darkness",
+                  "bookmark": null,
+                  "runtime_sec": 1753,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145117_INFORMATIVE|en",
+                    "text": "Sorcerio declares that demonic possession is behind Bean's drunken exploits -- and things look dicey for Luci when the king hires an eerie exorcist."
+                  },
+                  "unified_entity_id": "Video:80145117",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              },
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "Mw==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 4,
+                  "video_id": 80145118,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|02969780-8a3a-11e8-af5e-0a7e987b423a|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABWDpaN10vcjIaTiipRVI2Ht7aRcfDxfqZMNb5luu-3NuQbfME8tgs9TJOSEEVbL93hY-tf6jhBVP_ts6Ab76tppTBXZJFd2VxnbfK71OsBltdMlPly1LKRO3.jpg?r=23f",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1815,
+                  "is_in_remind_me_list": false,
+                  "title": "Castle Party Massacre",
+                  "bookmark": null,
+                  "runtime_sec": 1815,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145118_INFORMATIVE|en",
+                    "text": "With the king away, Bean throws a wild party while Odval and Sorcerio gather their secret society for a ritual. But the night takes a surprising turn."
+                  },
+                  "unified_entity_id": "Video:80145118",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              }
+            ],
+            "page_info": {
+              "field__typename": "PageInfo",
+              "end_cursor": "Mw==",
+              "has_next_page": true
+            }
+          },
+          "hide_episode_numbers": false,
+          "number": 1,
+          "parent_show": {
+            "field__typename": "Show",
+            "current_episode": {
+              "field__typename": "Episode",
+              "video_id": 80117711
+            },
+            "has_recurring_releases": false,
+            "video_id": 80095697,
+            "is_available": true,
+            "is_playable": true,
+            "unplayable_causes": null
+          },
+          "title": "Part 1"
+        }
+      ]
+    }
+  },
+  {
+    "errors": [
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      }
+    ],
+    "data": {
+      "videos": [
+        {
+          "field__typename": "Season",
+          "video_id": 80117549,
+          "episodes": {
+            "field__typename": "EpisodesConnection",
+            "edges": [
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "NA==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 5,
+                  "video_id": 80145119,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|8553a350-9112-11e8-b4d9-12b3a0c2ada2|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABU7H1DDXLJ5mcLx9PqpGPEfDxQeqxJktnjxyNZslytvPzA4BxBFd4yzX2crQAxrNYSi2ITFf6HL6xTDa2lxCNjDQLVNPgFkqPC_dApmX06y8MTF3yGVONIzX.jpg?r=b03",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1720,
+                  "is_in_remind_me_list": false,
+                  "title": "Faster, Princess! Kill! Kill!",
+                  "bookmark": null,
+                  "runtime_sec": 1720,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145119_INFORMATIVE|en",
+                    "text": "Banished from the castle by Z\u00f8g, Bean tries to work but has trouble keeping a job. Elfo encounters a bizarre pair of siblings living in a candy house."
+                  },
+                  "unified_entity_id": "Video:80145119",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              },
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "NQ==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 6,
+                  "video_id": 80145116,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|c15f6890-9057-11e8-b528-0ef808a5b7a0|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABfzKu5-QYGnLA4W_rC3VTM3oNh7UevSY-HFTsYCCcgbdPkDzNDwD0kLhJvtj9Q3shfEKe5lq64q3TTo9IkZUViIRs49FRG_vkzKJpBNae6YfmXhNxYHgBAXT.jpg?r=c74",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1707,
+                  "is_in_remind_me_list": false,
+                  "title": "Swamp and Circumstance",
+                  "bookmark": null,
+                  "runtime_sec": 1707,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145116_INFORMATIVE|en",
+                    "text": "Bean tries her hand at diplomacy after Z\u00f8g makes her ambassador to Dankmire, Oona's kingdom and an important ally for Dreamland."
+                  },
+                  "unified_entity_id": "Video:80145116",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              }
+            ],
+            "page_info": {
+              "field__typename": "PageInfo",
+              "end_cursor": "NQ==",
+              "has_next_page": true
+            }
+          },
+          "hide_episode_numbers": false,
+          "number": 1,
+          "parent_show": {
+            "field__typename": "Show",
+            "current_episode": {
+              "field__typename": "Episode",
+              "video_id": 80117711
+            },
+            "has_recurring_releases": false,
+            "video_id": 80095697,
+            "is_available": true,
+            "is_playable": true,
+            "unplayable_causes": null
+          },
+          "title": "Part 1"
+        }
+      ]
+    }
+  },
+  {
+    "errors": [
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      }
+    ],
+    "data": {
+      "videos": [
+        {
+          "field__typename": "Season",
+          "video_id": 80117549,
+          "episodes": {
+            "field__typename": "EpisodesConnection",
+            "edges": [
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "Ng==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 7,
+                  "video_id": 80145120,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|b7facac0-9114-11e8-b615-125e5ca9504c|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABVYZ8-ov0SdoXcc15zKvf8m9bybbRE4d3CF2BcC_fakRysa2N8RZBTtAnCNLJb7WCmxSIFmd0I08J2x00wfpN_uEjSyn5o2-4IQvS4oCoISYsOkeFz4vxPYA.jpg?r=060",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1717,
+                  "is_in_remind_me_list": false,
+                  "title": "Love's Tender Rampage",
+                  "bookmark": null,
+                  "runtime_sec": 1717,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145120_INFORMATIVE|en",
+                    "text": "Elfo lies to hide his feelings for Bean, but things get complicated when she tries to help him by sending the knights on a quest."
+                  },
+                  "unified_entity_id": "Video:80145120",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              },
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "Nw==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 8,
+                  "video_id": 80145121,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|37ffccf0-9112-11e8-b4d9-12b3a0c2ada2|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABc4jOUPUsew9VEpIt-hO-0xPqP7NtS2ZXTLc9kgq6KISWqGEpzDFdXFPj_KFYc6hAnXssBdp5ORGeHonUzNvfrQF0QTOHVtUbSYOJZ-K-CmUStHqC6avPxhc.jpg?r=ea9",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1661,
+                  "is_in_remind_me_list": false,
+                  "title": "The Limits of Immortality",
+                  "bookmark": null,
+                  "runtime_sec": 1661,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145121_INFORMATIVE|en",
+                    "text": "Elfo's been kidnapped! Bean, Luci, Sorcerio and the knights search for him, along with a magical pendant needed to complete the immortality potion."
+                  },
+                  "unified_entity_id": "Video:80145121",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              }
+            ],
+            "page_info": {
+              "field__typename": "PageInfo",
+              "end_cursor": "Nw==",
+              "has_next_page": true
+            }
+          },
+          "hide_episode_numbers": false,
+          "number": 1,
+          "parent_show": {
+            "field__typename": "Show",
+            "current_episode": {
+              "field__typename": "Episode",
+              "video_id": 80117711
+            },
+            "has_recurring_releases": false,
+            "video_id": 80095697,
+            "is_available": true,
+            "is_playable": true,
+            "unplayable_causes": null
+          },
+          "title": "Part 1"
+        }
+      ]
+    }
+  },
+  {
+    "errors": [
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          0,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "bookmark"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      },
+      {
+        "message": "UNAUTHENTICATED",
+        "path": [
+          "videos",
+          0,
+          "episodes",
+          "edges",
+          1,
+          "node",
+          "playlistActions"
+        ],
+        "extensions": {
+          "error_type": "UNAUTHENTICATED",
+          "origin": "gusto"
+        }
+      }
+    ],
+    "data": {
+      "videos": [
+        {
+          "field__typename": "Season",
+          "video_id": 80117549,
+          "episodes": {
+            "field__typename": "EpisodesConnection",
+            "edges": [
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "OA==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 9,
+                  "video_id": 80145122,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|635da340-9112-11e8-a6dc-12a2ca192798|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABWrM-Cp5GmkfqJGPnEGz_6r9MXB_ntzEzGchK6kFVGo2avzqCnaiO6kN4cZM8pO8lVfNqiONNCA5-wlW1VzlBG61tbLxfvUibGHg_QdlzbqsC7OUUji6VxF6.jpg?r=683",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1729,
+                  "is_in_remind_me_list": false,
+                  "title": "To Thine Own Elf Be True",
+                  "bookmark": null,
+                  "runtime_sec": 1729,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145122_INFORMATIVE|en",
+                    "text": "After he learns a surprising secret about himself, Elfo heads home to Elfwood in search of the truth."
+                  },
+                  "unified_entity_id": "Video:80145122",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              },
+              {
+                "field__typename": "EpisodeEdge",
+                "cursor": "OQ==",
+                "node": {
+                  "field__typename": "Episode",
+                  "number": 10,
+                  "video_id": 80145123,
+                  "artwork": {
+                    "field__typename": "Image",
+                    "height": 192,
+                    "key": "MERCH_STILL|d38f1a90-9112-11e8-9fed-0e956fbd4a4a|en",
+                    "url": "https://occ-0-2794-2219.1.nflxso.net/dnm/api/v6/9pS1daC2n6UGc3dUogvWIPMR_OU/AAAABe9GYVEQ_0xeQpKTWEc1XVryO2aKJOuoCy4saiPkRvEMZmWc1ONwTHCA56H-PI8Z74oXjorDCzlG7MOLVUva4nlpHLSL7Wc6ZePeqgOvVyFvtfdaJ6kP8hog.jpg?r=b1e",
+                    "width": 342
+                  },
+                  "availability_date_messaging": null,
+                  "display_runtime_sec": 1719,
+                  "is_in_remind_me_list": false,
+                  "title": "Dreamland Falls",
+                  "bookmark": null,
+                  "runtime_sec": 1719,
+                  "live_event": null,
+                  "contextual_synopsis": {
+                    "field__typename": "ContextualSynopsis",
+                    "evidence_key": "web_synopsis|80145123_INFORMATIVE|en",
+                    "text": "As Dreamland celebrates an unexpected arrival while saying goodbye to a friend, everyday life is thrown into disarray."
+                  },
+                  "unified_entity_id": "Video:80145123",
+                  "is_available": true,
+                  "is_playable": true,
+                  "unplayable_causes": null,
+                  "badges": [
+                    "NONE"
+                  ],
+                  "has_recurring_releases": false,
+                  "is_in_playlist": false,
+                  "is_in_rolling_reminders_list": false,
+                  "playlist_actions": null
+                }
+              }
+            ],
+            "page_info": {
+              "field__typename": "PageInfo",
+              "end_cursor": "OQ==",
+              "has_next_page": false
+            }
+          },
+          "hide_episode_numbers": false,
+          "number": 1,
+          "parent_show": {
+            "field__typename": "Show",
+            "current_episode": {
+              "field__typename": "Episode",
+              "video_id": 80117711
+            },
+            "has_recurring_releases": false,
+            "video_id": 80095697,
+            "is_available": true,
+            "is_playable": true,
+            "unplayable_causes": null
+          },
+          "title": "Part 1"
+        }
+      ]
+    }
+  }
+]
