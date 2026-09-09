@@ -1,11 +1,9 @@
-# TODO: Validate
 import pytest
-from get_around import build_client_automatically
+from get_around import GetAround, get_credential
 
 from meshfilm import Meshfilm
 
 
-# TODO: Validate
 @pytest.fixture(scope="session")
 def client() -> Meshfilm:
-    return Meshfilm(build_client_automatically())
+    return Meshfilm(GetAround(proxy=get_credential("PROXY")))

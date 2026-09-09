@@ -1,100 +1,121 @@
-# TODO: Validate
-"""Exceptions."""
-
 from __future__ import annotations
 
 from typing import Any
 
 
-# TODO: Validate
 class MeshfilmError(Exception):
     """Base exception for Meshfilm."""
 
     response: str | dict[str, Any] | None = None
 
 
-# TODO: Validate
 class HTTPError(MeshfilmError):
     """Raised when HTTP request fails with unexpected status code."""
 
-    # TODO: Validate
     def __init__(
         self,
         status_code: int,
         response: str | dict[str, Any] | None,
     ) -> None:
-        """Initialize the HTTPError with the status code and response body."""
+        """Initialize HTTPError."""
         self.status_code = status_code
         self.response = response
         super().__init__(f"Unexpected response status code: {status_code}")
 
 
-# TODO: Validate
 class ResourceNotFoundError(HTTPError):
     """Raised when the API reports that the requested resource does not exist."""
 
 
-# TODO: Validate
-class VideoNotFoundError(ResourceNotFoundError):
-    """Raised when the requested video does not exist."""
+class TitleNotFoundError(ResourceNotFoundError):
+    """Raised when the requested title does not exist."""
 
-    # TODO: Validate
     def __init__(
         self,
-        video_id: int,
+        title_id: int,
         status_code: int,
         response: str | dict[str, Any] | None,
     ) -> None:
-        """Initialize with the video id and the originating response."""
-        self.video_id = video_id
+        """Initialize TitleNotFoundError."""
+        self.title_id = title_id
         super().__init__(status_code, response)
 
 
-# TODO: Validate
 class ShowNotFoundError(ResourceNotFoundError):
     """Raised when the requested show does not exist."""
 
-    # TODO: Validate
     def __init__(
         self,
         show_id: int,
         status_code: int,
         response: str | dict[str, Any] | None,
     ) -> None:
-        """Initialize with the show id and the originating response."""
+        """Initialize ShowNotFoundError."""
         self.show_id = show_id
         super().__init__(status_code, response)
 
 
-# TODO: Validate
 class SeasonNotFoundError(ResourceNotFoundError):
     """Raised when the requested season does not exist."""
 
-    # TODO: Validate
     def __init__(
         self,
         season_id: int,
         status_code: int,
         response: str | dict[str, Any] | None,
     ) -> None:
-        """Initialize with the season id and the originating response."""
+        """Initialize SeasonNotFoundError."""
         self.season_id = season_id
         super().__init__(status_code, response)
 
 
-# TODO: Validate
-class InvalidFileError(MeshfilmError):
-    """Raised when a downloaded file is not for what was requested."""
+class InvalidArgsError(MeshfilmError):
+    """Raised when the requested id is not the kind of video the endpoint takes."""
 
-    # TODO: Validate
+
+class NotAShowError(InvalidArgsError):
+    """Raised if show_id is not a show."""
+
     def __init__(
         self,
-        field: str,
-        expected: object,
+        show_id: int,
+        typename: str,
         response: str | dict[str, Any] | None,
     ) -> None:
-        """Initialize with the field, the value it should hold, and the response."""
-        self.field = field
-        self.expected = expected
+        """Initialize NotAShowError."""
+        self.show_id = show_id
+        self.typename = typename
         self.response = response
-        super().__init__(f"Downloaded file is not for {field} {expected!r}")
+        super().__init__(f"{show_id} is a {typename}, not a show")
+
+
+class NotASeasonError(InvalidArgsError):
+    """Raised if season_id is not a season."""
+
+    def __init__(
+        self,
+        season_id: int,
+        typename: str,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize NotASeasonError."""
+        self.season_id = season_id
+        self.typename = typename
+        self.response = response
+        super().__init__(f"{season_id} is a {typename}, not a season")
+
+
+class NotATitleError(InvalidArgsError):
+    """Raised if title_id is not a show or a movie."""
+
+    def __init__(
+        self,
+        title_id: int,
+        typename: str,
+        response: str | dict[str, Any] | None,
+    ) -> None:
+        """Initialize NotATitleError."""
+        self.title_id = title_id
+        self.typename = typename
+        self.response = response
+        super().__init__(f"{title_id} is a {typename}, not a show or a movie")

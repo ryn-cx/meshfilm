@@ -1,6 +1,3 @@
-# TODO: Validate
-"""Contains BaseEndpoint."""
-
 from __future__ import annotations
 
 from inspect import Parameter, signature
@@ -12,53 +9,55 @@ if TYPE_CHECKING:
     from meshfilm import Meshfilm
 
 
-# TODO: Validate
 class BaseEndpoint:
     """Base class for API endpoints."""
 
     WEBSITE = "Netflix"
 
-    # TODO: Validate
     @property
     def default_log_id(self) -> str:
         """Get the log id of the endpoint itself, without any arguments."""
         return f"{self.WEBSITE} - {self.__class__.__name__}"
 
-    # TODO: Validate
     def __init__(self, client: Meshfilm) -> None:
         """Initialize the endpoint with the Meshfilm client."""
         self._client = client
 
-    # TODO: Validate
     @staticmethod
     def non_default_args(
-        func: Callable[..., Any],
-        values: dict[str, Any],
+        endpoint_method: Callable[..., Any],
+        caller_locals: dict[str, Any],
     ) -> dict[str, Any]:
         """Return the args that are changed from their default values."""
         return {
-            name: values[name]
-            for name, param in signature(func).parameters.items()
-            if param.default is not Parameter.empty
-            and name in values
-            and values[name] != param.default
+            parameter_name: caller_locals[parameter_name]
+            for parameter_name, parameter in signature(
+                endpoint_method,
+            ).parameters.items()
+            if parameter.default is not Parameter.empty
+            and parameter_name in caller_locals
+            and caller_locals[parameter_name] != parameter.default
         }
 
-    # TODO: Validate
-    def get_log_id(self, func: Callable[..., Any], values: dict[str, Any]) -> str:
-        """Get the log id.
-
-        Example: Netflix - ClassName (arg1='value1' arg2='value2')
-        """
-        required = {
-            name: values[name]
-            for name, param in signature(func).parameters.items()
-            if param.default is Parameter.empty and name in values
+    def get_log_id(
+        self,
+        endpoint: Callable[..., Any],
+        caller_locals: dict[str, Any],
+    ) -> str:
+        """Get the log id."""
+        required_args = {
+            parameter_name: caller_locals[parameter_name]
+            for parameter_name, parameter in signature(endpoint).parameters.items()
+            if parameter.default is Parameter.empty and parameter_name in caller_locals
         }
-        set_args = {**required, **self.non_default_args(func, values)}
-        parts = [
-            *(f"{name}={value!r}" for name, value in set_args.items()),
+        logged_args = {
+            **required_args,
+            **self.non_default_args(endpoint, caller_locals),
+        }
+        formatted_args = [
+            f"{parameter_name}={value!r}"
+            for parameter_name, value in logged_args.items()
         ]
-        if not parts:
+        if not formatted_args:
             return self.default_log_id
-        return f"{self.default_log_id} ({' '.join(parts)})"
+        return f"{self.default_log_id} ({' '.join(formatted_args)})"

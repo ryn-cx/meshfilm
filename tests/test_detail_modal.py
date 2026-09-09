@@ -1,56 +1,40 @@
-# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from meshfilm.detail_modal.models import DetailModalModel
-from meshfilm.exceptions import VideoNotFoundError
-from tests.utils import RecordedEndpoint
+from meshfilm.exceptions import NotATitleError, TitleNotFoundError
 
 if TYPE_CHECKING:
     from meshfilm import Meshfilm
 
-VIDEO_IDS = [
-    # https://www.netflix.com/title/80095697
-    pytest.param(80095697, id="disenchantment show"),
-    # https://www.netflix.com/title/80117711
-    pytest.param(80117711, id="disenchantment first episode"),
-    # https://www.netflix.com/title/81458424
-    pytest.param(81458424, id="wake up dead man movie"),
+TITLES = [
+    pytest.param(80095697, id="Show"),
+    pytest.param(81458424, id="Movie"),
+    pytest.param(81415953, id="Deleted Show"),
+]
+
+NOT_TITLES = [
+    pytest.param(81159306, id="Season"),
+    pytest.param(81159422, id="Episode"),
 ]
 
 
 # TODO: Validate
-class DetailModalTest(RecordedEndpoint):
-    MODEL = DetailModalModel
+@pytest.mark.parametrize("title_id", TITLES)
+def test_download(client: Meshfilm, title_id: int) -> None:
+    detail_modal = client.detail_modal(title_id)
+    assert detail_modal.data.unified_entities[0].video_id == title_id
+
+
+def test_download_invalid(client: Meshfilm) -> None:
+    with pytest.raises(TitleNotFoundError):
+        client.detail_modal.download(1)
 
 
 # TODO: Validate
-@pytest.mark.parametrize("video_id", VIDEO_IDS)
-def test_download(client: Meshfilm, video_id: int) -> None:
-    DetailModalTest.download_test(
-        video_id,
-        lambda: client.detail_modal.download(video_id),
-    )
-
-
-# TODO: Validate
-@pytest.mark.parametrize("video_id", VIDEO_IDS)
-def test_parse(client: Meshfilm, video_id: int) -> None:
-    data = client.detail_modal.load(DetailModalTest.recorded_content(video_id))
-    assert data.data.unified_entities[0].video_id == video_id
-
-
-# TODO: Validate
-@pytest.mark.parametrize(
-    "video_id",
-    [pytest.param(1, id="video that does not exist")],
-)
-def test_download_invalid(client: Meshfilm, video_id: int) -> None:
-    DetailModalTest.error_test(
-        video_id,
-        lambda: client.detail_modal.download(video_id),
-        VideoNotFoundError,
-    )
+@pytest.mark.parametrize("title_id", NOT_TITLES)
+def test_download_not_a_title(client: Meshfilm, title_id: int) -> None:
+    with pytest.raises(NotATitleError):
+        client.detail_modal.download(title_id)

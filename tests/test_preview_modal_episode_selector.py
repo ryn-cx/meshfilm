@@ -1,59 +1,50 @@
-# TODO: Validate
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 import pytest
 
-from meshfilm.exceptions import ShowNotFoundError
-from meshfilm.preview_modal_episode_selector.models import (
-    PreviewModalEpisodeSelectorModel,
-)
-from tests.utils import RecordedEndpoint
+from meshfilm.exceptions import NotAShowError, ShowNotFoundError
 
 if TYPE_CHECKING:
     from meshfilm import Meshfilm
 
-SHOW_IDS = [
-    # https://www.netflix.com/title/80095697
-    pytest.param(80095697, id="disenchantment show"),
-    # A movie has no seasons, and is answered with itself rather than refused.
-    # https://www.netflix.com/title/81458424
-    pytest.param(81458424, id="wake up dead man movie"),
+SHOWS = [
+    pytest.param(80107103, 37, id="Show"),
+    pytest.param(81415953, 0, id="Deleted Show"),
+]
+
+NOT_SHOWS = [
+    pytest.param(81458424, id="Movie"),
+    pytest.param(81159422, id="Episode"),
 ]
 
 
-# TODO: Validate
-class PreviewModalEpisodeSelectorTest(RecordedEndpoint):
-    MODEL = PreviewModalEpisodeSelectorModel
+@pytest.mark.parametrize(("show_id", "season_count"), SHOWS)
+def test_download(client: Meshfilm, show_id: int, season_count: int) -> None:
+    video = client.preview_modal_episode_selector(show_id, season_count).data.videos[0]
+    assert video.video_id == show_id
+    assert len(video.seasons.edges) == season_count
+
+
+@pytest.mark.parametrize(("show_id", "season_count"), SHOWS)
+def test_download_no_season_count(
+    client: Meshfilm,
+    show_id: int,
+    season_count: int,
+) -> None:
+    video = client.preview_modal_episode_selector(show_id).data.videos[0]
+    assert video.video_id == show_id
+    assert len(video.seasons.edges) == season_count
+
+
+def test_download_invalid(client: Meshfilm) -> None:
+    with pytest.raises(ShowNotFoundError):
+        client.preview_modal_episode_selector.download(1)
 
 
 # TODO: Validate
-@pytest.mark.parametrize("show_id", SHOW_IDS)
-def test_download(client: Meshfilm, show_id: int) -> None:
-    PreviewModalEpisodeSelectorTest.download_test(
-        show_id,
-        lambda: client.preview_modal_episode_selector.download(show_id),
-    )
-
-
-# TODO: Validate
-@pytest.mark.parametrize("show_id", SHOW_IDS)
-def test_parse(client: Meshfilm, show_id: int) -> None:
-    data = client.preview_modal_episode_selector.load(
-        PreviewModalEpisodeSelectorTest.recorded_content(show_id),
-    )
-    assert data.data.videos[0].video_id == show_id
-
-
-# TODO: Validate
-@pytest.mark.parametrize(
-    "show_id",
-    [pytest.param(1, id="show that does not exist")],
-)
-def test_download_invalid(client: Meshfilm, show_id: int) -> None:
-    PreviewModalEpisodeSelectorTest.error_test(
-        show_id,
-        lambda: client.preview_modal_episode_selector.download(show_id),
-        ShowNotFoundError,
-    )
+@pytest.mark.parametrize("video_id", NOT_SHOWS)
+def test_download_not_a_show(client: Meshfilm, video_id: int) -> None:
+    with pytest.raises(NotAShowError):
+        client.preview_modal_episode_selector.download(video_id)

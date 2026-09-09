@@ -1,11 +1,4 @@
-"""DetailModalModel, strict to a type checker, all-optional at runtime.
-
-A type checker reads the strict model, so every field carries the type and
-the requiredness the schema recorded. At runtime the all-optional copy is imported
-instead, so a response that has drifted still parses and a field the data is
-missing is None despite what its type hint says.
-"""
-
+# ruff: noqa: D100
 from typing import TYPE_CHECKING
 
 from good_ass_pydantic_integrator import load
@@ -24,7 +17,6 @@ if TYPE_CHECKING:
         ContextualSynopsis,
         Creators,
         CurrentEpisode,
-        CurrentEpisode1,
         Data,
         DetailModalModel,
         Directors,
@@ -46,9 +38,6 @@ if TYPE_CHECKING:
         Node5,
         PageInfo,
         ParentSeason,
-        ParentSeason1,
-        ParentSeason2,
-        ParentShow,
         PlaybackEntity,
         Reason,
         Seasons,
@@ -74,7 +63,6 @@ else:
         ContextualSynopsis,
         Creators,
         CurrentEpisode,
-        CurrentEpisode1,
         Data,
         DetailModalModel,
         Directors,
@@ -96,9 +84,6 @@ else:
         Node5,
         PageInfo,
         ParentSeason,
-        ParentSeason1,
-        ParentSeason2,
-        ParentShow,
         PlaybackEntity,
         Reason,
         Seasons,
@@ -124,7 +109,6 @@ __all__ = [
     "ContextualSynopsis",
     "Creators",
     "CurrentEpisode",
-    "CurrentEpisode1",
     "Data",
     "DetailModalModel",
     "Directors",
@@ -146,9 +130,6 @@ __all__ = [
     "Node5",
     "PageInfo",
     "ParentSeason",
-    "ParentSeason1",
-    "ParentSeason2",
-    "ParentShow",
     "PlaybackEntity",
     "Reason",
     "Seasons",
