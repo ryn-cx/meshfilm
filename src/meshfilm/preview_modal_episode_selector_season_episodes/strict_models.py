@@ -3,17 +3,6 @@ from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 
-class Extensions(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    error_type: str = Field(..., alias='errorType')
-    origin: str
-
-class Error(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    message: str
-    path: list[int | str]
-    extensions: Extensions
-
 class Artwork(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
@@ -85,7 +74,7 @@ class ParentShow(BaseModel):
     is_playable: bool = Field(..., alias='isPlayable')
     unplayable_causes: None = Field(..., alias='unplayableCauses')
 
-class Video(BaseModel):
+class PreviewModalEpisodeSelectorSeasonEpisodesModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     video_id: int = Field(..., alias='videoId')
@@ -94,15 +83,6 @@ class Video(BaseModel):
     number: int
     parent_show: ParentShow = Field(..., alias='parentShow')
     title: str
-
-class Data(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    videos: list[Video]
-
-class PreviewModalEpisodeSelectorSeasonEpisodesModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    errors: list[Error]
-    data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

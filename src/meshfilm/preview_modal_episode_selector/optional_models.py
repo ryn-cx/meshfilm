@@ -56,19 +56,11 @@ class Seasons(BaseModel):
     edges: list[Edge] | None = None
     page_info: PageInfo | None = Field(None, alias='pageInfo')
 
-class Video(BaseModel):
+class PreviewModalEpisodeSelectorModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
     seasons: Seasons | None = None
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    videos: list[Video] | None = None
-
-class PreviewModalEpisodeSelectorModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

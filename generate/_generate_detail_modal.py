@@ -12,6 +12,7 @@ from good_ass_pydantic_integrator.recordings import (
 
 from generate.constants import GENERATOR_PATHS
 from meshfilm import Meshfilm
+from meshfilm.detail_modal import extract_title
 
 MODEL_NAME = "DetailModalModel"
 
@@ -30,7 +31,7 @@ TITLE_IDS = load_ids(GENERATOR_PATHS, MODEL_NAME, Video)
 
 def generate_detail_modal(client: Meshfilm) -> None:
     download_missing(GENERATOR_PATHS, MODEL_NAME, TITLE_IDS, client)
-    rebuild_model(GENERATOR_PATHS, MODEL_NAME, Video)
+    rebuild_model(GENERATOR_PATHS, MODEL_NAME, Video, extract_title)
 
 
 if __name__ == "__main__":

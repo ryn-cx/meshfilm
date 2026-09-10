@@ -22,9 +22,9 @@ NOT_SHOWS = [
 
 @pytest.mark.parametrize(("show_id", "season_count"), SHOWS)
 def test_download(client: Meshfilm, show_id: int, season_count: int) -> None:
-    video = client.preview_modal_episode_selector(show_id, season_count).data.videos[0]
-    assert video.video_id == show_id
-    assert len(video.seasons.edges) == season_count
+    show = client.preview_modal_episode_selector(show_id, season_count)
+    assert show.video_id == show_id
+    assert len(show.seasons.edges) == season_count
 
 
 @pytest.mark.parametrize(("show_id", "season_count"), SHOWS)
@@ -33,9 +33,9 @@ def test_download_no_season_count(
     show_id: int,
     season_count: int,
 ) -> None:
-    video = client.preview_modal_episode_selector(show_id).data.videos[0]
-    assert video.video_id == show_id
-    assert len(video.seasons.edges) == season_count
+    show = client.preview_modal_episode_selector(show_id)
+    assert show.video_id == show_id
+    assert len(show.seasons.edges) == season_count
 
 
 def test_download_invalid(client: Meshfilm) -> None:

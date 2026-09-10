@@ -19,6 +19,23 @@ PAGE_1_EPISODE_COUNT = 30
 LATER_PAGES_EPISODE_COUNT = 50
 
 
+# TODO: Validate
+def extract_season(page: str) -> dict[str, Any]:
+    """Extract the season data from one page of the response."""
+    if season := json.loads(page)["data"]["videos"][0]:
+        return season
+
+    raise SeasonNotFoundError(HTTPStatus.OK, page)
+
+
+# TODO: Validate
+def _validate_download(response: str, season_id: int) -> str:
+    typename = extract_season(response)["__typename"]
+    if typename != "Season":
+        raise NotASeasonError(season_id, typename, response)
+    return response
+
+
 class PreviewModalEpisodeSelectorSeasonEpisodes(BaseEndpoint):
     """Contains the episodes of one season, a page at a time.
 
@@ -163,7 +180,7 @@ class PreviewModalEpisodeSelectorSeasonEpisodes(BaseEndpoint):
             },
         }
         response = self._client.download(payload, log_id)
-        return self._validate_download(response, season_id)
+        return _validate_download(response, season_id)
 
     def download_all(self, season_id: int) -> list[str]:
         """Download all PreviewModalEpisodeSelectorSeasonEpisodes files for a season."""
@@ -178,27 +195,20 @@ class PreviewModalEpisodeSelectorSeasonEpisodes(BaseEndpoint):
                 return pages
             cursor = page_info["endCursor"]
 
+    # TODO: Validate
     @staticmethod
     def _page_info(page: str) -> dict[str, Any]:
         """Return the paging of one page."""
-        return json.loads(page)["data"]["videos"][0]["episodes"]["pageInfo"]
+        return extract_season(page)["episodes"]["pageInfo"]
 
-    def _validate_download(self, response: str, season_id: int) -> str:
-        video = json.loads(response)["data"]["videos"][0]
-        if video is None:
-            raise SeasonNotFoundError(season_id, HTTPStatus.OK, response)
-        typename = video["__typename"]
-        if typename != "Season":
-            raise NotASeasonError(season_id, typename, response)
-        return response
-
+    # TODO: Validate
     def load(
         self,
         data: str,
         log_id: str = "",
     ) -> PreviewModalEpisodeSelectorSeasonEpisodesModel:
-        """Load a PreviewModalEpisodeSelectorSeasonEpisodes file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load the season of a PreviewModalEpisodeSelectorSeasonEpisodes file."""
+        return model_validate_json(extract_season(data), log_id or self.default_log_id)
 
     def load_pages(
         self,

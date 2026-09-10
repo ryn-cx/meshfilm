@@ -30,43 +30,13 @@ class ResourceNotFoundError(HTTPError):
 class TitleNotFoundError(ResourceNotFoundError):
     """Raised when the requested title does not exist."""
 
-    def __init__(
-        self,
-        title_id: int,
-        status_code: int,
-        response: str | dict[str, Any] | None,
-    ) -> None:
-        """Initialize TitleNotFoundError."""
-        self.title_id = title_id
-        super().__init__(status_code, response)
-
 
 class ShowNotFoundError(ResourceNotFoundError):
     """Raised when the requested show does not exist."""
 
-    def __init__(
-        self,
-        show_id: int,
-        status_code: int,
-        response: str | dict[str, Any] | None,
-    ) -> None:
-        """Initialize ShowNotFoundError."""
-        self.show_id = show_id
-        super().__init__(status_code, response)
-
 
 class SeasonNotFoundError(ResourceNotFoundError):
     """Raised when the requested season does not exist."""
-
-    def __init__(
-        self,
-        season_id: int,
-        status_code: int,
-        response: str | dict[str, Any] | None,
-    ) -> None:
-        """Initialize SeasonNotFoundError."""
-        self.season_id = season_id
-        super().__init__(status_code, response)
 
 
 class InvalidArgsError(MeshfilmError):
@@ -78,7 +48,7 @@ class NotAShowError(InvalidArgsError):
 
     def __init__(
         self,
-        show_id: int,
+        show_id: int | None,
         typename: str,
         response: str | dict[str, Any] | None,
     ) -> None:
@@ -94,7 +64,7 @@ class NotASeasonError(InvalidArgsError):
 
     def __init__(
         self,
-        season_id: int,
+        season_id: int | None,
         typename: str,
         response: str | dict[str, Any] | None,
     ) -> None:
@@ -110,7 +80,7 @@ class NotATitleError(InvalidArgsError):
 
     def __init__(
         self,
-        title_id: int,
+        title_id: int | None,
         typename: str,
         response: str | dict[str, Any] | None,
     ) -> None:

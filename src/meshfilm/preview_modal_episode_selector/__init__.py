@@ -16,6 +16,21 @@ logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
 
+def extract_show(response: str) -> dict[str, Any]:
+    """Extract the show data from the PreviewModalEpisodeSelector response."""
+    if show := json.loads(response)["data"]["videos"][0]:
+        return show
+
+    raise ShowNotFoundError(HTTPStatus.OK, response)
+
+
+def _validate_download(response: str, show_id: int) -> str:
+    typename = extract_show(response)["__typename"]
+    if typename != "Show":
+        raise NotAShowError(show_id, typename, response)
+    return response
+
+
 class PreviewModalEpisodeSelector(BaseEndpoint):
     """Contains information about a show's seasons.
 
@@ -108,17 +123,9 @@ class PreviewModalEpisodeSelector(BaseEndpoint):
             ),
         }
         response = self._client.download(payload, log_id, headers)
-        return self._validate_download(response, show_id)
+        return _validate_download(response, show_id)
 
-    def _validate_download(self, response: str, show_id: int) -> str:
-        video = json.loads(response)["data"]["videos"][0]
-        if video is None:
-            raise ShowNotFoundError(show_id, HTTPStatus.OK, response)
-        typename = video["__typename"]
-        if typename != "Show":
-            raise NotAShowError(show_id, typename, response)
-        return response
-
+    # TODO: Validate
     def load(self, data: str, log_id: str = "") -> PreviewModalEpisodeSelectorModel:
-        """Load a PreviewModalEpisodeSelector file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load the show of a PreviewModalEpisodeSelector file into its model."""
+        return model_validate_json(extract_show(data), log_id or self.default_log_id)

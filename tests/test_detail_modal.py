@@ -25,7 +25,7 @@ NOT_TITLES = [
 @pytest.mark.parametrize("title_id", TITLES)
 def test_download(client: Meshfilm, title_id: int) -> None:
     detail_modal = client.detail_modal(title_id)
-    assert detail_modal.data.unified_entities[0].video_id == title_id
+    assert detail_modal.video_id == title_id
 
 
 def test_download_invalid(client: Meshfilm) -> None:

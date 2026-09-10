@@ -91,7 +91,7 @@ class TrackingInfo(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
     request_id: UUID | None = Field(None, alias='requestId')
 
-class Page(BaseModel):
+class SearchPageQueryResultsModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     field_id: str | None = Field(None, alias='_id')
@@ -99,14 +99,6 @@ class Page(BaseModel):
     expires: AwareDatetime | None = None
     sections: Sections | None = None
     tracking_info: TrackingInfo | None = Field(None, alias='trackingInfo')
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    page: Page | None = None
-
-class SearchPageQueryResultsModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

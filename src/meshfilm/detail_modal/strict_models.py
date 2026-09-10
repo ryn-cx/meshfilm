@@ -4,22 +4,6 @@ from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from typing import Any
 
-class Extensions(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    error_type: str = Field(..., alias='errorType')
-    origin: str
-
-class Error(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    message: str
-    path: list[int | str]
-    extensions: Extensions
-
-class PlaybackEntity(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    video_id: int = Field(..., alias='videoId')
-
 class BroadcastInfo(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
@@ -290,7 +274,7 @@ class TitleLogoUnbranded(BaseModel):
     url: str
     width: int
 
-class UnifiedEntity(BaseModel):
+class DetailModalModel(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     video_id: int = Field(..., alias='videoId')
@@ -344,16 +328,6 @@ class UnifiedEntity(BaseModel):
     badges: list[str] | None = None
     bookmark: None = Field(None)
     runtime_sec: int | None = Field(None, alias='runtimeSec')
-
-class Data(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    playback_entities: list[PlaybackEntity] = Field(..., alias='playbackEntities')
-    unified_entities: list[UnifiedEntity] = Field(..., alias='unifiedEntities')
-
-class DetailModalModel(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    errors: list[Error]
-    data: Data
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

@@ -11,48 +11,36 @@ if TYPE_CHECKING:
         Artwork,
         ContextualSynopsis,
         CurrentEpisode,
-        Data,
         Edge,
         Episodes,
-        Error,
-        Extensions,
         Node,
         PageInfo,
         ParentShow,
         PreviewModalEpisodeSelectorSeasonEpisodesModel,
-        Video,
     )
 else:
     from .optional_models import (
         Artwork,
         ContextualSynopsis,
         CurrentEpisode,
-        Data,
         Edge,
         Episodes,
-        Error,
-        Extensions,
         Node,
         PageInfo,
         ParentShow,
         PreviewModalEpisodeSelectorSeasonEpisodesModel,
-        Video,
     )
 
 __all__ = [
     "Artwork",
     "ContextualSynopsis",
     "CurrentEpisode",
-    "Data",
     "Edge",
     "Episodes",
-    "Error",
-    "Extensions",
     "Node",
     "PageInfo",
     "ParentShow",
     "PreviewModalEpisodeSelectorSeasonEpisodesModel",
-    "Video",
     "model_validate_json",
 ]
 

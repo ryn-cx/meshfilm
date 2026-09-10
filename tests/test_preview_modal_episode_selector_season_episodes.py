@@ -26,9 +26,9 @@ NOT_SEASONS = [
 def test_download(client: Meshfilm, season_id: int, episode_count: int) -> None:
     endpoint = client.preview_modal_episode_selector_season_episodes
     first_page = endpoint(season_id)
-    assert first_page.data.videos[0].video_id == season_id
+    assert first_page.video_id == season_id
     first_page_episode_count = min(PAGE_1_EPISODE_COUNT, episode_count)
-    first_page_episodes = first_page.data.videos[0].episodes
+    first_page_episodes = first_page.episodes
     assert len(first_page_episodes.edges) == first_page_episode_count
 
     remaining_episode_count = episode_count - first_page_episode_count
@@ -37,8 +37,8 @@ def test_download(client: Meshfilm, season_id: int, episode_count: int) -> None:
         return
 
     second_page = endpoint(season_id, first_page_episodes.page_info.end_cursor)
-    assert second_page.data.videos[0].video_id == season_id
-    second_page_episodes = second_page.data.videos[0].episodes
+    assert second_page.video_id == season_id
+    second_page_episodes = second_page.episodes
     assert len(second_page_episodes.edges) == min(
         LATER_PAGES_EPISODE_COUNT,
         remaining_episode_count,
@@ -50,7 +50,7 @@ def test_download_all(client: Meshfilm, season_id: int, episode_count: int) -> N
     endpoint = client.preview_modal_episode_selector_season_episodes
     downloaded_episode_count = 0
     for page in endpoint.load_pages(endpoint.download_all(season_id)):
-        episodes = page.data.videos[0].episodes
+        episodes = page.episodes
         downloaded_episode_count += len(episodes.edges)
 
     assert downloaded_episode_count == episode_count

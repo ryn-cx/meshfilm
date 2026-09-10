@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import json
 from logging import NullHandler, getLogger
 from typing import Any
 from urllib.parse import quote
 from uuid import uuid4
 
 from meshfilm.base_api_endpoint import BaseEndpoint
+from meshfilm.exceptions import MeshfilmError
 from meshfilm.search_page_query_results.models import (
     SearchPageQueryResultsModel,
     model_validate_json,
@@ -181,6 +183,16 @@ def _variables(
         "searchTerm": search_term,
         "endCursor": end_cursor,
     }
+
+
+# TODO: Validate
+def extract_results(response: str) -> dict[str, Any]:
+    """Extract the results data from the SearchPageQueryResults response."""
+    if results := json.loads(response)["data"]["page"]:
+        return results
+
+    msg = "The response has no results page in it"
+    raise MeshfilmError(msg)
 
 
 class SearchPageQueryResults(BaseEndpoint):
@@ -455,6 +467,7 @@ class SearchPageQueryResults(BaseEndpoint):
         # No meaningful way to validate the response.
         return self._client.download(payload, log_id, headers)
 
+    # TODO: Validate
     def load(self, data: str, log_id: str = "") -> SearchPageQueryResultsModel:
-        """Load a SearchPageQueryResults file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load the results page of a SearchPageQueryResults file into its model."""
+        return model_validate_json(extract_results(data), log_id or self.default_log_id)

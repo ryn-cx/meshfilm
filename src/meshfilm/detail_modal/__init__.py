@@ -12,8 +12,20 @@ from meshfilm.exceptions import NotATitleError, TitleNotFoundError
 logger = getLogger(__name__)
 logger.addHandler(NullHandler())
 
-TITLE_TYPENAMES = frozenset({"Show", "Movie"})
-"""What the endpoint answers for, as opposed to a season or an episode of one."""
+
+def extract_title(response: str) -> dict[str, Any]:
+    """Extract the title data from the DetailModal response."""
+    if title := json.loads(response)["data"]["unifiedEntities"][0]:
+        return title
+
+    raise TitleNotFoundError(HTTPStatus.OK, response)
+
+
+def _validate_download(response: str, title_id: int) -> str:
+    typename = extract_title(response)["__typename"]
+    if typename not in {"Show", "Movie"}:
+        raise NotATitleError(title_id, typename, response)
+    return response
 
 
 class DetailModal(BaseEndpoint):
@@ -111,17 +123,9 @@ class DetailModal(BaseEndpoint):
             },
         }
         response = self._client.download(payload, log_id)
-        return self._validate_download(response, title_id)
+        return _validate_download(response, title_id)
 
-    def _validate_download(self, response: str, title_id: int) -> str:
-        entity = json.loads(response)["data"]["unifiedEntities"][0]
-        if entity is None:
-            raise TitleNotFoundError(title_id, HTTPStatus.OK, response)
-        typename = entity["__typename"]
-        if typename not in TITLE_TYPENAMES:
-            raise NotATitleError(title_id, typename, response)
-        return response
-
+    # TODO: Validate
     def load(self, data: str, log_id: str = "") -> DetailModalModel:
-        """Load a DetailModal file into its model."""
-        return model_validate_json(data, log_id or self.default_log_id)
+        """Load the title of a DetailModal file into its model."""
+        return model_validate_json(extract_title(data), log_id or self.default_log_id)

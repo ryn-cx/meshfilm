@@ -3,17 +3,6 @@ from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any
 
-class Extensions(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    error_type: str | None = Field(None, alias='errorType')
-    origin: str | None = None
-
-class Error(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    message: str | None = None
-    path: list[int | str] | None = None
-    extensions: Extensions | None = None
-
 class Artwork(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
@@ -85,7 +74,7 @@ class ParentShow(BaseModel):
     is_playable: bool | None = Field(None, alias='isPlayable')
     unplayable_causes: Any | None = Field(None, alias='unplayableCauses')
 
-class Video(BaseModel):
+class PreviewModalEpisodeSelectorSeasonEpisodesModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     video_id: int | None = Field(None, alias='videoId')
@@ -94,15 +83,6 @@ class Video(BaseModel):
     number: int | None = None
     parent_show: ParentShow | None = Field(None, alias='parentShow')
     title: str | None = None
-
-class Data(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    videos: list[Video] | None = None
-
-class PreviewModalEpisodeSelectorSeasonEpisodesModel(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    errors: list[Error] | None = None
-    data: Data | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

@@ -16,11 +16,11 @@ SEARCH_TERMS = [
 @pytest.mark.parametrize("search_term", SEARCH_TERMS)
 def test_download(client: Meshfilm, search_term: str) -> None:
     search_page_query_results = client.search_page_query_results(search_term)
-    assert search_page_query_results.data.page.sections.edges
+    assert search_page_query_results.sections.edges
 
 
 def test_download_invalid(client: Meshfilm) -> None:
     search_page_query_results = client.search_page_query_results(
         "123456 qwert asdfg zxcvb",
     )
-    assert not search_page_query_results.data.page.sections.edges
+    assert not search_page_query_results.sections.edges

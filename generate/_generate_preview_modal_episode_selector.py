@@ -12,6 +12,7 @@ from good_ass_pydantic_integrator.recordings import (
 
 from generate.constants import GENERATOR_PATHS
 from meshfilm import Meshfilm
+from meshfilm.preview_modal_episode_selector import extract_show
 
 MODEL_NAME = "PreviewModalEpisodeSelectorModel"
 
@@ -32,7 +33,7 @@ SHOW_IDS = load_ids(GENERATOR_PATHS, MODEL_NAME, Show)
 
 def generate_preview_modal_episode_selector(client: Meshfilm) -> None:
     download_missing(GENERATOR_PATHS, MODEL_NAME, SHOW_IDS, client)
-    rebuild_model(GENERATOR_PATHS, MODEL_NAME, Show)
+    rebuild_model(GENERATOR_PATHS, MODEL_NAME, Show, extract_show)
 
 
 if __name__ == "__main__":

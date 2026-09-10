@@ -9,7 +9,6 @@ from .strict_models import PreviewModalEpisodeSelectorModel as StrictModel
 if TYPE_CHECKING:
     from .strict_models import (
         ContentAdvisory,
-        Data,
         Edge,
         Episodes,
         Node,
@@ -17,12 +16,10 @@ if TYPE_CHECKING:
         PreviewModalEpisodeSelectorModel,
         Reason,
         Seasons,
-        Video,
     )
 else:
     from .optional_models import (
         ContentAdvisory,
-        Data,
         Edge,
         Episodes,
         Node,
@@ -30,12 +27,10 @@ else:
         PreviewModalEpisodeSelectorModel,
         Reason,
         Seasons,
-        Video,
     )
 
 __all__ = [
     "ContentAdvisory",
-    "Data",
     "Edge",
     "Episodes",
     "Node",
@@ -43,7 +38,6 @@ __all__ = [
     "PreviewModalEpisodeSelectorModel",
     "Reason",
     "Seasons",
-    "Video",
     "model_validate_json",
 ]
 

@@ -12,6 +12,7 @@ from good_ass_pydantic_integrator.recordings import (
 
 from generate.constants import GENERATOR_PATHS
 from meshfilm import Meshfilm
+from meshfilm.search_page_query_results import extract_results
 
 MODEL_NAME = "SearchPageQueryResultsModel"
 
@@ -28,7 +29,7 @@ SEARCH_TERMS = load_ids(GENERATOR_PATHS, MODEL_NAME, Search)
 
 def generate_search_page_query_results(client: Meshfilm) -> None:
     download_missing(GENERATOR_PATHS, MODEL_NAME, SEARCH_TERMS, client)
-    rebuild_model(GENERATOR_PATHS, MODEL_NAME, Search)
+    rebuild_model(GENERATOR_PATHS, MODEL_NAME, Search, extract_results)
 
 
 if __name__ == "__main__":
