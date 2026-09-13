@@ -295,7 +295,7 @@ class DetailModalModel(BaseModel):
     content_warning: None = Field(..., alias='contentWarning')
     unified_entity_id: str = Field(..., alias='unifiedEntityId')
     contextual_synopsis: ContextualSynopsis = Field(..., alias='contextualSynopsis')
-    latest_year: int = Field(..., alias='latestYear')
+    latest_year: int | None = Field(..., alias='latestYear')
     playback_badges: list[str] = Field(..., alias='playbackBadges')
     has_recurring_releases: bool = Field(..., alias='hasRecurringReleases')
     is_in_playlist: bool = Field(..., alias='isInPlaylist')

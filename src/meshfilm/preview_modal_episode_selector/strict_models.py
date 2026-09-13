@@ -46,9 +46,9 @@ class Edge(BaseModel):
 class PageInfo(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
-    end_cursor: str = Field(..., alias='endCursor')
+    end_cursor: str | None = Field(..., alias='endCursor')
     has_next_page: bool = Field(..., alias='hasNextPage')
-    start_cursor: str = Field(..., alias='startCursor')
+    start_cursor: str | None = Field(..., alias='startCursor')
 
 class Seasons(BaseModel):
     model_config = ConfigDict(defer_build=True)
