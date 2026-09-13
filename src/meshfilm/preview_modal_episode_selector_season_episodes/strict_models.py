@@ -23,7 +23,7 @@ class Node(BaseModel):
     number: int
     video_id: int = Field(..., alias='videoId')
     artwork: Artwork
-    availability_date_messaging: None = Field(..., alias='availabilityDateMessaging')
+    availability_date_messaging: str | None = Field(..., alias='availabilityDateMessaging')
     display_runtime_sec: int = Field(..., alias='displayRuntimeSec')
     is_in_remind_me_list: bool = Field(..., alias='isInRemindMeList')
     title: str

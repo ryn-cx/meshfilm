@@ -120,40 +120,6 @@ class ContextualSynopsis(BaseModel):
     evidence_key: str | None = Field(None, alias='evidenceKey')
     text: str | None = None
 
-class Episodes(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    total_count: int | None = Field(None, alias='totalCount')
-
-class ParentSeason(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    episodes: Episodes | None = None
-    video_id: int | None = Field(None, alias='videoId')
-    hide_episode_numbers: bool | None = Field(None, alias='hideEpisodeNumbers')
-    number: int | None = None
-    number_label: str | None = Field(None, alias='numberLabel')
-    title: str | None = None
-
-class CurrentEpisode(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    parent_season: ParentSeason | None = Field(None, alias='parentSeason')
-    video_id: int | None = Field(None, alias='videoId')
-    hide_episode_numbers: bool | None = Field(None, alias='hideEpisodeNumbers')
-    number: int | None = None
-    title: str | None = None
-    badges: list[str] | None = None
-    watch_status: str | None = Field(None, alias='watchStatus')
-    contextual_synopsis: ContextualSynopsis | None = Field(None, alias='contextualSynopsis')
-    runtime_sec: int | None = Field(None, alias='runtimeSec')
-    bookmark: Any | None = None
-
-class Seasons(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    total_count: int | None = Field(None, alias='totalCount')
-
 class MostLikedMessage(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
@@ -273,6 +239,40 @@ class TitleLogoUnbranded(BaseModel):
     url: str | None = None
     width: int | None = None
 
+class Episodes(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | None = Field(None, alias='__typename')
+    total_count: int | None = Field(None, alias='totalCount')
+
+class ParentSeason(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | None = Field(None, alias='__typename')
+    episodes: Episodes | None = None
+    video_id: int | None = Field(None, alias='videoId')
+    hide_episode_numbers: bool | None = Field(None, alias='hideEpisodeNumbers')
+    number: int | None = None
+    number_label: str | None = Field(None, alias='numberLabel')
+    title: str | None = None
+
+class CurrentEpisode(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | None = Field(None, alias='__typename')
+    parent_season: ParentSeason | None = Field(None, alias='parentSeason')
+    video_id: int | None = Field(None, alias='videoId')
+    hide_episode_numbers: bool | None = Field(None, alias='hideEpisodeNumbers')
+    number: int | None = None
+    title: str | None = None
+    badges: list[str] | None = None
+    watch_status: str | None = Field(None, alias='watchStatus')
+    contextual_synopsis: ContextualSynopsis | None = Field(None, alias='contextualSynopsis')
+    runtime_sec: int | None = Field(None, alias='runtimeSec')
+    bookmark: Any | None = None
+
+class Seasons(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | None = Field(None, alias='__typename')
+    total_count: int | None = Field(None, alias='totalCount')
+
 class DetailModalModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
@@ -281,7 +281,7 @@ class DetailModalModel(BaseModel):
     is_playable: bool | None = Field(None, alias='isPlayable')
     unplayable_causes: Any | None = Field(None, alias='unplayableCauses')
     title: str | None = None
-    next_live_event: Any | None = Field(None, alias='nextLiveEvent')
+    live_event: Any | None = Field(None, alias='liveEvent')
     broadcast_info: BroadcastInfo | None = Field(None, alias='broadcastInfo')
     copyright: Any | None = None
     cast: Cast | None = None
@@ -301,11 +301,11 @@ class DetailModalModel(BaseModel):
     is_in_remind_me_list: bool | None = Field(None, alias='isInRemindMeList')
     is_in_rolling_reminders_list: bool | None = Field(None, alias='isInRollingRemindersList')
     playlist_actions: Any | None = Field(None, alias='playlistActions')
-    current_episode: CurrentEpisode | None = Field(None, alias='currentEpisode')
-    num_seasons_label: str | None = Field(None, alias='numSeasonsLabel')
-    seasons: Seasons | None = None
+    display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
     most_liked_messages: list[MostLikedMessage] | None = Field(None, alias='mostLikedMessages')
     tagline_messages: list[TaglineMessage] | None = Field(None, alias='taglineMessages')
+    badges: list[str] | None = None
+    watch_status: str | None = Field(None, alias='watchStatus')
     similars: list[Similar] | None = None
     ryan_murphy_collection_ids: list[Any] | None = Field(None, alias='ryanMurphyCollectionIds')
     shonda_rhimes_collection_ids: list[Any] | None = Field(None, alias='shondaRhimesCollectionIds')
@@ -319,14 +319,14 @@ class DetailModalModel(BaseModel):
     story_art: StoryArt | None = Field(None, alias='storyArt')
     title_logo_branded: TitleLogoBranded | None = Field(None, alias='titleLogoBranded')
     title_logo_unbranded: TitleLogoUnbranded | None = Field(None, alias='titleLogoUnbranded')
-    tf1_collection_ids: list[Any] | None = Field(None, alias='tf1CollectionIds')
-    watch_status: str | None = Field(None, alias='watchStatus')
-    thumb_rating: Any | None = Field(None, alias='thumbRating')
-    live_event: Any | None = Field(None, alias='liveEvent')
-    display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
-    badges: list[str] | None = None
     bookmark: Any | None = None
+    tf1_collection_ids: list[Any] | None = Field(None, alias='tf1CollectionIds')
     runtime_sec: int | None = Field(None, alias='runtimeSec')
+    thumb_rating: Any | None = Field(None, alias='thumbRating')
+    next_live_event: Any | None = Field(None, alias='nextLiveEvent')
+    current_episode: CurrentEpisode | None = Field(None, alias='currentEpisode')
+    num_seasons_label: str | None = Field(None, alias='numSeasonsLabel')
+    seasons: Seasons | None = None
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')
