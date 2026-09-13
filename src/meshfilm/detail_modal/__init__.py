@@ -14,7 +14,7 @@ logger.addHandler(NullHandler())
 
 
 def extract_title(response: str) -> dict[str, Any]:
-    """Extract the title data from the DetailModal response."""
+    """Extract the title from the DetailModal response."""
     if title := json.loads(response)["data"]["unifiedEntities"][0]:
         return title
 
@@ -127,5 +127,5 @@ class DetailModal(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> DetailModalModel:
-        """Load the title of a DetailModal file into its model."""
+        """Load a DetailModal file into its model."""
         return model_validate_json(extract_title(data), log_id or self.default_log_id)

@@ -187,7 +187,7 @@ def _variables(
 
 # TODO: Validate
 def extract_results(response: str) -> dict[str, Any]:
-    """Extract the results data from the SearchPageQueryResults response."""
+    """Extract the search results from the SearchPageQueryResults response."""
     if results := json.loads(response)["data"]["page"]:
         return results
 
@@ -469,5 +469,5 @@ class SearchPageQueryResults(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> SearchPageQueryResultsModel:
-        """Load the results page of a SearchPageQueryResults file into its model."""
+        """Load a SearchPageQueryResults file into its model."""
         return model_validate_json(extract_results(data), log_id or self.default_log_id)

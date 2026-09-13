@@ -21,7 +21,7 @@ LATER_PAGES_EPISODE_COUNT = 50
 
 # TODO: Validate
 def extract_season(page: str) -> dict[str, Any]:
-    """Extract the season data from one page of the response."""
+    """Extract the season from one page of the response."""
     if season := json.loads(page)["data"]["videos"][0]:
         return season
 
@@ -207,7 +207,7 @@ class PreviewModalEpisodeSelectorSeasonEpisodes(BaseEndpoint):
         data: str,
         log_id: str = "",
     ) -> PreviewModalEpisodeSelectorSeasonEpisodesModel:
-        """Load the season of a PreviewModalEpisodeSelectorSeasonEpisodes file."""
+        """Load a PreviewModalEpisodeSelectorSeasonEpisodes file into its model."""
         return model_validate_json(extract_season(data), log_id or self.default_log_id)
 
     def load_pages(

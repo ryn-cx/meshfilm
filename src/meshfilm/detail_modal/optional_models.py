@@ -1,13 +1,13 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from typing import Any
 
 class BroadcastInfo(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     distributor_name: Any | None = Field(None, alias='distributorName')
-    release_date: Any | None = Field(None, alias='releaseDate')
+    release_date: Any | AwareDatetime | None = Field(None, alias='releaseDate')
 
 class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -198,7 +198,7 @@ class TitleGroupMembership(BaseModel):
     field__typename: str | None = Field(None, alias='__typename')
     id: str | None = None
     kind: str | None = None
-    siblings: list[Sibling] | None = None
+    siblings: Any | list[Sibling] | None = None
     title: str | None = None
 
 class Boxart(BaseModel):
@@ -244,7 +244,7 @@ class StoryArt(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     available: bool | None = None
-    focal_point: FocalPoint | None = Field(None, alias='focalPoint')
+    focal_point: Any | FocalPoint | None = Field(None, alias='focalPoint')
     height: int | None = None
     key: str | None = None
     status: str | None = None
@@ -314,7 +314,7 @@ class DetailModalModel(BaseModel):
     thumbs_rating: Any | None = Field(None, alias='thumbsRating')
     boxart: Boxart | None = None
     boxart_high_res: BoxartHighRes | None = Field(None, alias='boxartHighRes')
-    brand_logo_small: BrandLogoSmall | None = Field(None, alias='brandLogoSmall')
+    brand_logo_small: Any | BrandLogoSmall | None = Field(None, alias='brandLogoSmall')
     live_now: Any | None = Field(None, alias='liveNow')
     story_art: StoryArt | None = Field(None, alias='storyArt')
     title_logo_branded: TitleLogoBranded | None = Field(None, alias='titleLogoBranded')

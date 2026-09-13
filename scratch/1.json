@@ -1,0 +1,23 @@
+{
+  "errors": [
+    {
+      "message": "Unified entity with requested id 'Video:1' not found",
+      "path": [
+        "unifiedEntities",
+        0
+      ],
+      "extensions": {
+        "errorType": "NOT_FOUND",
+        "origin": "gusto"
+      }
+    }
+  ],
+  "data": {
+    "playbackEntities": [
+      null
+    ],
+    "unifiedEntities": [
+      null
+    ]
+  }
+}

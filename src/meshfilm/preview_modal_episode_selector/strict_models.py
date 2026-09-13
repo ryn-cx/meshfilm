@@ -22,7 +22,7 @@ class ContentAdvisory(BaseModel):
     board_name: str = Field(..., alias='boardName')
     certification_rating_id: int = Field(..., alias='certificationRatingId')
     certification_value: str = Field(..., alias='certificationValue')
-    i18n_reasons_text: str = Field(..., alias='i18nReasonsText')
+    i18n_reasons_text: str | None = Field(..., alias='i18nReasonsText')
     maturity_description: str = Field(..., alias='maturityDescription')
     maturity_level: int = Field(..., alias='maturityLevel')
     reasons: list[Reason]

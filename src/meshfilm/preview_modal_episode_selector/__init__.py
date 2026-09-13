@@ -17,7 +17,7 @@ logger.addHandler(NullHandler())
 
 
 def extract_show(response: str) -> dict[str, Any]:
-    """Extract the show data from the PreviewModalEpisodeSelector response."""
+    """Extract the show from the PreviewModalEpisodeSelector response."""
     if show := json.loads(response)["data"]["videos"][0]:
         return show
 
@@ -127,5 +127,5 @@ class PreviewModalEpisodeSelector(BaseEndpoint):
 
     # TODO: Validate
     def load(self, data: str, log_id: str = "") -> PreviewModalEpisodeSelectorModel:
-        """Load the show of a PreviewModalEpisodeSelector file into its model."""
+        """Load a PreviewModalEpisodeSelector file into its model."""
         return model_validate_json(extract_show(data), log_id or self.default_log_id)

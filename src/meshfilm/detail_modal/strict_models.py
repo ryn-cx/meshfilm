@@ -1,14 +1,14 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import ConfigDict
-from pydantic import BaseModel, Field
+from pydantic import AwareDatetime, BaseModel, Field
 from typing import Any
 
 class BroadcastInfo(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     distributor_name: None = Field(..., alias='distributorName')
-    release_date: None = Field(..., alias='releaseDate')
+    release_date: AwareDatetime | None = Field(..., alias='releaseDate')
 
 class Node(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -101,7 +101,7 @@ class ContentAdvisory(BaseModel):
     board_name: str = Field(..., alias='boardName')
     certification_rating_id: int = Field(..., alias='certificationRatingId')
     certification_value: str = Field(..., alias='certificationValue')
-    i18n_reasons_text: str = Field(..., alias='i18nReasonsText')
+    i18n_reasons_text: str | None = Field(..., alias='i18nReasonsText')
     maturity_description: str = Field(..., alias='maturityDescription')
     maturity_level: int = Field(..., alias='maturityLevel')
     reasons: list[Reason]
@@ -199,7 +199,7 @@ class TitleGroupMembership(BaseModel):
     field__typename: str = Field(..., alias='__typename')
     id: str
     kind: str
-    siblings: list[Sibling]
+    siblings: list[Sibling] | None
     title: str
 
 class Boxart(BaseModel):
@@ -245,7 +245,7 @@ class StoryArt(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
-    focal_point: FocalPoint = Field(..., alias='focalPoint')
+    focal_point: FocalPoint | None = Field(..., alias='focalPoint')
     height: int
     key: str
     status: str
@@ -315,7 +315,7 @@ class DetailModalModel(BaseModel):
     thumbs_rating: None = Field(..., alias='thumbsRating')
     boxart: Boxart
     boxart_high_res: BoxartHighRes = Field(..., alias='boxartHighRes')
-    brand_logo_small: BrandLogoSmall = Field(..., alias='brandLogoSmall')
+    brand_logo_small: BrandLogoSmall | None = Field(..., alias='brandLogoSmall')
     live_now: None = Field(..., alias='liveNow')
     story_art: StoryArt = Field(..., alias='storyArt')
     title_logo_branded: TitleLogoBranded = Field(..., alias='titleLogoBranded')
