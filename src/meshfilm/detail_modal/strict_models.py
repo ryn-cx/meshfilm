@@ -115,6 +115,13 @@ class MoodTag(BaseModel):
     is_displayable: bool = Field(..., alias='isDisplayable')
     is_mood: bool = Field(..., alias='isMood')
 
+class ContentWarning(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    field__typename: str = Field(..., alias='__typename')
+    message: str
+    url: str
+    url_substitution_string: str = Field(..., alias='urlSubstitutionString')
+
 class ContextualSynopsis(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
@@ -292,7 +299,7 @@ class DetailModalModel(BaseModel):
     genre_tags: GenreTags = Field(..., alias='genreTags')
     content_advisory: ContentAdvisory = Field(..., alias='contentAdvisory')
     mood_tags: list[MoodTag] = Field(..., alias='moodTags')
-    content_warning: None = Field(..., alias='contentWarning')
+    content_warning: ContentWarning | None = Field(..., alias='contentWarning')
     unified_entity_id: str = Field(..., alias='unifiedEntityId')
     contextual_synopsis: ContextualSynopsis = Field(..., alias='contextualSynopsis')
     latest_year: int | None = Field(..., alias='latestYear')
@@ -308,7 +315,7 @@ class DetailModalModel(BaseModel):
     badges: list[str] | None = None
     watch_status: str = Field(..., alias='watchStatus')
     similars: list[Similar]
-    ryan_murphy_collection_ids: list[None] = Field(..., alias='ryanMurphyCollectionIds')
+    ryan_murphy_collection_ids: list[int] = Field(..., alias='ryanMurphyCollectionIds')
     shonda_rhimes_collection_ids: list[int] = Field(..., alias='shondaRhimesCollectionIds')
     supplemental_videos_list: SupplementalVideosList = Field(..., alias='supplementalVideosList')
     title_group_memberships: list[TitleGroupMembership] = Field(..., alias='titleGroupMemberships')

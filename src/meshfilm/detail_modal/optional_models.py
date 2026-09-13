@@ -114,6 +114,13 @@ class MoodTag(BaseModel):
     is_displayable: bool | None = Field(None, alias='isDisplayable')
     is_mood: bool | None = Field(None, alias='isMood')
 
+class ContentWarning(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | None = Field(None, alias='__typename')
+    message: str | None = None
+    url: str | None = None
+    url_substitution_string: str | None = Field(None, alias='urlSubstitutionString')
+
 class ContextualSynopsis(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
@@ -291,7 +298,7 @@ class DetailModalModel(BaseModel):
     genre_tags: GenreTags | None = Field(None, alias='genreTags')
     content_advisory: ContentAdvisory | None = Field(None, alias='contentAdvisory')
     mood_tags: list[MoodTag] | None = Field(None, alias='moodTags')
-    content_warning: Any | None = Field(None, alias='contentWarning')
+    content_warning: ContentWarning | None = Field(None, alias='contentWarning')
     unified_entity_id: str | None = Field(None, alias='unifiedEntityId')
     contextual_synopsis: ContextualSynopsis | None = Field(None, alias='contextualSynopsis')
     latest_year: int | None = Field(None, alias='latestYear')
@@ -307,7 +314,7 @@ class DetailModalModel(BaseModel):
     badges: list[str] | None = None
     watch_status: str | None = Field(None, alias='watchStatus')
     similars: list[Similar] | None = None
-    ryan_murphy_collection_ids: list[Any] | None = Field(None, alias='ryanMurphyCollectionIds')
+    ryan_murphy_collection_ids: list[int] | None = Field(None, alias='ryanMurphyCollectionIds')
     shonda_rhimes_collection_ids: list[int] | None = Field(None, alias='shondaRhimesCollectionIds')
     supplemental_videos_list: SupplementalVideosList | None = Field(None, alias='supplementalVideosList')
     title_group_memberships: list[TitleGroupMembership] | None = Field(None, alias='titleGroupMemberships')
