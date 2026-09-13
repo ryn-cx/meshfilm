@@ -13,7 +13,7 @@ class UnifiedEntity(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
     unified_entity_id: str | None = Field(None, alias='unifiedEntityId')
-    content_advisory: Any | ContentAdvisory | None = Field(None, alias='contentAdvisory')
+    content_advisory: ContentAdvisory | None = Field(None, alias='contentAdvisory')
     video_id: int | None = Field(None, alias='videoId')
 
 class Artwork(BaseModel):
