@@ -69,11 +69,13 @@ class SectionTreatment(BaseModel):
 class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | None = Field(None, alias='__typename')
+    field_id: str | None = Field(None, alias='_id')
     display_string: str | None = Field(None, alias='displayString')
     entities: Entities | None = None
     id: str | None = None
     logging_data: LoggingData | None = Field(None, alias='loggingData')
     section_treatment: SectionTreatment | None = Field(None, alias='sectionTreatment')
+    version: Any | None = None
 
 class Edge(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)

@@ -308,7 +308,7 @@ class DetailModalModel(BaseModel):
     watch_status: str | None = Field(None, alias='watchStatus')
     similars: list[Similar] | None = None
     ryan_murphy_collection_ids: list[Any] | None = Field(None, alias='ryanMurphyCollectionIds')
-    shonda_rhimes_collection_ids: list[Any] | None = Field(None, alias='shondaRhimesCollectionIds')
+    shonda_rhimes_collection_ids: list[int] | None = Field(None, alias='shondaRhimesCollectionIds')
     supplemental_videos_list: SupplementalVideosList | None = Field(None, alias='supplementalVideosList')
     title_group_memberships: list[TitleGroupMembership] | None = Field(None, alias='titleGroupMemberships')
     thumbs_rating: Any | None = Field(None, alias='thumbsRating')
