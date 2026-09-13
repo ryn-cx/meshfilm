@@ -1,6 +1,6 @@
 from typing import Self
 from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from typing import Any
 
 class Artwork(BaseModel):
@@ -10,6 +10,24 @@ class Artwork(BaseModel):
     key: str | None = None
     url: str | None = None
     width: int | None = None
+
+class Event(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | None = Field(None, alias='__typename')
+    is_available: bool | None = Field(None, alias='isAvailable')
+    video_id: int | None = Field(None, alias='videoId')
+
+class TimeWindow(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | None = Field(None, alias='__typename')
+    end_time: AwareDatetime | None = Field(None, alias='endTime')
+
+class LiveEvent(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | None = Field(None, alias='__typename')
+    availability_start_time: AwareDatetime | None = Field(None, alias='availabilityStartTime')
+    event: Event | None = None
+    time_window: TimeWindow | None = Field(None, alias='timeWindow')
 
 class ContextualSynopsis(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -29,7 +47,7 @@ class Node(BaseModel):
     title: str | None = None
     bookmark: Any | None = None
     runtime_sec: int | None = Field(None, alias='runtimeSec')
-    live_event: Any | None = Field(None, alias='liveEvent')
+    live_event: LiveEvent | None = Field(None, alias='liveEvent')
     contextual_synopsis: ContextualSynopsis | None = Field(None, alias='contextualSynopsis')
     unified_entity_id: str | None = Field(None, alias='unifiedEntityId')
     is_available: bool | None = Field(None, alias='isAvailable')

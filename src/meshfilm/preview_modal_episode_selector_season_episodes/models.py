@@ -13,10 +13,13 @@ if TYPE_CHECKING:
         CurrentEpisode,
         Edge,
         Episodes,
+        Event,
+        LiveEvent,
         Node,
         PageInfo,
         ParentShow,
         PreviewModalEpisodeSelectorSeasonEpisodesModel,
+        TimeWindow,
     )
 else:
     from .optional_models import (
@@ -25,10 +28,13 @@ else:
         CurrentEpisode,
         Edge,
         Episodes,
+        Event,
+        LiveEvent,
         Node,
         PageInfo,
         ParentShow,
         PreviewModalEpisodeSelectorSeasonEpisodesModel,
+        TimeWindow,
     )
 
 __all__ = [
@@ -37,10 +43,13 @@ __all__ = [
     "CurrentEpisode",
     "Edge",
     "Episodes",
+    "Event",
+    "LiveEvent",
     "Node",
     "PageInfo",
     "ParentShow",
     "PreviewModalEpisodeSelectorSeasonEpisodesModel",
+    "TimeWindow",
     "model_validate_json",
 ]
 
