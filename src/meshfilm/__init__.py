@@ -12,6 +12,7 @@ from get_around import GetAround
 
 from meshfilm.detail_modal import DetailModal
 from meshfilm.exceptions import HTTPError
+from meshfilm.lodp_title_and_plans_page import LodpTitleAndPlansPage
 from meshfilm.preview_modal_episode_selector import PreviewModalEpisodeSelector
 from meshfilm.preview_modal_episode_selector_season_episodes import (
     PreviewModalEpisodeSelectorSeasonEpisodes,
@@ -35,12 +36,14 @@ class Meshfilm:
         )
         self.search_page_query_results = SearchPageQueryResults(self)
         self.detail_modal = DetailModal(self)
+        self.lodp_title_and_plans_page = LodpTitleAndPlansPage(self)
 
         # Alternative API interface.
         self.title = self.detail_modal
         self.seasons = self.preview_modal_episode_selector
         self.episodes = self.preview_modal_episode_selector_season_episodes
         self.search = self.search_page_query_results
+        self.similar = self.lodp_title_and_plans_page
 
     def _headers(self, operation_name: str) -> dict[str, str]:
         """Build the headers the browser sends, in the order it sends them."""
