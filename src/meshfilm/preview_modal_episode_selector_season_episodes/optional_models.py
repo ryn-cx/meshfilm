@@ -5,102 +5,102 @@ from typing import Any
 
 class Artwork(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    height: int | None = None
-    key: str | None = None
-    url: str | None = None
-    width: int | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    key: str | Any = Field(default=None, union_mode='left_to_right')
+    url: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class Event(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    is_available: bool | None = Field(None, alias='isAvailable')
-    video_id: int | None = Field(None, alias='videoId')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    is_available: bool | Any = Field(None, alias='isAvailable', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
 
 class TimeWindow(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    end_time: AwareDatetime | None = Field(None, alias='endTime')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    end_time: AwareDatetime | Any = Field(None, alias='endTime', union_mode='left_to_right')
 
 class LiveEvent(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    availability_start_time: AwareDatetime | None = Field(None, alias='availabilityStartTime')
-    event: Event | None = None
-    time_window: TimeWindow | None = Field(None, alias='timeWindow')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    availability_start_time: AwareDatetime | Any = Field(None, alias='availabilityStartTime', union_mode='left_to_right')
+    event: Event | Any = Field(default=None, union_mode='left_to_right')
+    time_window: TimeWindow | Any = Field(None, alias='timeWindow', union_mode='left_to_right')
 
 class ContextualSynopsis(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    evidence_key: str | None = Field(None, alias='evidenceKey')
-    text: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    evidence_key: str | Any = Field(None, alias='evidenceKey', union_mode='left_to_right')
+    text: str | Any = Field(default=None, union_mode='left_to_right')
 
 class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    number: int | None = None
-    video_id: int | None = Field(None, alias='videoId')
-    artwork: Artwork | None = None
-    availability_date_messaging: str | None = Field(None, alias='availabilityDateMessaging')
-    display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
-    is_in_remind_me_list: bool | None = Field(None, alias='isInRemindMeList')
-    title: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    number: int | Any = Field(default=None, union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+    artwork: Artwork | Any = Field(default=None, union_mode='left_to_right')
+    availability_date_messaging: str | Any = Field(None, alias='availabilityDateMessaging', union_mode='left_to_right')
+    display_runtime_sec: int | Any = Field(None, alias='displayRuntimeSec', union_mode='left_to_right')
+    is_in_remind_me_list: bool | Any = Field(None, alias='isInRemindMeList', union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
     bookmark: Any | None = None
-    runtime_sec: int | None = Field(None, alias='runtimeSec')
-    live_event: LiveEvent | None = Field(None, alias='liveEvent')
-    contextual_synopsis: ContextualSynopsis | None = Field(None, alias='contextualSynopsis')
-    unified_entity_id: str | None = Field(None, alias='unifiedEntityId')
-    is_available: bool | None = Field(None, alias='isAvailable')
-    is_playable: bool | None = Field(None, alias='isPlayable')
+    runtime_sec: int | Any = Field(None, alias='runtimeSec', union_mode='left_to_right')
+    live_event: LiveEvent | Any = Field(None, alias='liveEvent', union_mode='left_to_right')
+    contextual_synopsis: ContextualSynopsis | Any = Field(None, alias='contextualSynopsis', union_mode='left_to_right')
+    unified_entity_id: str | Any = Field(None, alias='unifiedEntityId', union_mode='left_to_right')
+    is_available: bool | Any = Field(None, alias='isAvailable', union_mode='left_to_right')
+    is_playable: bool | Any = Field(None, alias='isPlayable', union_mode='left_to_right')
     unplayable_causes: Any | None = Field(None, alias='unplayableCauses')
-    badges: list[str] | None = None
-    has_recurring_releases: bool | None = Field(None, alias='hasRecurringReleases')
-    is_in_playlist: bool | None = Field(None, alias='isInPlaylist')
-    is_in_rolling_reminders_list: bool | None = Field(None, alias='isInRollingRemindersList')
+    badges: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    has_recurring_releases: bool | Any = Field(None, alias='hasRecurringReleases', union_mode='left_to_right')
+    is_in_playlist: bool | Any = Field(None, alias='isInPlaylist', union_mode='left_to_right')
+    is_in_rolling_reminders_list: bool | Any = Field(None, alias='isInRollingRemindersList', union_mode='left_to_right')
     playlist_actions: Any | None = Field(None, alias='playlistActions')
 
 class Edge(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    cursor: str | None = None
-    node: Node | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    cursor: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
 
 class PageInfo(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    end_cursor: str | None = Field(None, alias='endCursor')
-    has_next_page: bool | None = Field(None, alias='hasNextPage')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    end_cursor: str | Any = Field(None, alias='endCursor', union_mode='left_to_right')
+    has_next_page: bool | Any = Field(None, alias='hasNextPage', union_mode='left_to_right')
 
 class Episodes(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    edges: list[Edge] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    edges: list[Edge] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
 
 class CurrentEpisode(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    video_id: int | None = Field(None, alias='videoId')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
 
 class ParentShow(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    current_episode: CurrentEpisode | None = Field(None, alias='currentEpisode')
-    has_recurring_releases: bool | None = Field(None, alias='hasRecurringReleases')
-    video_id: int | None = Field(None, alias='videoId')
-    is_available: bool | None = Field(None, alias='isAvailable')
-    is_playable: bool | None = Field(None, alias='isPlayable')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    current_episode: CurrentEpisode | Any = Field(None, alias='currentEpisode', union_mode='left_to_right')
+    has_recurring_releases: bool | Any = Field(None, alias='hasRecurringReleases', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+    is_available: bool | Any = Field(None, alias='isAvailable', union_mode='left_to_right')
+    is_playable: bool | Any = Field(None, alias='isPlayable', union_mode='left_to_right')
     unplayable_causes: Any | None = Field(None, alias='unplayableCauses')
 
 class PreviewModalEpisodeSelectorSeasonEpisodesModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    video_id: int | None = Field(None, alias='videoId')
-    episodes: Episodes | None = None
-    hide_episode_numbers: bool | None = Field(None, alias='hideEpisodeNumbers')
-    number: int | None = None
-    parent_show: ParentShow | None = Field(None, alias='parentShow')
-    title: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+    episodes: Episodes | Any = Field(default=None, union_mode='left_to_right')
+    hide_episode_numbers: bool | Any = Field(None, alias='hideEpisodeNumbers', union_mode='left_to_right')
+    number: int | Any = Field(default=None, union_mode='left_to_right')
+    parent_show: ParentShow | Any = Field(None, alias='parentShow', union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

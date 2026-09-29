@@ -5,335 +5,335 @@ from typing import Any
 
 class BroadcastInfo(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
     distributor_name: Any | None = Field(None, alias='distributorName')
-    release_date: AwareDatetime | None = Field(None, alias='releaseDate')
+    release_date: AwareDatetime | Any = Field(None, alias='releaseDate', union_mode='left_to_right')
 
 class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    name: str | None = None
-    person_id: int | None = Field(None, alias='personId')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    name: str | Any = Field(default=None, union_mode='left_to_right')
+    person_id: int | Any = Field(None, alias='personId', union_mode='left_to_right')
 
 class Edge(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    cursor: str | None = None
-    node: Node | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    cursor: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
 
 class PageInfo(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    has_next_page: bool | None = Field(None, alias='hasNextPage')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    has_next_page: bool | Any = Field(None, alias='hasNextPage', union_mode='left_to_right')
 
 class Cast(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    edges: list[Edge] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    edges: list[Edge] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
 
 class Edge1(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    cursor: str | None = None
-    node: Node | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    cursor: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
 
 class Creators(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    edges: list[Edge1] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    edges: list[Edge1] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
 
 class Edge2(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    cursor: str | None = None
-    node: Node | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    cursor: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
 
 class Directors(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    edges: list[Edge2] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    edges: list[Edge2] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
 
 class Edge3(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    cursor: str | None = None
-    node: Node | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    cursor: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
 
 class Writers(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    edges: list[Edge3] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    edges: list[Edge3] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
 
 class Node4(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    genre_id: int | None = Field(None, alias='genreId')
-    name: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    genre_id: int | Any = Field(None, alias='genreId', union_mode='left_to_right')
+    name: str | Any = Field(default=None, union_mode='left_to_right')
 
 class Edge4(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    cursor: str | None = None
-    node: Node4 | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    cursor: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node4 | Any = Field(default=None, union_mode='left_to_right')
 
 class GenreTags(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    edges: list[Edge4] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    edges: list[Edge4] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
 
 class Reason(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    icon_id: int | None = Field(None, alias='iconId')
-    level: str | None = None
-    text: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    icon_id: int | Any = Field(None, alias='iconId', union_mode='left_to_right')
+    level: str | Any = Field(default=None, union_mode='left_to_right')
+    text: str | Any = Field(default=None, union_mode='left_to_right')
 
 class ContentAdvisory(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    board_id: int | None = Field(None, alias='boardId')
-    board_name: str | None = Field(None, alias='boardName')
-    certification_rating_id: int | None = Field(None, alias='certificationRatingId')
-    certification_value: str | None = Field(None, alias='certificationValue')
-    i18n_reasons_text: str | None = Field(None, alias='i18nReasonsText')
-    maturity_description: str | None = Field(None, alias='maturityDescription')
-    maturity_level: int | None = Field(None, alias='maturityLevel')
-    reasons: list[Reason] | None = None
-    video_specific_rating_reason: str | None = Field(None, alias='videoSpecificRatingReason')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    board_id: int | Any = Field(None, alias='boardId', union_mode='left_to_right')
+    board_name: str | Any = Field(None, alias='boardName', union_mode='left_to_right')
+    certification_rating_id: int | Any = Field(None, alias='certificationRatingId', union_mode='left_to_right')
+    certification_value: str | Any = Field(None, alias='certificationValue', union_mode='left_to_right')
+    i18n_reasons_text: str | Any = Field(None, alias='i18nReasonsText', union_mode='left_to_right')
+    maturity_description: str | Any = Field(None, alias='maturityDescription', union_mode='left_to_right')
+    maturity_level: int | Any = Field(None, alias='maturityLevel', union_mode='left_to_right')
+    reasons: list[Reason] | Any = Field(default=None, union_mode='left_to_right')
+    video_specific_rating_reason: str | Any = Field(None, alias='videoSpecificRatingReason', union_mode='left_to_right')
 
 class MoodTag(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    display_name: str | None = Field(None, alias='displayName')
-    id: int | None = None
-    is_displayable: bool | None = Field(None, alias='isDisplayable')
-    is_mood: bool | None = Field(None, alias='isMood')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    display_name: str | Any = Field(None, alias='displayName', union_mode='left_to_right')
+    id: int | Any = Field(default=None, union_mode='left_to_right')
+    is_displayable: bool | Any = Field(None, alias='isDisplayable', union_mode='left_to_right')
+    is_mood: bool | Any = Field(None, alias='isMood', union_mode='left_to_right')
 
 class ContentWarning(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    message: str | None = None
-    url: str | None = None
-    url_substitution_string: str | None = Field(None, alias='urlSubstitutionString')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    message: str | Any = Field(default=None, union_mode='left_to_right')
+    url: str | Any = Field(default=None, union_mode='left_to_right')
+    url_substitution_string: str | Any = Field(None, alias='urlSubstitutionString', union_mode='left_to_right')
 
 class ContextualSynopsis(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    evidence_key: str | None = Field(None, alias='evidenceKey')
-    text: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    evidence_key: str | Any = Field(None, alias='evidenceKey', union_mode='left_to_right')
+    text: str | Any = Field(default=None, union_mode='left_to_right')
 
 class MostLikedMessage(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    tagline: str | None = None
-    typed_classification: str | None = Field(None, alias='typedClassification')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    tagline: str | Any = Field(default=None, union_mode='left_to_right')
+    typed_classification: str | Any = Field(None, alias='typedClassification', union_mode='left_to_right')
 
 class TaglineMessage(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
     cta_message: Any | None = Field(None, alias='ctaMessage')
-    tagline: str | None = None
-    typed_classification: str | None = Field(None, alias='typedClassification')
+    tagline: str | Any = Field(default=None, union_mode='left_to_right')
+    typed_classification: str | Any = Field(None, alias='typedClassification', union_mode='left_to_right')
 
 class Similar(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    video_id: int | None = Field(None, alias='videoId')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
 
 class Node5(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    video_id: int | None = Field(None, alias='videoId')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
 
 class Edge5(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    node: Node5 | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    node: Node5 | Any = Field(default=None, union_mode='left_to_right')
 
 class SupplementalVideosList(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    edges: list[Edge5] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    edges: list[Edge5] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
 
 class Sibling(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    video_id: int | None = Field(None, alias='videoId')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
 
 class TitleGroupMembership(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    id: str | None = None
-    kind: str | None = None
-    siblings: list[Sibling] | None = None
-    title: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    id: str | Any = Field(default=None, union_mode='left_to_right')
+    kind: str | Any = Field(default=None, union_mode='left_to_right')
+    siblings: list[Sibling] | Any = Field(default=None, union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
 
 class Boxart(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    available: bool | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    available: bool | Any = Field(default=None, union_mode='left_to_right')
     focal_point: Any | None = Field(None, alias='focalPoint')
-    height: int | None = None
-    key: str | None = None
-    status: str | None = None
-    url: str | None = None
-    width: int | None = None
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    key: str | Any = Field(default=None, union_mode='left_to_right')
+    status: str | Any = Field(default=None, union_mode='left_to_right')
+    url: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class BoxartHighRes(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    available: bool | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    available: bool | Any = Field(default=None, union_mode='left_to_right')
     focal_point: Any | None = Field(None, alias='focalPoint')
-    height: int | None = None
-    key: str | None = None
-    status: str | None = None
-    url: str | None = None
-    width: int | None = None
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    key: str | Any = Field(default=None, union_mode='left_to_right')
+    status: str | Any = Field(default=None, union_mode='left_to_right')
+    url: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class BrandLogoSmall(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    available: bool | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    available: bool | Any = Field(default=None, union_mode='left_to_right')
     focal_point: Any | None = Field(None, alias='focalPoint')
-    height: int | None = None
-    key: str | None = None
-    status: str | None = None
-    url: str | None = None
-    width: int | None = None
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    key: str | Any = Field(default=None, union_mode='left_to_right')
+    status: str | Any = Field(default=None, union_mode='left_to_right')
+    url: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class FocalPoint(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    x: float | None = None
-    y: float | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    x: float | Any = Field(default=None, union_mode='left_to_right')
+    y: float | Any = Field(default=None, union_mode='left_to_right')
 
 class StoryArt(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    available: bool | None = None
-    focal_point: FocalPoint | None = Field(None, alias='focalPoint')
-    height: int | None = None
-    key: str | None = None
-    status: str | None = None
-    url: str | None = None
-    width: int | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    available: bool | Any = Field(default=None, union_mode='left_to_right')
+    focal_point: FocalPoint | Any = Field(None, alias='focalPoint', union_mode='left_to_right')
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    key: str | Any = Field(default=None, union_mode='left_to_right')
+    status: str | Any = Field(default=None, union_mode='left_to_right')
+    url: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class TitleLogoBranded(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    available: bool | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    available: bool | Any = Field(default=None, union_mode='left_to_right')
     focal_point: Any | None = Field(None, alias='focalPoint')
-    height: int | None = None
-    key: str | None = None
-    status: str | None = None
-    url: str | None = None
-    width: int | None = None
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    key: str | Any = Field(default=None, union_mode='left_to_right')
+    status: str | Any = Field(default=None, union_mode='left_to_right')
+    url: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class TitleLogoUnbranded(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    available: bool | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    available: bool | Any = Field(default=None, union_mode='left_to_right')
     focal_point: Any | None = Field(None, alias='focalPoint')
-    height: int | None = None
-    key: str | None = None
-    status: str | None = None
-    url: str | None = None
-    width: int | None = None
+    height: int | Any = Field(default=None, union_mode='left_to_right')
+    key: str | Any = Field(default=None, union_mode='left_to_right')
+    status: str | Any = Field(default=None, union_mode='left_to_right')
+    url: str | Any = Field(default=None, union_mode='left_to_right')
+    width: int | Any = Field(default=None, union_mode='left_to_right')
 
 class Episodes(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    total_count: int | None = Field(None, alias='totalCount')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    total_count: int | Any = Field(None, alias='totalCount', union_mode='left_to_right')
 
 class ParentSeason(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    episodes: Episodes | None = None
-    video_id: int | None = Field(None, alias='videoId')
-    hide_episode_numbers: bool | None = Field(None, alias='hideEpisodeNumbers')
-    number: int | None = None
-    number_label: str | None = Field(None, alias='numberLabel')
-    title: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    episodes: Episodes | Any = Field(default=None, union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+    hide_episode_numbers: bool | Any = Field(None, alias='hideEpisodeNumbers', union_mode='left_to_right')
+    number: int | Any = Field(default=None, union_mode='left_to_right')
+    number_label: str | Any = Field(None, alias='numberLabel', union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
 
 class CurrentEpisode(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    parent_season: ParentSeason | None = Field(None, alias='parentSeason')
-    video_id: int | None = Field(None, alias='videoId')
-    hide_episode_numbers: bool | None = Field(None, alias='hideEpisodeNumbers')
-    number: int | None = None
-    title: str | None = None
-    badges: list[str] | None = None
-    watch_status: str | None = Field(None, alias='watchStatus')
-    contextual_synopsis: ContextualSynopsis | None = Field(None, alias='contextualSynopsis')
-    runtime_sec: int | None = Field(None, alias='runtimeSec')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    parent_season: ParentSeason | Any = Field(None, alias='parentSeason', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+    hide_episode_numbers: bool | Any = Field(None, alias='hideEpisodeNumbers', union_mode='left_to_right')
+    number: int | Any = Field(default=None, union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
+    badges: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    watch_status: str | Any = Field(None, alias='watchStatus', union_mode='left_to_right')
+    contextual_synopsis: ContextualSynopsis | Any = Field(None, alias='contextualSynopsis', union_mode='left_to_right')
+    runtime_sec: int | Any = Field(None, alias='runtimeSec', union_mode='left_to_right')
     bookmark: Any | None = None
 
 class Seasons(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    total_count: int | None = Field(None, alias='totalCount')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    total_count: int | Any = Field(None, alias='totalCount', union_mode='left_to_right')
 
 class DetailModalModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    video_id: int | None = Field(None, alias='videoId')
-    is_available: bool | None = Field(None, alias='isAvailable')
-    is_playable: bool | None = Field(None, alias='isPlayable')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+    is_available: bool | Any = Field(None, alias='isAvailable', union_mode='left_to_right')
+    is_playable: bool | Any = Field(None, alias='isPlayable', union_mode='left_to_right')
     unplayable_causes: Any | None = Field(None, alias='unplayableCauses')
-    title: str | None = None
+    title: str | Any = Field(default=None, union_mode='left_to_right')
     live_event: Any | None = Field(None, alias='liveEvent')
-    broadcast_info: BroadcastInfo | None = Field(None, alias='broadcastInfo')
+    broadcast_info: BroadcastInfo | Any = Field(None, alias='broadcastInfo', union_mode='left_to_right')
     copyright: Any | None = None
-    cast: Cast | None = None
-    creators: Creators | None = None
-    directors: Directors | None = None
-    writers: Writers | None = None
-    genre_tags: GenreTags | None = Field(None, alias='genreTags')
-    content_advisory: ContentAdvisory | None = Field(None, alias='contentAdvisory')
-    mood_tags: list[MoodTag] | None = Field(None, alias='moodTags')
-    content_warning: ContentWarning | None = Field(None, alias='contentWarning')
-    unified_entity_id: str | None = Field(None, alias='unifiedEntityId')
-    contextual_synopsis: ContextualSynopsis | None = Field(None, alias='contextualSynopsis')
-    latest_year: int | None = Field(None, alias='latestYear')
-    playback_badges: list[str] | None = Field(None, alias='playbackBadges')
-    has_recurring_releases: bool | None = Field(None, alias='hasRecurringReleases')
-    is_in_playlist: bool | None = Field(None, alias='isInPlaylist')
-    is_in_remind_me_list: bool | None = Field(None, alias='isInRemindMeList')
-    is_in_rolling_reminders_list: bool | None = Field(None, alias='isInRollingRemindersList')
+    cast: Cast | Any = Field(default=None, union_mode='left_to_right')
+    creators: Creators | Any = Field(default=None, union_mode='left_to_right')
+    directors: Directors | Any = Field(default=None, union_mode='left_to_right')
+    writers: Writers | Any = Field(default=None, union_mode='left_to_right')
+    genre_tags: GenreTags | Any = Field(None, alias='genreTags', union_mode='left_to_right')
+    content_advisory: ContentAdvisory | Any = Field(None, alias='contentAdvisory', union_mode='left_to_right')
+    mood_tags: list[MoodTag] | Any = Field(None, alias='moodTags', union_mode='left_to_right')
+    content_warning: ContentWarning | Any = Field(None, alias='contentWarning', union_mode='left_to_right')
+    unified_entity_id: str | Any = Field(None, alias='unifiedEntityId', union_mode='left_to_right')
+    contextual_synopsis: ContextualSynopsis | Any = Field(None, alias='contextualSynopsis', union_mode='left_to_right')
+    latest_year: int | Any = Field(None, alias='latestYear', union_mode='left_to_right')
+    playback_badges: list[str] | Any = Field(None, alias='playbackBadges', union_mode='left_to_right')
+    has_recurring_releases: bool | Any = Field(None, alias='hasRecurringReleases', union_mode='left_to_right')
+    is_in_playlist: bool | Any = Field(None, alias='isInPlaylist', union_mode='left_to_right')
+    is_in_remind_me_list: bool | Any = Field(None, alias='isInRemindMeList', union_mode='left_to_right')
+    is_in_rolling_reminders_list: bool | Any = Field(None, alias='isInRollingRemindersList', union_mode='left_to_right')
     playlist_actions: Any | None = Field(None, alias='playlistActions')
-    display_runtime_sec: int | None = Field(None, alias='displayRuntimeSec')
-    most_liked_messages: list[MostLikedMessage] | None = Field(None, alias='mostLikedMessages')
-    tagline_messages: list[TaglineMessage] | None = Field(None, alias='taglineMessages')
-    badges: list[str] | None = None
-    watch_status: str | None = Field(None, alias='watchStatus')
-    similars: list[Similar] | None = None
-    ryan_murphy_collection_ids: list[int] | None = Field(None, alias='ryanMurphyCollectionIds')
-    shonda_rhimes_collection_ids: list[int] | None = Field(None, alias='shondaRhimesCollectionIds')
-    supplemental_videos_list: SupplementalVideosList | None = Field(None, alias='supplementalVideosList')
-    title_group_memberships: list[TitleGroupMembership] | None = Field(None, alias='titleGroupMemberships')
+    display_runtime_sec: int | Any = Field(None, alias='displayRuntimeSec', union_mode='left_to_right')
+    most_liked_messages: list[MostLikedMessage] | Any = Field(None, alias='mostLikedMessages', union_mode='left_to_right')
+    tagline_messages: list[TaglineMessage] | Any = Field(None, alias='taglineMessages', union_mode='left_to_right')
+    badges: list[str] | Any = Field(default=None, union_mode='left_to_right')
+    watch_status: str | Any = Field(None, alias='watchStatus', union_mode='left_to_right')
+    similars: list[Similar] | Any = Field(default=None, union_mode='left_to_right')
+    ryan_murphy_collection_ids: list[int] | Any = Field(None, alias='ryanMurphyCollectionIds', union_mode='left_to_right')
+    shonda_rhimes_collection_ids: list[int] | Any = Field(None, alias='shondaRhimesCollectionIds', union_mode='left_to_right')
+    supplemental_videos_list: SupplementalVideosList | Any = Field(None, alias='supplementalVideosList', union_mode='left_to_right')
+    title_group_memberships: list[TitleGroupMembership] | Any = Field(None, alias='titleGroupMemberships', union_mode='left_to_right')
     thumbs_rating: Any | None = Field(None, alias='thumbsRating')
-    boxart: Boxart | None = None
-    boxart_high_res: BoxartHighRes | None = Field(None, alias='boxartHighRes')
-    brand_logo_small: BrandLogoSmall | None = Field(None, alias='brandLogoSmall')
+    boxart: Boxart | Any = Field(default=None, union_mode='left_to_right')
+    boxart_high_res: BoxartHighRes | Any = Field(None, alias='boxartHighRes', union_mode='left_to_right')
+    brand_logo_small: BrandLogoSmall | Any = Field(None, alias='brandLogoSmall', union_mode='left_to_right')
     live_now: Any | None = Field(None, alias='liveNow')
-    story_art: StoryArt | None = Field(None, alias='storyArt')
-    title_logo_branded: TitleLogoBranded | None = Field(None, alias='titleLogoBranded')
-    title_logo_unbranded: TitleLogoUnbranded | None = Field(None, alias='titleLogoUnbranded')
+    story_art: StoryArt | Any = Field(None, alias='storyArt', union_mode='left_to_right')
+    title_logo_branded: TitleLogoBranded | Any = Field(None, alias='titleLogoBranded', union_mode='left_to_right')
+    title_logo_unbranded: TitleLogoUnbranded | Any = Field(None, alias='titleLogoUnbranded', union_mode='left_to_right')
     bookmark: Any | None = None
-    tf1_collection_ids: list[Any] | None = Field(None, alias='tf1CollectionIds')
-    runtime_sec: int | None = Field(None, alias='runtimeSec')
+    tf1_collection_ids: list[Any] | Any = Field(None, alias='tf1CollectionIds', union_mode='left_to_right')
+    runtime_sec: int | Any = Field(None, alias='runtimeSec', union_mode='left_to_right')
     thumb_rating: Any | None = Field(None, alias='thumbRating')
     next_live_event: Any | None = Field(None, alias='nextLiveEvent')
-    current_episode: CurrentEpisode | None = Field(None, alias='currentEpisode')
-    num_seasons_label: str | None = Field(None, alias='numSeasonsLabel')
-    seasons: Seasons | None = None
+    current_episode: CurrentEpisode | Any = Field(None, alias='currentEpisode', union_mode='left_to_right')
+    num_seasons_label: str | Any = Field(None, alias='numSeasonsLabel', union_mode='left_to_right')
+    seasons: Seasons | Any = Field(default=None, union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')

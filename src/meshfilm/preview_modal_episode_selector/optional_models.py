@@ -5,62 +5,62 @@ from typing import Any
 
 class Episodes(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    total_count: int | None = Field(None, alias='totalCount')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    total_count: int | Any = Field(None, alias='totalCount', union_mode='left_to_right')
 
 class Reason(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    icon_id: int | None = Field(None, alias='iconId')
-    level: str | None = None
-    text: str | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    icon_id: int | Any = Field(None, alias='iconId', union_mode='left_to_right')
+    level: str | Any = Field(default=None, union_mode='left_to_right')
+    text: str | Any = Field(default=None, union_mode='left_to_right')
 
 class ContentAdvisory(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    board_id: int | None = Field(None, alias='boardId')
-    board_name: str | None = Field(None, alias='boardName')
-    certification_rating_id: int | None = Field(None, alias='certificationRatingId')
-    certification_value: str | None = Field(None, alias='certificationValue')
-    i18n_reasons_text: str | None = Field(None, alias='i18nReasonsText')
-    maturity_description: str | None = Field(None, alias='maturityDescription')
-    maturity_level: int | None = Field(None, alias='maturityLevel')
-    reasons: list[Reason] | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    board_id: int | Any = Field(None, alias='boardId', union_mode='left_to_right')
+    board_name: str | Any = Field(None, alias='boardName', union_mode='left_to_right')
+    certification_rating_id: int | Any = Field(None, alias='certificationRatingId', union_mode='left_to_right')
+    certification_value: str | Any = Field(None, alias='certificationValue', union_mode='left_to_right')
+    i18n_reasons_text: str | Any = Field(None, alias='i18nReasonsText', union_mode='left_to_right')
+    maturity_description: str | Any = Field(None, alias='maturityDescription', union_mode='left_to_right')
+    maturity_level: int | Any = Field(None, alias='maturityLevel', union_mode='left_to_right')
+    reasons: list[Reason] | Any = Field(default=None, union_mode='left_to_right')
     video_specific_rating_reason: Any | None = Field(None, alias='videoSpecificRatingReason')
 
 class Node(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    episodes: Episodes | None = None
-    hidden_episode_numbers: bool | None = Field(None, alias='hiddenEpisodeNumbers')
-    title: str | None = None
-    video_id: int | None = Field(None, alias='videoId')
-    content_advisory: ContentAdvisory | None = Field(None, alias='contentAdvisory')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    episodes: Episodes | Any = Field(default=None, union_mode='left_to_right')
+    hidden_episode_numbers: bool | Any = Field(None, alias='hiddenEpisodeNumbers', union_mode='left_to_right')
+    title: str | Any = Field(default=None, union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+    content_advisory: ContentAdvisory | Any = Field(None, alias='contentAdvisory', union_mode='left_to_right')
 
 class Edge(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    cursor: str | None = None
-    node: Node | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    cursor: str | Any = Field(default=None, union_mode='left_to_right')
+    node: Node | Any = Field(default=None, union_mode='left_to_right')
 
 class PageInfo(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    end_cursor: str | None = Field(None, alias='endCursor')
-    has_next_page: bool | None = Field(None, alias='hasNextPage')
-    start_cursor: str | None = Field(None, alias='startCursor')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    end_cursor: str | Any = Field(None, alias='endCursor', union_mode='left_to_right')
+    has_next_page: bool | Any = Field(None, alias='hasNextPage', union_mode='left_to_right')
+    start_cursor: str | Any = Field(None, alias='startCursor', union_mode='left_to_right')
 
 class Seasons(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    edges: list[Edge] | None = None
-    page_info: PageInfo | None = Field(None, alias='pageInfo')
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    edges: list[Edge] | Any = Field(default=None, union_mode='left_to_right')
+    page_info: PageInfo | Any = Field(None, alias='pageInfo', union_mode='left_to_right')
 
 class PreviewModalEpisodeSelectorModel(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | None = Field(None, alias='__typename')
-    video_id: int | None = Field(None, alias='videoId')
-    seasons: Seasons | None = None
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+    seasons: Seasons | Any = Field(default=None, union_mode='left_to_right')
     _raw_input: Any = PrivateAttr(default=None)
 
     @model_validator(mode='wrap')
