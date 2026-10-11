@@ -3,10 +3,28 @@ from pydantic import ModelWrapValidatorHandler, PrivateAttr, model_validator
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 from typing import Any
 
+class Event(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    is_available: bool | Any = Field(None, alias='isAvailable', union_mode='left_to_right')
+    video_id: int | Any = Field(None, alias='videoId', union_mode='left_to_right')
+
+class TimeWindow(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    end_time: AwareDatetime | Any = Field(None, alias='endTime', union_mode='left_to_right')
+
+class LiveEvent(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    availability_start_time: AwareDatetime | Any = Field(None, alias='availabilityStartTime', union_mode='left_to_right')
+    event: Event | Any = Field(default=None, union_mode='left_to_right')
+    time_window: TimeWindow | Any = Field(None, alias='timeWindow', union_mode='left_to_right')
+
 class BroadcastInfo(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
-    distributor_name: Any | None = Field(None, alias='distributorName')
+    distributor_name: str | Any = Field(None, alias='distributorName', union_mode='left_to_right')
     release_date: AwareDatetime | Any = Field(None, alias='releaseDate', union_mode='left_to_right')
 
 class Node(BaseModel):
@@ -174,11 +192,17 @@ class TitleGroupMembership(BaseModel):
     siblings: list[Sibling] | Any = Field(default=None, union_mode='left_to_right')
     title: str | Any = Field(default=None, union_mode='left_to_right')
 
+class FocalPoint(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    x: float | Any = Field(default=None, union_mode='left_to_right')
+    y: float | Any = Field(default=None, union_mode='left_to_right')
+
 class Boxart(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
     available: bool | Any = Field(default=None, union_mode='left_to_right')
-    focal_point: Any | None = Field(None, alias='focalPoint')
+    focal_point: FocalPoint | Any = Field(None, alias='focalPoint', union_mode='left_to_right')
     height: int | Any = Field(default=None, union_mode='left_to_right')
     key: str | Any = Field(default=None, union_mode='left_to_right')
     status: str | Any = Field(default=None, union_mode='left_to_right')
@@ -189,7 +213,7 @@ class BoxartHighRes(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
     available: bool | Any = Field(default=None, union_mode='left_to_right')
-    focal_point: Any | None = Field(None, alias='focalPoint')
+    focal_point: FocalPoint | Any = Field(None, alias='focalPoint', union_mode='left_to_right')
     height: int | Any = Field(default=None, union_mode='left_to_right')
     key: str | Any = Field(default=None, union_mode='left_to_right')
     status: str | Any = Field(default=None, union_mode='left_to_right')
@@ -206,12 +230,6 @@ class BrandLogoSmall(BaseModel):
     status: str | Any = Field(default=None, union_mode='left_to_right')
     url: str | Any = Field(default=None, union_mode='left_to_right')
     width: int | Any = Field(default=None, union_mode='left_to_right')
-
-class FocalPoint(BaseModel):
-    model_config = ConfigDict(extra='ignore', defer_build=True)
-    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
-    x: float | Any = Field(default=None, union_mode='left_to_right')
-    y: float | Any = Field(default=None, union_mode='left_to_right')
 
 class StoryArt(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -239,12 +257,19 @@ class TitleLogoUnbranded(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
     field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
     available: bool | Any = Field(default=None, union_mode='left_to_right')
-    focal_point: Any | None = Field(None, alias='focalPoint')
+    focal_point: FocalPoint | Any = Field(None, alias='focalPoint', union_mode='left_to_right')
     height: int | Any = Field(default=None, union_mode='left_to_right')
     key: str | Any = Field(default=None, union_mode='left_to_right')
     status: str | Any = Field(default=None, union_mode='left_to_right')
     url: str | Any = Field(default=None, union_mode='left_to_right')
     width: int | Any = Field(default=None, union_mode='left_to_right')
+
+class NextLiveEvent(BaseModel):
+    model_config = ConfigDict(extra='ignore', defer_build=True)
+    field__typename: str | Any = Field(None, alias='__typename', union_mode='left_to_right')
+    availability_start_time: AwareDatetime | Any = Field(None, alias='availabilityStartTime', union_mode='left_to_right')
+    event: Event | Any = Field(default=None, union_mode='left_to_right')
+    time_window: TimeWindow | Any = Field(None, alias='timeWindow', union_mode='left_to_right')
 
 class Episodes(BaseModel):
     model_config = ConfigDict(extra='ignore', defer_build=True)
@@ -288,9 +313,9 @@ class DetailModalModel(BaseModel):
     is_playable: bool | Any = Field(None, alias='isPlayable', union_mode='left_to_right')
     unplayable_causes: Any | None = Field(None, alias='unplayableCauses')
     title: str | Any = Field(default=None, union_mode='left_to_right')
-    live_event: Any | None = Field(None, alias='liveEvent')
+    live_event: LiveEvent | Any = Field(None, alias='liveEvent', union_mode='left_to_right')
     broadcast_info: BroadcastInfo | Any = Field(None, alias='broadcastInfo', union_mode='left_to_right')
-    copyright: Any | None = None
+    copyright: str | Any = Field(default=None, union_mode='left_to_right')
     cast: Cast | Any = Field(default=None, union_mode='left_to_right')
     creators: Creators | Any = Field(default=None, union_mode='left_to_right')
     directors: Directors | Any = Field(default=None, union_mode='left_to_right')
@@ -330,7 +355,7 @@ class DetailModalModel(BaseModel):
     tf1_collection_ids: list[Any] | Any = Field(None, alias='tf1CollectionIds', union_mode='left_to_right')
     runtime_sec: int | Any = Field(None, alias='runtimeSec', union_mode='left_to_right')
     thumb_rating: Any | None = Field(None, alias='thumbRating')
-    next_live_event: Any | None = Field(None, alias='nextLiveEvent')
+    next_live_event: NextLiveEvent | Any = Field(None, alias='nextLiveEvent', union_mode='left_to_right')
     current_episode: CurrentEpisode | Any = Field(None, alias='currentEpisode', union_mode='left_to_right')
     num_seasons_label: str | Any = Field(None, alias='numSeasonsLabel', union_mode='left_to_right')
     seasons: Seasons | Any = Field(default=None, union_mode='left_to_right')

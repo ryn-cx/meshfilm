@@ -4,10 +4,28 @@ from pydantic import ConfigDict
 from pydantic import AwareDatetime, BaseModel, Field
 from typing import Any
 
+class Event(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    field__typename: str = Field(..., alias='__typename')
+    is_available: bool = Field(..., alias='isAvailable')
+    video_id: int = Field(..., alias='videoId')
+
+class TimeWindow(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    field__typename: str = Field(..., alias='__typename')
+    end_time: AwareDatetime = Field(..., alias='endTime')
+
+class LiveEvent(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    field__typename: str = Field(..., alias='__typename')
+    availability_start_time: AwareDatetime = Field(..., alias='availabilityStartTime')
+    event: Event
+    time_window: TimeWindow = Field(..., alias='timeWindow')
+
 class BroadcastInfo(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
-    distributor_name: None = Field(..., alias='distributorName')
+    distributor_name: str | None = Field(..., alias='distributorName')
     release_date: AwareDatetime | None = Field(..., alias='releaseDate')
 
 class Node(BaseModel):
@@ -73,7 +91,7 @@ class Node4(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     genre_id: int = Field(..., alias='genreId')
-    name: str
+    name: str | None
 
 class Edge4(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -175,11 +193,17 @@ class TitleGroupMembership(BaseModel):
     siblings: list[Sibling] | None
     title: str
 
+class FocalPoint(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    field__typename: str = Field(..., alias='__typename')
+    x: float
+    y: float
+
 class Boxart(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
-    focal_point: None = Field(..., alias='focalPoint')
+    focal_point: FocalPoint | None = Field(..., alias='focalPoint')
     height: int
     key: str
     status: str
@@ -190,7 +214,7 @@ class BoxartHighRes(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
-    focal_point: None = Field(..., alias='focalPoint')
+    focal_point: FocalPoint | None = Field(..., alias='focalPoint')
     height: int
     key: str
     status: str
@@ -207,12 +231,6 @@ class BrandLogoSmall(BaseModel):
     status: str
     url: str
     width: int
-
-class FocalPoint(BaseModel):
-    model_config = ConfigDict(defer_build=True)
-    field__typename: str = Field(..., alias='__typename')
-    x: float
-    y: float
 
 class StoryArt(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -240,12 +258,19 @@ class TitleLogoUnbranded(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
     available: bool
-    focal_point: None = Field(..., alias='focalPoint')
+    focal_point: FocalPoint | None = Field(..., alias='focalPoint')
     height: int
     key: str
     status: str
     url: str
     width: int
+
+class NextLiveEvent(BaseModel):
+    model_config = ConfigDict(defer_build=True)
+    field__typename: str = Field(..., alias='__typename')
+    availability_start_time: AwareDatetime = Field(..., alias='availabilityStartTime')
+    event: Event
+    time_window: TimeWindow = Field(..., alias='timeWindow')
 
 class Episodes(BaseModel):
     model_config = ConfigDict(defer_build=True)
@@ -289,15 +314,15 @@ class DetailModalModel(BaseModel):
     is_playable: bool = Field(..., alias='isPlayable')
     unplayable_causes: None = Field(..., alias='unplayableCauses')
     title: str
-    live_event: None = Field(None, alias='liveEvent')
+    live_event: LiveEvent | None = Field(None, alias='liveEvent')
     broadcast_info: BroadcastInfo = Field(..., alias='broadcastInfo')
-    copyright: None
+    copyright: str | None
     cast: Cast
     creators: Creators
     directors: Directors
     writers: Writers
     genre_tags: GenreTags = Field(..., alias='genreTags')
-    content_advisory: ContentAdvisory = Field(..., alias='contentAdvisory')
+    content_advisory: ContentAdvisory | None = Field(..., alias='contentAdvisory')
     mood_tags: list[MoodTag] = Field(..., alias='moodTags')
     content_warning: ContentWarning | None = Field(..., alias='contentWarning')
     unified_entity_id: str = Field(..., alias='unifiedEntityId')
@@ -325,13 +350,13 @@ class DetailModalModel(BaseModel):
     brand_logo_small: BrandLogoSmall | None = Field(..., alias='brandLogoSmall')
     live_now: None = Field(..., alias='liveNow')
     story_art: StoryArt = Field(..., alias='storyArt')
-    title_logo_branded: TitleLogoBranded = Field(..., alias='titleLogoBranded')
-    title_logo_unbranded: TitleLogoUnbranded = Field(..., alias='titleLogoUnbranded')
+    title_logo_branded: TitleLogoBranded | None = Field(..., alias='titleLogoBranded')
+    title_logo_unbranded: TitleLogoUnbranded | None = Field(..., alias='titleLogoUnbranded')
     bookmark: None = Field(None)
     tf1_collection_ids: list[None] = Field(..., alias='tf1CollectionIds')
     runtime_sec: int | None = Field(None, alias='runtimeSec')
     thumb_rating: None = Field(..., alias='thumbRating')
-    next_live_event: None = Field(None, alias='nextLiveEvent')
+    next_live_event: NextLiveEvent | None = Field(None, alias='nextLiveEvent')
     current_episode: CurrentEpisode | None = Field(None, alias='currentEpisode')
     num_seasons_label: str | None = Field(None, alias='numSeasonsLabel')
     seasons: Seasons | None = None

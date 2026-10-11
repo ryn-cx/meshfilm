@@ -42,7 +42,7 @@ class Node(BaseModel):
     video_id: int = Field(..., alias='videoId')
     artwork: Artwork
     availability_date_messaging: str | None = Field(..., alias='availabilityDateMessaging')
-    display_runtime_sec: int = Field(..., alias='displayRuntimeSec')
+    display_runtime_sec: int | None = Field(..., alias='displayRuntimeSec')
     is_in_remind_me_list: bool = Field(..., alias='isInRemindMeList')
     title: str
     bookmark: None
@@ -68,7 +68,7 @@ class Edge(BaseModel):
 class PageInfo(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
-    end_cursor: str = Field(..., alias='endCursor')
+    end_cursor: str | None = Field(..., alias='endCursor')
     has_next_page: bool = Field(..., alias='hasNextPage')
 
 class Episodes(BaseModel):
@@ -85,7 +85,7 @@ class CurrentEpisode(BaseModel):
 class ParentShow(BaseModel):
     model_config = ConfigDict(defer_build=True)
     field__typename: str = Field(..., alias='__typename')
-    current_episode: CurrentEpisode = Field(..., alias='currentEpisode')
+    current_episode: CurrentEpisode | None = Field(..., alias='currentEpisode')
     has_recurring_releases: bool = Field(..., alias='hasRecurringReleases')
     video_id: int = Field(..., alias='videoId')
     is_available: bool = Field(..., alias='isAvailable')
